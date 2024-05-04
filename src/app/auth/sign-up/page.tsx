@@ -1,11 +1,13 @@
-import SignInCashFPL from "@/app/components/sign-in";
 import SignUpCashFPL from "@/app/components/sign-up";
 
 export default function SignUp() {
   return (
-    <main className="flex max-h-fit flex-col items-center justify-between p-24">
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <SignUpCashFPL/>
+    <main
+      className="flex flex-col items-center justify-center bg-gray-300 py-0"
+      style={{ height: "90vh" }}
+    >
+      <div className="flex flex-col bg-gray-800 p-6 rounded-lg">
+        <SignUpCashFPL />
       </div>
     </main>
   );

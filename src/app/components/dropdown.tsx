@@ -1,7 +1,8 @@
 "use client";
-import { Fragment, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import { SignUpState } from "./sign-up";
 
 const users = [
   {
@@ -14,22 +15,35 @@ const users = [
   },
 ];
 
+type props = {
+  stateChanges: Dispatch<SetStateAction<SignUpState>>;
+};
+
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ListUser() {
+export default function ListUser({ stateChanges }: props) {
   const [selected, setSelected] = useState(users[1]);
+
+  useEffect(() => {
+    stateChanges((prev: SignUpState) => {
+      return { ...prev, role: selected.id };
+    });
+  }, [selected]);
 
   return (
     <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
         <>
-          <Listbox.Label className="block text-sm font-medium leading-6 text-gray-900">
+          <Listbox.Label className="block text-sm font-medium leading-6 text-base text-white">
             Register as
           </Listbox.Label>
           <div className="relative mt-2">
-            <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 sm:text-sm sm:leading-6">
+            <Listbox.Button
+              style={{ height: "3rem" }}
+              className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 sm:text-sm sm:leading-6"
+            >
               <span className="flex items-center">
                 <span className="ml-3 block truncate">{selected.name}</span>
               </span>
