@@ -1,7 +1,6 @@
 // not a server-side component, so it can be used in the client
 "use client";
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import AuthButton from "../buttons/auth/Button";
 
@@ -33,7 +32,7 @@ export default function LandingPageNavbar() {
               </div>
               <div className="absolute space-x-4 inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <AuthButton btn_text="Sign in" link="sign-in" />
-                <AuthButton btn_text="Sign up"  link="sign-up"/>
+                <AuthButton btn_text="Sign up" link="sign-up" />
 
                 <button
                   type="button"
