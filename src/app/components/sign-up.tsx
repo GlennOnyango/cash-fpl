@@ -2,6 +2,8 @@
 import { useEffect, useMemo, useState } from "react";
 import CustomInput from "./customInput";
 import ListUser from "./dropdown";
+import { createUser } from "../actions";
+import { useFormState } from "react-dom";
 
 export type SignUpState = {
   email: string;
@@ -21,19 +23,18 @@ const defaultState = {
   role: 2,
 };
 
+const initialState = {
+  message: "",
+};
+
 export default function SignUpCashFPL() {
   const [signUpState, setSignUpState] = useState<SignUpState>(defaultState);
-
+  const [state, formAction] = useFormState(createUser, initialState);
   const passwordMatch = useMemo(() => {
     return signUpState.password === signUpState.confirmPassword;
   }, [signUpState]);
 
   const passwordMatchText = useMemo(() => {
-    console.log(
-      (signUpState.password.length > 0 ||
-        signUpState.confirmPassword.length > 0) &&
-        !passwordMatch
-    );
     return (
       (signUpState.password.length > 0 ||
         signUpState.confirmPassword.length > 0) &&
@@ -41,11 +42,33 @@ export default function SignUpCashFPL() {
     );
   }, [passwordMatch, signUpState]);
 
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
+
+  const errors = useMemo(() => {
+    const error = [];
+    for (const key in state?.errors) {
+      if (key === "email") error.push(state?.errors.email);
+      if (key === "username") error.push(state?.errors.username);
+      if (key === "password") error.push(state?.errors.password);
+      if (key === "teamId") error.push(state?.errors.teamId);
+      if (key === "roleId") error.push(state?.errors.roleId);
+    }
+    return error;
+  }, [state]);
+
   return (
-    <form className="w-full min-w-sm mx-auto" autoComplete="off">
+    <form action={formAction} className="w-full min-w-sm mx-auto">
       <h1 className="text-center text-4xl pb-8 text-white font-medium">
         Join our growing community
       </h1>
+
+      {errors.map((error, idx) => {
+        return <p className="bg-red-100 rounded-md py-2 pl-3 my-2 text-gray-900" key={idx}>{error}</p>;
+      })}
+
+      <input type="hidden" name="role" value={signUpState.role} />
 
       <div className="flex flex-column space-x-3">
         <CustomInput

@@ -7,7 +7,7 @@ import { SignUpState } from "./sign-up";
 const users = [
   {
     id: 1,
-    name: "Admin / Player",
+    name: "Manager / Player",
   },
   {
     id: 2,
