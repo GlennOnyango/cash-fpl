@@ -4,6 +4,7 @@ import CustomInput from "./customInput";
 import ListUser from "./dropdown";
 import { createUser } from "../actions";
 import { useFormState } from "react-dom";
+import { redirect } from "next/navigation";
 
 export type SignUpState = {
   email: string;
@@ -43,7 +44,12 @@ export default function SignUpCashFPL() {
   }, [passwordMatch, signUpState]);
 
   useEffect(() => {
-    console.log(state);
+    if(state.message === "User created"){
+      console.log(state);
+      // redirect to login page
+
+      redirect("/auth/confirm-email");
+    }
   }, [state]);
 
   const errors = useMemo(() => {
