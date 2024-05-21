@@ -1,6 +1,7 @@
 "use server";
-
 import { z } from "zod";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 const requestOptions = {
   method: "GET",
@@ -34,17 +35,28 @@ const User = z
         invalid_type_error: "Invalid team",
         message: "Team should be a number",
       })
-      .refine(async (teamId) => {
-        const response = await fetch(
-          `https://fantasy.premierleague.com/api/entry/${teamId}/`
-        );
+      .refine(
+        async (teamId) => {
+          console.log(teamId);
+          try {
+            const response = await fetch(
+              `https://fantasy.premierleague.com/api/entry/${teamId}/`
+            );
 
-        const data = await response.json();
+            const data = await response.json();
 
-        return data.id === teamId;
-      }, {
-        message: "Team ID does not exist",
-      }),
+            console.log(data);
+
+            return data.id === teamId;
+          } catch (e) {
+            console.log("asdsadas",e);
+            return false;
+          }
+        },
+        {
+          message: "Team ID does not exist",
+        }
+      ),
 
     roleId: z
       .number({
@@ -84,6 +96,17 @@ export async function createUser(prevState: any, formData: FormData) {
       errors: user.error.flatten().fieldErrors,
     };
   }
+
+
+  const newUser = await prisma.user.create({
+    data: {
+      email: user.data.email,
+      username: user.data.username,
+      password: user.data.password,
+      teamId: user.data.teamId,
+      roleId: user.data.roleId,
+    },
+  });
 
   return {
     message: "User created",
