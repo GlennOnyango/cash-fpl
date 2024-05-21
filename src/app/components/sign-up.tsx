@@ -65,7 +65,7 @@ export default function SignUpCashFPL() {
   }, [state]);
 
   return (
-    <form action={formAction} autoComplete="false" className="w-full min-w-sm mx-auto">
+    <form action={formAction} autoComplete="off" className="w-full min-w-sm mx-auto">
       <h1 className="text-center text-4xl pb-8 text-white font-medium">
         Join our growing community
       </h1>
