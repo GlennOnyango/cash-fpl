@@ -1,6 +1,7 @@
 "use server";
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
+import { cookies } from "next/headers";
 const prisma = new PrismaClient();
 
 const requestOptions = {
@@ -49,7 +50,7 @@ const User = z
 
             return data.id === teamId;
           } catch (e) {
-            console.log("asdsadas",e);
+            console.log("asdsadas", e);
             return false;
           }
         },
@@ -81,6 +82,17 @@ const User = z
     }
   );
 
+const signUser = z.object({
+  email: z.string({
+    invalid_type_error: "Invalid email",
+    required_error: "Email is required",
+  }),
+  password: z.string({
+    required_error: "Password is required",
+    invalid_type_error: "Invalid password",
+  }),
+});
+
 export async function createUser(prevState: any, formData: FormData) {
   const user = await User.safeParseAsync({
     email: formData.get("email") as string,
@@ -97,7 +109,6 @@ export async function createUser(prevState: any, formData: FormData) {
     };
   }
 
-
   const newUser = await prisma.user.create({
     data: {
       email: user.data.email,
@@ -110,5 +121,43 @@ export async function createUser(prevState: any, formData: FormData) {
 
   return {
     message: "User created",
+  };
+}
+
+export async function signInUser(prevState: any, formData: FormData) {
+  const user = await signUser.safeParseAsync({
+    email: formData.get("email") as string,
+    password: formData.get("password") as string,
+  });
+
+  if (!user.success) {
+    return {
+      errors: user.error.flatten().fieldErrors,
+    };
+  }
+
+  const userExists = await prisma.user.findUnique({
+    where: {
+      email: user.data.email,
+      password: user.data.password,
+    },
+  });
+
+  if (!userExists) {
+    return {
+      errors: {
+        email: "User does not exist",
+      },
+    };
+  }
+
+  console.log(userExists);
+  cookies().set("credentials", `${userExists.id}`, { secure: true });
+  cookies().set("role", `${userExists.roleId}`, { secure: true });
+  cookies().set("team", `${userExists.teamId}`, { secure: true });
+
+  return {
+    message: "User signed in",
+    role: userExists.roleId,
   };
 }
