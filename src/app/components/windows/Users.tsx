@@ -43,25 +43,24 @@ const Leagues = [
     number_of_teams: 9,
     weeks_participated: 6,
     invite_link: "/leagues/avocado-oil",
-  }
+  },
 ];
 
-
-export default function LeaguesWindows() {
+export default function LeaguesUsers() {
   return (
     <div
       className="rounded-md bg-white"
-      style={{ width: "40%", height: "60vh" }}
+      style={{ width: "60%", height: "60vh" }}
     >
       <h1 className="text-3xl p-4 text-center font-bold text-gray-900 dark:text-white">
-        Leagues
+        Users
       </h1>
       <div
         className="overflow-x-auto bg-white max-h-80"
         style={{ width: "100%" }}
       >
         <Flowbite theme={{ theme: customTheme }}>
-          <Table striped >
+          <Table striped>
             <Table.Head>
               <Table.HeadCell>League</Table.HeadCell>
               <Table.HeadCell>Status</Table.HeadCell>
@@ -71,7 +70,7 @@ export default function LeaguesWindows() {
                 <span className="sr-only">Edit</span>
               </Table.HeadCell>
             </Table.Head>
-            <Table.Body className="divide-y">
+            <Table.Body className="divide-y overflow-hidden">
               {Leagues.map(
                 ({
                   id,
@@ -97,7 +96,7 @@ export default function LeaguesWindows() {
                           href={`${invite_link}`}
                           className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
                         >
-                          invite
+                          View
                         </a>
                       </Table.Cell>
                     </Table.Row>
@@ -106,6 +105,7 @@ export default function LeaguesWindows() {
               )}
             </Table.Body>
           </Table>
+
         </Flowbite>
       </div>
 
@@ -113,10 +113,9 @@ export default function LeaguesWindows() {
         <Button outline gradientDuoTone="purpleToBlue">
           view all
         </Button>
-        <Button outline gradientDuoTone="purpleToBlue">
-          Create
-        </Button>
       </div>
     </div>
   );
 }
+
+
