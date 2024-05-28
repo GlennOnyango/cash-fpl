@@ -32,4 +32,60 @@ model User {
   roleId    Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  League    League?
+  Player    Player?
 }
+
+// Rules
+
+model Rule {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  League_Rule League_Rule[]
+}
+
+// Leagues
+
+model League {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  creator     User          @relation(fields: [creatorId], references: [id])
+  creatorId   String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  League_Rule League_Rule[]
+  Player      Player[]
+}
+
+//League_Rules
+
+model League_Rule {
+  id        Int      @id @default(autoincrement())
+  league    League   @relation(fields: [leagueId], references: [id])
+  leagueId  Int
+  rule      Rule     @relation(fields: [ruleId], references: [id])
+  ruleId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Players
+
+model Player {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  league    League   @relation(fields: [leagueId], references: [id])
+  leagueId  Int
+  status    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Payments
+
+// Weeks
+
+// Table
