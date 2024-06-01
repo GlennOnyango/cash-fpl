@@ -14,21 +14,28 @@ export default function Layout({
   players,
   notifications,
   leagues,
-  play
+  play,
+  statistics,
 }: Readonly<{
   children: React.ReactNode;
   players: React.ReactNode;
   notifications: React.ReactNode;
   leagues: React.ReactNode;
   play: React.ReactNode;
+  statistics: React.ReactNode;
 }>) {
   return (
     <ManagerPageNavbar>
-      {children}
-      {players}
-      {notifications}
-      {leagues}
-      {play}
+      <div className="p-4" >
+        {children}
+        <div className="grid grid-cols-12 grid-rows-12 gap-2 pt-2 " style={{height:"80vh"}}>
+          {leagues}
+          {players}
+          {notifications}
+          {statistics}
+          {play}
+        </div>
+      </div>
     </ManagerPageNavbar>
   );
 }

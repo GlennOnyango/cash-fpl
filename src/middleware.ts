@@ -12,8 +12,8 @@ export function middleware(request: NextRequest) {
     return Response.redirect(new URL("/player", request.url));
   }
 
-  if (!currentUser && !request.nextUrl.pathname.startsWith("/login")) {
-    return Response.redirect(new URL("/login", request.url));
+  if (!currentUser && !request.nextUrl.pathname.startsWith("/sign-in")) {
+    return Response.redirect(new URL("/sign-in", request.url));
   }
 }
 

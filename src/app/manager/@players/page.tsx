@@ -1,3 +1,7 @@
 export default function Players() {
-  return <h1>Players 1</h1>;
+  return (
+    <div className="col-span-8 row-span-6 bg-gray-800">
+      <h1 className="text-white">Players 1</h1>
+    </div>
+  );
 }
