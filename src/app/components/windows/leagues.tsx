@@ -1,6 +1,6 @@
 "use client";
 
-import { Flowbite, Table, Button } from "flowbite-react";
+import { Flowbite, Table, Button, Tooltip } from "flowbite-react";
 import customTheme from "../customTheme";
 
 const Leagues = [
@@ -43,25 +43,96 @@ const Leagues = [
     number_of_teams: 9,
     weeks_participated: 6,
     invite_link: "/leagues/avocado-oil",
-  }
+  },
+  {
+    id: 6,
+    name: "Sunflower oil",
+    status: "Active",
+    number_of_teams: 7,
+    weeks_participated: 2,
+    invite_link: "/leagues/sunflower-oil",
+  },
+  {
+    id: 7,
+    name: "Peanut oil",
+    status: "Active",
+    number_of_teams: 11,
+    weeks_participated: 8,
+    invite_link: "/leagues/peanut-oil",
+  },
+  {
+    id: 8,
+    name: "Sesame oil",
+    status: "Inactive",
+    number_of_teams: 5,
+    weeks_participated: 1,
+    invite_link: "/leagues/sesame-oil",
+  },
+  {
+    id: 9,
+    name: "Walnut oil",
+    status: "Active",
+    number_of_teams: 4,
+    weeks_participated: 9,
+    invite_link: "/leagues/walnut-oil",
+  },
+  {
+    id: 10,
+    name: "Grapeseed oil",
+    status: "Active",
+    number_of_teams: 3,
+    weeks_participated: 10,
+    invite_link: "/leagues/grapeseed-oil",
+  },
+  {
+    id: 11,
+    name: "Palm oil",
+    status: "Active",
+    number_of_teams: 2,
+    weeks_participated: 11,
+    invite_link: "/leagues/palm-oil",
+  },
+  {
+    id: 12,
+    name: "Canola oil",
+    status: "Active",
+    number_of_teams: 1,
+    weeks_participated: 12,
+    invite_link: "/leagues/canola-oil",
+  },
+  {
+    id: 13,
+    name: "Soybean oil",
+    status: "Active",
+    number_of_teams: 0,
+    weeks_participated: 13,
+    invite_link: "/leagues/soybean-oil",
+  },
+  {
+    id: 14,
+    name: "Corn oil",
+    status: "Active",
+    number_of_teams: 0,
+    weeks_participated: 14,
+    invite_link: "/leagues/corn-oil",
+  },
 ];
-
 
 export default function LeaguesWindows() {
   return (
-    <div
-      className="rounded-md bg-white"
-      style={{ width: "40%", height: "60vh" }}
-    >
-      <h1 className="text-3xl p-4 text-center font-bold text-gray-900 dark:text-white">
-        Leagues
-      </h1>
-      <div
-        className="overflow-x-auto bg-white max-h-80"
-        style={{ width: "100%" }}
+    <div className="rounded-md" style={{ width: "100%", height: "100%" }}>
+      <Tooltip
+        content="Shows all leagues you have created presently"
+        animation="duration-150"
       >
+        <h1 className="text-3xl p-4  font-bold text-gray-900 dark:text-white">
+          Leagues
+        </h1>
+      </Tooltip>
+
+      <div className="overflow-x-auto" style={{ width: "100%", height: "80%" }}>
         <Flowbite theme={{ theme: customTheme }}>
-          <Table striped >
+          <Table striped className="bg-white">
             <Table.Head>
               <Table.HeadCell>League</Table.HeadCell>
               <Table.HeadCell>Status</Table.HeadCell>
