@@ -26,9 +26,12 @@ export default function Layout({
 }>) {
   return (
     <ManagerPageNavbar>
-      <div className="p-4" >
+      <div className="p-4">
         {children}
-        <div className="grid grid-cols-12 grid-rows-12 gap-2 pt-2 " style={{height:"80vh"}}>
+        <div
+          className="grid grid-cols-12 grid-rows-12 gap-1 pt-2"
+          style={{ height: "80vh" }}
+        >
           {leagues}
           {players}
           {notifications}
