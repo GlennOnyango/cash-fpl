@@ -25,10 +25,10 @@ export default function SignInCashFPL() {
 
   useEffect(() => {
     if(state.role === 1){
-      redirect("/player/dashboard");
+      redirect("/player");
     }
     else if(state.role === 2){
-      redirect("/admin/dashboard");
+      redirect("/manager");
     }
   }, [state]);
 

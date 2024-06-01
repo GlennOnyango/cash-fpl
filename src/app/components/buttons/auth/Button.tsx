@@ -12,7 +12,7 @@ type Props = {
 export default function AuthButton({ btn_text, link }: Props) {
   return (
     <a
-      href={`/auth/${link}`}
+      href={`/${link}`}
       className="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
     >
       {btn_text}
