@@ -91,7 +91,7 @@ export async function createUser(prevState: any, formData: FormData) {
     const errorArray: string[] = [];
 
     const errorObj: any = user.error.flatten().fieldErrors;
-    const formErrors:any = user.error.flatten().formErrors;
+    const formErrors: any = user.error.flatten().formErrors;
 
     for (const key in errorObj) {
       errorArray.push(errorObj[key]);
@@ -106,21 +106,21 @@ export async function createUser(prevState: any, formData: FormData) {
     };
   }
 
-  const newUser = await prisma.user.create({
-    data: {
-      email: user.data.email,
-      username: user.data.username,
-      password: user.data.password,
-      teamId: user.data.teamId,
-    },
-  });
-
-  if (!newUser) {
+  try {
+    const newUser = await prisma.user.create({
+      data: {
+        email: user.data.email,
+        username: user.data.username,
+        password: user.data.password,
+        teamId: user.data.teamId,
+      },
+    });
+    redirect("/auth/confirm-email");
+  } catch (error) {
+    console.log(error);
     return {
       errors: ["User could not be created"],
     };
-  } else {
-    redirect("/auth/confirm-email");
   }
 }
 
