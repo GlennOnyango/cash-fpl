@@ -12,40 +12,33 @@ export type SignUpState = {
   confirmPassword: string;
 };
 
-const defaultState = {
-  email: "",
-  username: "",
-  teamId: "",
-  password: "",
-  confirmPassword: "",
-};
+type fieldErrors = {
+  email?: string[] | undefined;
+  username?: string[] | undefined;
+  password?: string[] | undefined;
+  teamId?: string[] | undefined;
+  confirmPassword?: string[] | undefined;
+}
 
-const initialState = {
-  message: "",
+const initialState : {errors:string | fieldErrors} = {
+  errors: "",
 };
 
 export default function SignUpCashFPL() {
   const [state, formAction] = useFormState(createUser, initialState);
 
-  useEffect(() => {
-    if (state.message === "User created") {
-      console.log(state);
-      // redirect to login page
+  // const errors = useMemo(() => {
+  //   const error = [];
+  //   for (const key in state?.errors) {
+  //     if (key === "email") error.push(state?.errors.email);
+  //     if (key === "username") error.push(state?.errors.username);
+  //     if (key === "password") error.push(state?.errors.password);
+  //     if (key === "teamId") error.push(state?.errors.teamId);
+  //   }
+  //   return error;
+  // }, [state]);
 
-      redirect("/auth/confirm-email");
-    }
-  }, [state]);
-
-  const errors = useMemo(() => {
-    const error = [];
-    for (const key in state?.errors) {
-      if (key === "email") error.push(state?.errors.email);
-      if (key === "username") error.push(state?.errors.username);
-      if (key === "password") error.push(state?.errors.password);
-      if (key === "teamId") error.push(state?.errors.teamId);
-    }
-    return error;
-  }, [state]);
+  useEffect(() => {console.log(state)}, [state]);
 
   return (
     <form
@@ -57,7 +50,7 @@ export default function SignUpCashFPL() {
         Join our growing community
       </h1>
 
-      {errors.map((error, idx) => {
+      {/* {errors.map((error, idx) => {
         return (
           <p
             className="bg-red-100 rounded-md py-2 pl-3 my-2 text-gray-900"
@@ -66,7 +59,7 @@ export default function SignUpCashFPL() {
             {error}
           </p>
         );
-      })}
+      })} */}
 
       <div className="flex flex-column space-x-3">
         <div className="w-full max-w-sm mx-auto ">

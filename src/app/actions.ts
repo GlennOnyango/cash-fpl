@@ -7,11 +7,6 @@ import { redirect } from "next/navigation";
 
 const prisma = new PrismaClient();
 
-const requestOptions = {
-  method: "GET",
-  redirect: "follow",
-};
-
 const User = z
   .object({
     email: z.string({
@@ -112,9 +107,13 @@ export async function createUser(prevState: any, formData: FormData) {
     },
   });
 
-  return {
-    message: "User created",
-  };
+  if (!newUser) {
+    return {
+      errors: "User could not be created",
+    };
+  } else {
+    redirect("/auth/confirm-email");
+  }
 }
 
 export async function signInUser(prevState: any, formData: FormData) {
@@ -147,4 +146,11 @@ export async function signInUser(prevState: any, formData: FormData) {
 
     redirect("/dashboard");
   }
+}
+
+export async function signOut() {
+  cookies().delete("credentials");
+  cookies().delete("team");
+
+  redirect("/");
 }

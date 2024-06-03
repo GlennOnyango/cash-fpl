@@ -1,9 +1,6 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
 import { signInUser } from "../actions";
 import { useFormState } from "react-dom";
-import { redirect } from "next/navigation";
-import { error } from "console";
 
 export type SignInState = {
   email: string;
