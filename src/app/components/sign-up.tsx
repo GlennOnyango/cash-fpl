@@ -3,6 +3,7 @@ import { useEffect, useMemo } from "react";
 import { createUser } from "../actions";
 import { useFormState } from "react-dom";
 import { redirect } from "next/navigation";
+import { stat } from "fs";
 
 export type SignUpState = {
   email: string;
@@ -18,27 +19,18 @@ type fieldErrors = {
   password?: string[] | undefined;
   teamId?: string[] | undefined;
   confirmPassword?: string[] | undefined;
-}
+};
 
-const initialState : {errors:string | fieldErrors} = {
+const initialState: { errors: any } = {
   errors: "",
 };
 
 export default function SignUpCashFPL() {
   const [state, formAction] = useFormState(createUser, initialState);
 
-  // const errors = useMemo(() => {
-  //   const error = [];
-  //   for (const key in state?.errors) {
-  //     if (key === "email") error.push(state?.errors.email);
-  //     if (key === "username") error.push(state?.errors.username);
-  //     if (key === "password") error.push(state?.errors.password);
-  //     if (key === "teamId") error.push(state?.errors.teamId);
-  //   }
-  //   return error;
-  // }, [state]);
-
-  useEffect(() => {console.log(state)}, [state]);
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
 
   return (
     <form
@@ -50,16 +42,14 @@ export default function SignUpCashFPL() {
         Join our growing community
       </h1>
 
-      {/* {errors.map((error, idx) => {
-        return (
-          <p
-            className="bg-red-100 rounded-md py-2 pl-3 my-2 text-gray-900"
-            key={idx}
-          >
-            {error}
-          </p>
-        );
-      })} */}
+      {state.errors.length > 0 && (
+        <p
+          className="bg-red-100 rounded-md py-2 pl-3 my-2 text-gray-900"
+          key={"error"}
+        >
+          {state.errors[0]}
+        </p>
+      )}
 
       <div className="flex flex-column space-x-3">
         <div className="w-full max-w-sm mx-auto ">

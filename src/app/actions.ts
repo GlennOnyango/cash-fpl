@@ -36,7 +36,6 @@ const User = z
       })
       .refine(
         async (teamId) => {
-          console.log(teamId);
           try {
             const response = await fetch(
               `https://fantasy.premierleague.com/api/entry/${teamId}/`
@@ -44,11 +43,8 @@ const User = z
 
             const data = await response.json();
 
-            console.log(data);
-
             return data.id === teamId;
           } catch (e) {
-            console.log("asdsadas", e);
             return false;
           }
         },
@@ -56,7 +52,6 @@ const User = z
           message: "Team ID does not exist",
         }
       ),
-
     confirmPassword: z.string({
       required_error: "Confirm password is required",
       invalid_type_error: "Invalid confirm password",
@@ -93,8 +88,21 @@ export async function createUser(prevState: any, formData: FormData) {
   });
 
   if (!user.success) {
+    const errorArray: string[] = [];
+
+    const errorObj: any = user.error.flatten().fieldErrors;
+    const formErrors:any = user.error.flatten().formErrors;
+
+    for (const key in errorObj) {
+      errorArray.push(errorObj[key]);
+    }
+
+    if (formErrors) {
+      errorArray.push(formErrors);
+    }
+
     return {
-      errors: user.error.flatten().fieldErrors,
+      errors: errorArray,
     };
   }
 
@@ -109,7 +117,7 @@ export async function createUser(prevState: any, formData: FormData) {
 
   if (!newUser) {
     return {
-      errors: "User could not be created",
+      errors: ["User could not be created"],
     };
   } else {
     redirect("/auth/confirm-email");
