@@ -2,6 +2,9 @@
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
 import { cookies } from "next/headers";
+
+import { redirect } from "next/navigation";
+
 const prisma = new PrismaClient();
 
 const requestOptions = {
@@ -59,14 +62,6 @@ const User = z
         }
       ),
 
-    roleId: z
-      .number({
-        required_error: "Role is required",
-        invalid_type_error: "Invalid role",
-      })
-      .refine((roleId) => roleId === 1 || roleId === 2, {
-        message: "Role should be a player or a manager ID",
-      }),
     confirmPassword: z.string({
       required_error: "Confirm password is required",
       invalid_type_error: "Invalid confirm password",
@@ -99,7 +94,6 @@ export async function createUser(prevState: any, formData: FormData) {
     username: formData.get("username") as string,
     password: formData.get("password") as string,
     teamId: Number(formData.get("teamId")),
-    roleId: Number(formData.get("role")),
     confirmPassword: formData.get("confirmPassword") as string,
   });
 
@@ -115,7 +109,6 @@ export async function createUser(prevState: any, formData: FormData) {
       username: user.data.username,
       password: user.data.password,
       teamId: user.data.teamId,
-      roleId: user.data.roleId,
     },
   });
 
@@ -145,19 +138,13 @@ export async function signInUser(prevState: any, formData: FormData) {
 
   if (!userExists) {
     return {
-      errors: {
-        email: "User does not exist",
-      },
+      errors: "User does not exist",
     };
+  } else {
+    console.log(userExists);
+    cookies().set("credentials", `${userExists.id}`, { secure: true });
+    cookies().set("team", `${userExists.teamId}`, { secure: true });
+
+    redirect("/dashboard");
   }
-
-  console.log(userExists);
-  cookies().set("credentials", `${userExists.id}`, { secure: true });
-  cookies().set("role", `${userExists.roleId}`, { secure: true });
-  cookies().set("team", `${userExists.teamId}`, { secure: true });
-
-  return {
-    message: "User signed in",
-    role: userExists.roleId,
-  };
 }

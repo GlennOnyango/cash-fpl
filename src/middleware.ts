@@ -1,15 +1,11 @@
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const currentUser = request.cookies.get("role")?.value;
+  const currentUser = request.cookies.get("credentials")?.value;
   console.log("current", currentUser);
 
-  if (currentUser === "2" && !request.nextUrl.pathname.startsWith("/manager")) {
-    return Response.redirect(new URL("/manager", request.url));
-  }
-
-  if (currentUser === "1" && !request.nextUrl.pathname.startsWith("/player")) {
-    return Response.redirect(new URL("/player", request.url));
+  if (currentUser && !request.nextUrl.pathname.startsWith("/dashboard")) {
+    return Response.redirect(new URL("/dashboard", request.url));
   }
 
   if (!currentUser && !request.nextUrl.pathname.startsWith("/sign-in")) {
@@ -18,5 +14,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/manager", "/player"],
+  matcher: ["/dashboard"],
 };
