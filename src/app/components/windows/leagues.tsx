@@ -123,14 +123,14 @@ export default function LeaguesWindows() {
     <div className="rounded-md" style={{ width: "100%", height: "100%" }}>
       <Tooltip
         content="Shows all leagues you have created presently"
-        animation="duration-150"
+        animation="duration-1000"
       >
         <h1 className="text-3xl p-4  font-bold text-gray-900 dark:text-white">
           Leagues
         </h1>
       </Tooltip>
 
-      <div className="overflow-x-auto" style={{ width: "100%", height: "80%" }}>
+      <div className="overflow-y-hidden" style={{ width: "100%", height: "80%" }}>
         <Flowbite theme={{ theme: customTheme }}>
           <Table striped className="bg-white">
             <Table.Head>

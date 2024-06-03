@@ -17,6 +17,7 @@ const defaultState = {
 
 const initialState = {
   message: "",
+  role: 0,
 };
 
 export default function SignInCashFPL() {
