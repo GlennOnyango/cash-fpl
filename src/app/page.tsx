@@ -7,14 +7,13 @@ export default function Home() {
   return (
     <PageTemplate>
       <div
-        className="flex flex-col items-center justify-center bg-gray-800 gap-4 py-4 px-6"
-        style={{ height: "100%" }}
+        className="flex flex-col grow items-center justify-center bg-gray-800 gap-4 "
       >
         <div
           className="bg-gray-800 rounded-full w-1/4 "
           style={{
             height: "14vh",
-            backgroundImage: "url(/resources/points.jpg)",
+            backgroundImage: "url(/resources/mini.jpg)",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
