@@ -1,9 +1,6 @@
 "use client";
-import { useEffect, useMemo } from "react";
 import { createUser } from "../actions";
 import { useFormState } from "react-dom";
-import { redirect } from "next/navigation";
-import { stat } from "fs";
 
 export type SignUpState = {
   email: string;
@@ -13,24 +10,12 @@ export type SignUpState = {
   confirmPassword: string;
 };
 
-type fieldErrors = {
-  email?: string[] | undefined;
-  username?: string[] | undefined;
-  password?: string[] | undefined;
-  teamId?: string[] | undefined;
-  confirmPassword?: string[] | undefined;
-};
-
-const initialState: { errors: any } = {
-  errors: "",
+const initialState: { errors: string[] } = {
+  errors: [],
 };
 
 export default function SignUpCashFPL() {
   const [state, formAction] = useFormState(createUser, initialState);
-
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
 
   return (
     <form
@@ -152,16 +137,6 @@ export default function SignUpCashFPL() {
           />
         </div>
       </div>
-
-      {/* <div className="flex flex-row mb-3 justify-center">
-        <p
-          className={`text-base text-white  ${
-            passwordMatchText ? "block" : "hidden"
-          }`}
-        >
-          Passwords do not match
-        </p>
-      </div> */}
 
       <button
         type="submit"
