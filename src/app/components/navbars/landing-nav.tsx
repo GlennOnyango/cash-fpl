@@ -19,8 +19,8 @@ export default function PageTemplate({
       <header className="grow-0 p-0 px-4 sm:p-4  bg-gray-800">
         <Navbar fluid className="bg-gray-800 ">
           <NavbarBrand as={Link} href="/">
-            <span className="self-center whitespace-nowrap text-white text-2xl font-semibold dark:text-white">
-              Captain Cash
+            <span className="self-center whitespace-nowrap text-white text-3xl font-semibold dark:text-white">
+              Bench Boasters
             </span>
           </NavbarBrand>
           <NavbarToggle />
