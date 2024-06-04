@@ -34,7 +34,7 @@ export default function PageTemplate({
                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                   <div className="flex flex-shrink-0 items-center">
                     <h1 className="text-white font-bold text-lg">
-                      <a href="/">Cash FPL</a>
+                      <a href="/">Captain Cash</a>
                     </h1>
                   </div>
                 </div>
