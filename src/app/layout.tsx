@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import {  Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({ subsets:["latin"] ,weight: ["400", "500", "700"] });
 
 export const metadata: Metadata = {
   title: "Captain Cash",
@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" >
-      <body className={`${inter.className} flex flex-col bg-gray-800 overflow-y-auto min-h-screen`} >
+      <body className={`${roboto.className} flex flex-col bg-gray-800 overflow-y-auto min-h-screen`} >
         {children}
       </body>
     </html>
