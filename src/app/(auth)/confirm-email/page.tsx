@@ -1,6 +1,12 @@
+import PageTemplate from "@/app/components/navbars/landing-nav";
+
 export default function ConfirmEmail() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center overflow-y-hidden">
+    <PageTemplate>
+      <div
+        className="flex flex-col items-center justify-center "
+        style={{ height: "80vh" }}
+      >
         <div className="flex flex-col bg-gray-800 p-6 rounded-lg">
           <div
             className="flex flex-col space-y-3 justify-center items-center"
@@ -14,6 +20,7 @@ export default function ConfirmEmail() {
             </p>
           </div>
         </div>
-      </main>
+      </div>
+    </PageTemplate>
   );
 }

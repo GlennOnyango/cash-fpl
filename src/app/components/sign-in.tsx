@@ -62,12 +62,22 @@ export default function SignInCashFPL() {
           className="block w-full px-4 py-2 mb-4 text-base text-gray-900 placeholder-gray-900 bg-white border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900"
         />
       </div>
+
       <button
         type="submit"
         className="w-full px-4 py-2 text-base font-semibold text-white bg-gray-900 rounded-lg hover:bg-gray-900 focus:outline-none focus:ring focus:bg-gray-900 focus:bg-gray-900"
       >
         Sign In
       </button>
+
+      <div className="flex justify-center w-full max-w-sm mx-auto py-2">
+        <a
+          href="/forgot-password"
+          className="text-neutral-50  hover:text-lg text-sm"
+        >
+          Forgot password?
+        </a>
+      </div>
     </form>
   );
 }

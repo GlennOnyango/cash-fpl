@@ -144,6 +144,15 @@ export default function SignUpCashFPL() {
       >
         Sign Up
       </button>
+
+      <div className="flex justify-center w-full max-w-sm mx-auto py-2">
+        <a
+          href="/contact-us"
+          className="text-neutral-50  hover:text-lg text-sm"
+        >
+          {`Can't sign up? Get help.`}
+        </a>
+      </div>
     </form>
   );
 }

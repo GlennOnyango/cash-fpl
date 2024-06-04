@@ -10,7 +10,10 @@ export default function PageTemplate({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="flex flex-col bg-gray-300 py-0" style={{ height: "100vh" }}>
+    <main
+      className="flex flex-col bg-gray-300 py-0"
+      style={{ height: "100vh" }}
+    >
       <Disclosure as="nav" className="bg-gray-800">
         {({ open }) => (
           <>
@@ -36,17 +39,40 @@ export default function PageTemplate({
                   </div>
                 </div>
                 <div className="absolute space-x-4 inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                  <AuthButton btn_text="Sign in" link="sign-in" />
-                  <AuthButton btn_text="Sign up" link="sign-up" />
-
-                  <button
-                    type="button"
-                    className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                  <a
+                    href="/notifications"
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    <span className="absolute -inset-1.5" />
-                    <span className="sr-only">View notifications</span>
-                    <BellIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
+                    Notifications
+                  </a>
+
+                  <a
+                    href="/contact-us"
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Contact us
+                  </a>
+
+                  <a
+                    href="/faqs"
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    FAQS
+                  </a>
+
+                  <a
+                    href="/sign-in"
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Sign in
+                  </a>
+
+                  <a
+                    href="/sign-up"
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Sign up
+                  </a>
                 </div>
               </div>
             </div>
