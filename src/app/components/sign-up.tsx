@@ -23,7 +23,7 @@ export default function SignUpCashFPL() {
       autoComplete="off"
       className="w-full min-w-sm mx-auto"
     >
-      <h1 className="text-center text-4xl pb-8 text-white font-medium">
+      <h1 className="text-center text-4xl pb-8 text-black font-medium">
         Join our growing community
       </h1>
 
@@ -36,11 +36,11 @@ export default function SignUpCashFPL() {
         </p>
       )}
 
-      <div className="flex flex-column space-x-3">
+      <div className="flex flex-col sm:flex-row sm:space-x-3">
         <div className="w-full max-w-sm mx-auto ">
           <label
             htmlFor={"cash_fpl_email_id"}
-            className="block mb-2 text-base text-white"
+            className="block mb-2 text-base text-black"
           >
             {"Email"}
           </label>
@@ -59,7 +59,7 @@ export default function SignUpCashFPL() {
         <div className="w-full max-w-sm mx-auto ">
           <label
             htmlFor={"cash_fpl_username"}
-            className="block mb-2 text-base text-white"
+            className="block mb-2 text-base text-black"
           >
             {"Username"}
           </label>
@@ -79,7 +79,7 @@ export default function SignUpCashFPL() {
       <div>
         <label
           htmlFor={"cash_fpl_team_id"}
-          className="block mb-2 text-base text-white"
+          className="block mb-2 text-base text-black"
         >
           {"Team id"}
         </label>
@@ -99,11 +99,11 @@ export default function SignUpCashFPL() {
         </div> */}
       </div>
 
-      <div className="flex flex-row space-x-3">
+      <div className="flex flex-col sm:flex-row  sm:space-x-3">
         <div className="w-full max-w-sm mx-auto ">
           <label
             htmlFor={"cash_fpl_password"}
-            className="block mb-2 text-base text-white"
+            className="block mb-2 text-base text-black"
           >
             {"Password"}
           </label>
@@ -121,7 +121,7 @@ export default function SignUpCashFPL() {
         <div className="w-full max-w-sm mx-auto ">
           <label
             htmlFor={"cash_fpl_confirm_password"}
-            className="block mb-2 text-base text-white"
+            className="block mb-2 text-base text-black"
           >
             {"Confirm Password"}
           </label>
@@ -148,7 +148,7 @@ export default function SignUpCashFPL() {
       <div className="flex justify-center w-full max-w-sm mx-auto py-2">
         <a
           href="/contact-us"
-          className="text-neutral-50  hover:text-lg text-sm"
+          className="text-black  hover:text-lg text-sm"
         >
           {`Can't sign up? Get help.`}
         </a>
