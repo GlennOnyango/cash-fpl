@@ -29,11 +29,11 @@ export default function SignInCashFPL() {
         </p>
       )}
 
-      <h1 className="text-center text-white text-4xl py-3 font-medium">
+      <h1 className="text-center text-black text-4xl py-3 font-medium">
         Welcome back, login to access your account.
       </h1>
       <div className="w-full max-w-sm mx-auto ">
-        <label htmlFor={"email"} className="block mb-2 text-base text-white">
+        <label htmlFor={"email"} className="block mb-2 text-base text-black">
           {"Email"}
         </label>
 
@@ -48,7 +48,7 @@ export default function SignInCashFPL() {
         />
       </div>
       <div className="w-full max-w-sm mx-auto ">
-        <label htmlFor={"password"} className="block mb-2 text-base text-white">
+        <label htmlFor={"password"} className="block mb-2 text-base text-black">
           {"Password"}
         </label>
 
@@ -73,7 +73,7 @@ export default function SignInCashFPL() {
       <div className="flex justify-center w-full max-w-sm mx-auto py-2">
         <a
           href="/forgot-password"
-          className="text-neutral-50  hover:text-lg text-sm"
+          className="text-black hover:text-lg text-sm"
         >
           Forgot password?
         </a>
