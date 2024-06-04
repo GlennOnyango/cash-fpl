@@ -6,11 +6,9 @@ import { PlayCircleIcon } from "@heroicons/react/24/outline";
 export default function Home() {
   return (
     <PageTemplate>
-      <div
-        className="flex flex-col grow items-center justify-center bg-gray-800 gap-4 "
-      >
+      <div className="flex flex-col grow items-center justify-center bg-gray-800 gap-8 ">
         <div
-          className="bg-gray-800 rounded-full w-1/4 "
+          className="bg-gray-800 rounded-full w-2/3 sm:w-1/4"
           style={{
             height: "14vh",
             backgroundImage: "url(/resources/mini.jpg)",
@@ -19,17 +17,17 @@ export default function Home() {
           }}
         ></div>
 
-        <div className="flex flex-col p-6 rounded-lg w-3/5 gap-4">
-          <h1 className="text-white text-center text-7xl font-semibold text-wrap">
+        <div className="flex flex-col rounded-lg w-3/5 space-y-10">
+          <h1 className="text-white text-center text-3xl lg:text-7xl font-semibold text-wrap">
             Level Up Your FPL Game: Play Against the Best, Win Big
           </h1>
-          <p className="text-white text-center text-base px-8 py-4">
+          <p className="text-white text-center text-base px-0 sm:px-2">
             Join the thousands of FPL managers taking their passion to the next
             level. Challenge your friends, compete against the best, and prove
             your FPL mastery by winning big on every game week.
           </p>
 
-          <div className="flex flex-row justify-center gap-3 p-4">
+          <div className="flex flex-col justify-center gap-3 sm:flex-row">
             <Button size={"xl"} color={"light"} pill>
               Get Started
             </Button>
