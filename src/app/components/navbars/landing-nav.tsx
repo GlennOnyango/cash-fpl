@@ -1,4 +1,3 @@
-// not a server-side component, so it can be used in the client
 import customTheme from "../customTheme";
 import Link from "next/link";
 import {
