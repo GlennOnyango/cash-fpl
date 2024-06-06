@@ -1,7 +1,8 @@
 "use client";
 
-import { Flowbite, Table, Button, Tooltip } from "flowbite-react";
+import { Flowbite, Table, Tooltip } from "flowbite-react";
 import customTheme from "../customTheme";
+import { Button } from "@nextui-org/button";
 
 const Leagues = [
   {
@@ -120,7 +121,7 @@ const Leagues = [
 
 export default function LeaguesWindows() {
   return (
-    <div className="bg-white flex flex-col" >
+    <div className="bg-white flex flex-col">
       <Tooltip
         content="Shows all leagues you have created presently"
         animation="duration-1000"
@@ -130,7 +131,7 @@ export default function LeaguesWindows() {
         </h1>
       </Tooltip>
 
-      <div className="overflow-y-auto" style={{height:"60vh"}}>
+      <div className="overflow-y-auto" style={{ height: "60vh" }}>
         <Flowbite theme={{ theme: customTheme }}>
           <Table striped className="bg-white">
             <Table.Head>
@@ -181,11 +182,11 @@ export default function LeaguesWindows() {
       </div>
 
       <div className="flex flex-row items-center justify-center gap-10 p-4">
-        <Button outline gradientDuoTone="purpleToBlue">
-          view all
+        <Button color="primary" variant="bordered">
+          View all
         </Button>
-        <Button outline gradientDuoTone="purpleToBlue">
-          Create
+        <Button color="primary" variant="bordered">
+          Create League
         </Button>
       </div>
     </div>

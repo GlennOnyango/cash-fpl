@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import {  Poppins, Roboto } from "next/font/google";
+import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
 
-const roboto = Roboto({ subsets:["latin"] ,weight: ["400", "500", "700"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export const metadata: Metadata = {
   title: "Bench Boasters",
@@ -15,9 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" >
-      <body className={`${roboto.className} flex flex-col bg-gray-800 overflow-y-auto min-h-screen`} >
-        {children}
+    <html lang="en">
+      <body
+        className={`${roboto.className} flex flex-col bg-gray-800 overflow-y-auto min-h-screen`}
+      >
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
