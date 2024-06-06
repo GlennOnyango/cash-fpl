@@ -59,7 +59,7 @@ export default function ManagerPageNavbar({
           </NavbarCollapse>
         </Navbar>
       </header>
-      <main className="grow flex flex-col bg-gray-800">{children}</main>
+      <main className="grow flex flex-col bg-gray-800 ">{children}</main>
     </>
 
   );

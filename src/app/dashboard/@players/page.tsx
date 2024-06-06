@@ -1,7 +1,9 @@
+import AppComplexLeague from "@/app/components/windows/leagueWindow/App";
+
 export default function Players() {
   return (
-    <div className="col-span-7 row-span-6 bg-white">
-      <h1 className="text-black">Players 1</h1>
+    <div className="col-span-6 row-span-6 bg-white p-4">
+      <AppComplexLeague/>
     </div>
   );
 }
