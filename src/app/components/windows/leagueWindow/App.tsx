@@ -149,9 +149,7 @@ export default function AppComplexLeague() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem>View</DropdownItem>
-                <DropdownItem>Edit</DropdownItem>
-                <DropdownItem>Delete</DropdownItem>
+                <DropdownItem>Manage</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -185,7 +183,7 @@ export default function AppComplexLeague() {
           <Input
             isClearable
             classNames={{
-              base: "w-full sm:max-w-[44%]",
+              base: "w-full sm:max-w-[35%]",
               inputWrapper: "border-1",
               input: [
                 "bg-transparent",
@@ -210,6 +208,7 @@ export default function AppComplexLeague() {
                   endContent={<ChevronDownIcon className="text-small" />}
                   size="sm"
                   variant="flat"
+                  className="bg-foreground text-background"
                 >
                   Status
                 </Button>
@@ -235,6 +234,7 @@ export default function AppComplexLeague() {
                   endContent={<ChevronDownIcon className="text-small" />}
                   size="sm"
                   variant="flat"
+                  className="bg-foreground text-background"
                 >
                   Columns
                 </Button>

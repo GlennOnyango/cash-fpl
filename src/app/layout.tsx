@@ -20,7 +20,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <div
-            className={`${roboto.className} flex flex-col bg-gray-800 overflow-y-auto min-h-screen`}
+            className={`${roboto.className} flex flex-col bg-gray-800 overflow-y-hidden h-screen`}
           >
             {children}
           </div>
