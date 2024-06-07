@@ -1,5 +1,5 @@
 "use client";
-import { createUser } from "../actions";
+import { createUser } from "../app/actions";
 import { useFormState } from "react-dom";
 
 export type SignUpState = {

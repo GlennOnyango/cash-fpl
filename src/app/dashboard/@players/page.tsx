@@ -1,4 +1,4 @@
-import AppComplexLeague from "@/app/components/windows/leagueWindow/App";
+import AppComplexLeague from "@/components/windows/leagueWindow/App";
 
 export default function Players() {
   return (

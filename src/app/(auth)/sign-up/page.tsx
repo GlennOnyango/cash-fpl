@@ -1,5 +1,5 @@
-import PageTemplate from "@/app/components/navbars/landing-nav";
-import SignUpCashFPL from "@/app/components/sign-up";
+import PageTemplate from "@/components/navbars/landing-nav";
+import SignUpCashFPL from "@/components/sign-up";
 
 export default function SignUp() {
   return (

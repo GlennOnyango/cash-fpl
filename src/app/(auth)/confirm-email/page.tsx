@@ -1,4 +1,4 @@
-import PageTemplate from "@/app/components/navbars/landing-nav";
+import PageTemplate from "@/components/navbars/landing-nav";
 
 export default function ConfirmEmail() {
   return (

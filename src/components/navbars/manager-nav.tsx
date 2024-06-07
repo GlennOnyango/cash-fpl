@@ -10,7 +10,7 @@ export default function ManagerPageNavbar({
 }>) {
   return (
     <>
-      <header className="grow-0 p-0 px-4 sm:p-4 bg-gray-800">
+      <header className="grow-0 p-0 px-4 sm:p-2 bg-gray-800">
         <Navbar fluid className="bg-gray-800 ">
           <NavbarBrand as={Link} href="/">
             <span className="self-center whitespace-nowrap text-white text-3xl font-semibold dark:text-white">
