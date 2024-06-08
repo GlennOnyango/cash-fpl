@@ -1,37 +1,49 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
 import Create from "@/components/createLeague/league";
 import ManagerPageNavbar from "@/components/navbars/manager-nav";
+import Rules from "@/components/createLeague/rules";
+import LeagueTypes from "@/components/createLeague/leagueType";
 
 export default function Page() {
-  const disabledKeys = ["rules", "types", "amounts"];
+  const [disabledKeys, setDisabledKeys] = useState([
+    "rules",
+    "types",
+    "amounts",
+  ]);
+
+  const [selected, setSelected] = React.useState("create");
+
   return (
     <ManagerPageNavbar>
       <div className="grow flex w-full flex-col justify-center items-center">
-        <Tabs disabledKeys={disabledKeys} aria-label="Options">
+        <Tabs
+          disabledKeys={disabledKeys}
+          aria-label="Options"
+          selectedKey={selected}
+        >
           <Tab key="create" title="Create Leagues">
             <Card>
               <CardBody>
-                <Create />
+                <Create disKeys={setDisabledKeys} displayKey={setSelected} />
               </CardBody>
             </Card>
           </Tab>
           <Tab key="rules" title="Select League Rules">
             <Card>
               <CardBody>
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                fugiat nulla pariatur.
+                <Rules disKeys={setDisabledKeys} displayKey={setSelected} />
               </CardBody>
             </Card>
           </Tab>
           <Tab key="types" title="Select League Type">
             <Card>
               <CardBody>
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim id est laborum.
+                <LeagueTypes
+                  disKeys={setDisabledKeys}
+                  displayKey={setSelected}
+                />
               </CardBody>
             </Card>
           </Tab>

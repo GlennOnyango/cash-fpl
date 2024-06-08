@@ -18,7 +18,7 @@ type Props = {
   displayKey: (value: React.SetStateAction<string>) => void;
 };
 
-export default function Create({ disKeys, displayKey }: Props) {
+export default function Amount({ disKeys, displayKey }: Props) {
   const [state, formAction] = useFormState(createLeague, initialState);
 
   useEffect(() => {
