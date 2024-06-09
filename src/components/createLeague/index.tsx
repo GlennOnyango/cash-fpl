@@ -191,6 +191,10 @@ export default function CreateLeagueComponent() {
         ))}
       </div>
 
+      <h3 className="col-span-3 text-lg font-semibold text-gray-900 dark:text-white">
+        Fines
+      </h3>
+
       <div className="col-span-3 grid grid-cols-3 gap-2 py-2">
         {rules.includes("fine") && (
           <div className="flex flex-col gap-2">
