@@ -4,7 +4,6 @@ import { PrismaClient } from "@prisma/client";
 import { cookies } from "next/headers";
 
 import { redirect } from "next/navigation";
-import { avatar } from "@nextui-org/react";
 
 const prisma = new PrismaClient();
 
