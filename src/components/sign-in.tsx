@@ -1,6 +1,11 @@
 "use client";
+import { Input } from "@nextui-org/react";
 import { signInUser } from "../app/actions";
 import { useFormState } from "react-dom";
+import { useState } from "react";
+
+import { EyeFilledIcon } from "../components/icons/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../components/icons/EyeSlashFilledIcon";
 
 export type SignInState = {
   email: string;
@@ -13,7 +18,9 @@ const initialState = {
 
 export default function SignInCashFPL() {
   const [state, formAction] = useFormState(signInUser, initialState);
+  const [isVisible, setIsVisible] = useState(false);
 
+  const toggleVisibility = () => setIsVisible(!isVisible);
   return (
     <form
       action={formAction}
@@ -52,14 +59,38 @@ export default function SignInCashFPL() {
           {"Password"}
         </label>
 
-        <input
-          placeholder="Password"
-          type="password"
+        <Input
           id="password"
           name="password"
           required={true}
-          style={{ height: "3rem" }}
-          className="block w-full px-4 py-2 mb-4 text-base text-gray-900 placeholder-gray-900 bg-white border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900"
+          variant="bordered"
+          placeholder="Enter your password"
+          endContent={
+            <button
+              className="focus:outline-none"
+              type="button"
+              onClick={toggleVisibility}
+            >
+              {isVisible ? (
+                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+              ) : (
+                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+              )}
+            </button>
+          }
+          type={isVisible ? "text" : "password"}
+          classNames={{
+            base: "w-full  py-2 mb-4 text-base text-gray-900",
+            inputWrapper:
+              "h-12 border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900",
+            input: [
+              "bg-transparent",
+              "border-none",
+              "focus:ring-0",
+              "text-black/90 dark:text-white/90",
+              "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+            ],
+          }}
         />
       </div>
 
@@ -71,10 +102,7 @@ export default function SignInCashFPL() {
       </button>
 
       <div className="flex justify-center w-full max-w-sm mx-auto py-2">
-        <a
-          href="/forgot-password"
-          className="text-black hover:text-lg text-sm"
-        >
+        <a href="/forgot-password" className="text-black hover:text-lg text-sm">
           Forgot password?
         </a>
       </div>

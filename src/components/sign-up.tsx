@@ -1,6 +1,8 @@
 "use client";
 import { createUser } from "../app/actions";
 import { useFormState } from "react-dom";
+import Password from "./inputs/password";
+import { useMemo, useState } from "react";
 
 export type SignUpState = {
   email: string;
@@ -16,6 +18,17 @@ const initialState: { errors: string[] } = {
 
 export default function SignUpCashFPL() {
   const [state, formAction] = useFormState(createUser, initialState);
+  const [signUpState, setSignUpState] = useState<SignUpState>({
+    email: "",
+    username: "",
+    teamId: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const disablSubmit = useMemo(() => {
+    return signUpState.password !== signUpState.confirmPassword;
+  }, [signUpState.password, signUpState.confirmPassword]);
 
   return (
     <form
@@ -93,10 +106,6 @@ export default function SignUpCashFPL() {
           style={{ height: "3rem" }}
           className="block w-full px-4 py-2 mb-4 text-base text-gray-900 placeholder-gray-900 bg-white border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900"
         />
-
-        {/* <div className="w-full max-w-sm mx-auto">
-          <ListUser stateChanges={setSignUpState} />
-        </div> */}
       </div>
 
       <div className="flex flex-col sm:flex-row  sm:space-x-3">
@@ -108,14 +117,12 @@ export default function SignUpCashFPL() {
             {"Password"}
           </label>
 
-          <input
-            placeholder="Password"
-            type="password"
+          <Password
             id="cash_fpl_password"
             name="password"
             required={true}
-            style={{ height: "3rem" }}
-            className="block w-full px-4 py-2 mb-4 text-base text-gray-900 placeholder-gray-900 bg-white border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900"
+            setSignUpState={setSignUpState}
+            placeholder="Enter your password"
           />
         </div>
         <div className="w-full max-w-sm mx-auto ">
@@ -126,30 +133,32 @@ export default function SignUpCashFPL() {
             {"Confirm Password"}
           </label>
 
-          <input
-            placeholder="Confirm Password"
-            type="password"
+          <Password
             id="cash_fpl_confirm_password"
             name="confirmPassword"
             required={true}
-            style={{ height: "3rem" }}
-            className="block w-full px-4 py-2 mb-4 text-base text-gray-900 placeholder-gray-900 bg-white border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900"
+            setSignUpState={setSignUpState}
+            placeholder="Confirm your password"
           />
         </div>
       </div>
 
+      {disablSubmit && (
+        <p className="text-center py-2">
+          Password should match confirm password.
+        </p>
+      )}
+
       <button
         type="submit"
+        disabled={disablSubmit}
         className="w-full px-4 py-2 text-base font-semibold text-white bg-gray-900 rounded-lg hover:bg-gray-900 focus:outline-none focus:ring focus:bg-gray-900 focus:bg-gray-900"
       >
         Sign Up
       </button>
 
       <div className="flex justify-center w-full max-w-sm mx-auto py-2">
-        <a
-          href="/contact-us"
-          className="text-black  hover:text-lg text-sm"
-        >
+        <a href="/contact-us" className="text-black  hover:text-lg text-sm">
           {`Can't sign up? Get help.`}
         </a>
       </div>
