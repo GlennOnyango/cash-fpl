@@ -19,6 +19,7 @@ import {
   Selection,
   ChipProps,
   SortDescriptor,
+  useDisclosure,
 } from "@nextui-org/react";
 import { PlusIcon } from "./PlusIcon";
 import { VerticalDotsIcon } from "./VerticalDotsIcon";
@@ -26,8 +27,8 @@ import { ChevronDownIcon } from "./ChevronDownIcon";
 import { SearchIcon } from "./SearchIcon";
 import { columns, users, statusOptions } from "./data";
 import { capitalize } from "./utils";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import CreateLeagueComponent from "@/components/createLeague";
+import CreateLeagueModal from "@/components/modals/create-league";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -40,7 +41,9 @@ const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
 type User = (typeof users)[0];
 
 export default function AppComplexLeague() {
-  const router = useRouter();
+  // Modal create league
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -259,8 +262,7 @@ export default function AppComplexLeague() {
             </Dropdown>
             <Button
               className="bg-foreground text-background"
-              as={Link}
-              href="/create-league"
+              onPress={onOpen}
               endContent={<PlusIcon />}
               size="sm"
             >
@@ -324,39 +326,42 @@ export default function AppComplexLeague() {
   );
 
   return (
-    <Table
-      isCompact
-      removeWrapper
-      aria-label="Example table with custom cells, pagination and sorting"
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      classNames={classNames}
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent={"No users found"} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <>
+    <CreateLeagueModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} />
+      <Table
+        isCompact
+        removeWrapper
+        aria-label="Example table with custom cells, pagination and sorting"
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        classNames={classNames}
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}
+      >
+        <TableHeader columns={headerColumns}>
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}
+              allowsSorting={column.sortable}
+            >
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody emptyContent={"No users found"} items={sortedItems}>
+          {(item) => (
+            <TableRow key={item.id}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </>
   );
 }

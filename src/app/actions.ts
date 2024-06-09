@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import { cookies } from "next/headers";
 
 import { redirect } from "next/navigation";
+import { avatar } from "@nextui-org/react";
 
 const prisma = new PrismaClient();
 
@@ -89,24 +90,22 @@ const League = z.object({
     invalid_type_error: "Invalid access",
     message: "Access should be a string",
   }),
-});
-
-const Rule = z.object({
-  rules: z.array(
-    z.string({
-      required_error: "Rules are required",
-      invalid_type_error: "Invalid rules",
-      message: "Rules should be a string",
-    })
-  ),
-});
-
-const Types = z.object({
+  avatar: z.string({
+    invalid_type_error: "Invalid avatar",
+    message: "Avatar should be a string",
+  }),
   types: z.array(
     z.string({
       required_error: "Types are required",
       invalid_type_error: "Invalid types",
       message: "Types should be a string",
+    })
+  ),
+  rules: z.array(
+    z.string({
+      required_error: "Rules are required",
+      invalid_type_error: "Invalid rules",
+      message: "Rules should be a string",
     })
   ),
 });
@@ -231,6 +230,8 @@ export async function createLeague(prevState: any, formData: FormData) {
   const league = await League.safeParseAsync({
     name: formData.get("leageName") as string,
     access: formData.get("access") as string,
+    rules: formData.getAll("rules"),
+    types: formData.getAll("types"),
   });
 
   if (!league.success) {
@@ -260,86 +261,6 @@ export async function createLeague(prevState: any, formData: FormData) {
     console.log(error);
     return {
       errors: ["League could not be created"],
-    };
-  }
-}
-
-export async function getLeagueTyps(id: string) {
-  //get league types of a certain league
-}
-
-// Rules
-export async function setRules(prevState: any, formData: FormData) {
-  const rules = await Rule.safeParseAsync({
-    rules: formData.getAll("rules"),
-  });
-
-  if (!rules.success) {
-    const errorArray: string[] = [];
-
-    const errorObj: any = rules.error.flatten().fieldErrors;
-    const formErrors: any = rules.error.flatten().formErrors;
-
-    for (const key in errorObj) {
-      errorArray.push(errorObj[key]);
-    }
-
-    if (formErrors) {
-      errorArray.push(formErrors);
-    }
-
-    return {
-      errors: errorArray,
-    };
-  }
-
-  try {
-    console.log(rules);
-    return {
-      data: "Rules set successfully",
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      errors: ["Rules could not be set"],
-    };
-  }
-}
-
-// League Types
-export async function setType(prevState: any, formData: FormData) {
-  const types = await Types.safeParseAsync({
-    types: formData.getAll("types"),
-  });
-
-  if (!types.success) {
-    const errorArray: string[] = [];
-
-    const errorObj: any = types.error.flatten().fieldErrors;
-    const formErrors: any = types.error.flatten().formErrors;
-
-    for (const key in errorObj) {
-      errorArray.push(errorObj[key]);
-    }
-
-    if (formErrors) {
-      errorArray.push(formErrors);
-    }
-
-    return {
-      errors: errorArray,
-    };
-  }
-
-  try {
-    console.log(types);
-    return {
-      data: "Types set successfully",
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      errors: ["Types could not be set"],
     };
   }
 }
