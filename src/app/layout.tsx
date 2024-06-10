@@ -5,6 +5,8 @@ import { Providers } from "./providers";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
+const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
+
 export const metadata: Metadata = {
   title: "Bench Boasters",
   description: "Bet on yourself to win big in fantasy football.",
@@ -20,7 +22,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <div
-            className={`${roboto.className} flex flex-col bg-gray-800 overflow-y-hidden h-screen`}
+            className={`${poppins.className} flex flex-col bg-gray-800 overflow-y-hidden h-screen`}
           >
             {children}
           </div>

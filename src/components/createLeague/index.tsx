@@ -79,7 +79,7 @@ export default function CreateLeagueComponent() {
                   <p className="mb-2 text-sm text-white dark:text-gray-400">
                     <span className="font-semibold">League Logo</span>
                   </p>
-                  <p className="text-xs text-white dark:text-gray-400">
+                  <p className="text-xs text-center text-white dark:text-gray-400">
                     PNG or JPG (MAX. 800x400px)
                   </p>
                 </div>
@@ -140,12 +140,12 @@ export default function CreateLeagueComponent() {
         </div>
       </div>
 
-      <div className="col-span-3 flex flex-col gap-4 mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div className="col-span-3 flex flex-col  justify-center items-center mb-4">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-4">
           Select competition type
         </h3>
 
-        <p className="col-span-3 text-sm text-gray-500 dark:text-gray-300">
+        <p className="col-span-3 text-sm text-gray-500 dark:text-gray-300 pt-0 pb-4">
           We have weekly, monthly and seasonal competitions. Weekly competitions
           run every <b>fpl game week</b>, monthly competitions run every{" "}
           <b>fpl game month</b> and seasonal competitions run every season. You
@@ -166,12 +166,12 @@ export default function CreateLeagueComponent() {
         </CheckboxGroup>
       </div>
 
-      <div className="col-span-3 flex flex-col gap-4 mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div className="col-span-3 flex flex-col justify-center items-center mb-4">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-4">
           Select League Rules
         </h3>
 
-        <p className="col-span-3 text-sm text-gray-500 dark:text-gray-300">
+        <p className="col-span-3 text-sm text-gray-500 dark:text-gray-300 pb-4">
           You can set rules for the league. You can set rules for extra
           transactions, late payment fines or no rules. If you select no rules,
           the league will have no rules. Do you want to suggest a rule?{" "}
@@ -199,13 +199,22 @@ export default function CreateLeagueComponent() {
         </CheckboxGroup>
       </div>
 
-      {selected.includes("none") && (
-        <p>Deselect No rules to pick other options.</p>
+      {rules.includes("none") && (
+        <p className="col-span-3 text-center text-gray-500 dark:text-gray-300">
+          Deselect No rules to pick other options.
+        </p>
       )}
 
-      <h3 className="col-span-3 text-lg font-semibold text-gray-900 dark:text-white">
-        Set Amounts
-      </h3>
+      <div className="col-span-3 flex flex-col items-center justify-center">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Set Amounts
+        </h3>
+        <p className="text-sm text-gray-500 dark:text-gray-300 pb-4">
+          Set amounts for the selected competition types and rules. You can set
+          amounts for weekly, monthly and seasonal competitions. You can also
+          set amounts for extra transactions and late payment fines.
+        </p>
+      </div>
       <div className="col-span-3 grid grid-cols-3 gap-2">
         {selected.map((type) => (
           <div key={type} className="flex flex-col gap-2">
@@ -234,10 +243,6 @@ export default function CreateLeagueComponent() {
           </div>
         ))}
       </div>
-
-      <h3 className="col-span-3 text-lg font-semibold text-gray-900 dark:text-white">
-        Fines
-      </h3>
 
       <div className="col-span-3 grid grid-cols-3 gap-2 py-2">
         {rules.includes("fine") && (
