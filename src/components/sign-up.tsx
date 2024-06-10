@@ -63,6 +63,10 @@ export default function SignUpCashFPL() {
             type="email"
             id="cash_fpl_email_id"
             name="email"
+            value={signUpState.email}
+            onChange={(e) =>
+              setSignUpState({ ...signUpState, email: e.target.value })
+            }
             required={true}
             style={{ height: "3rem" }}
             className="block w-full px-4 py-2 mb-4 text-base text-gray-900 placeholder-gray-900 bg-white border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900"
@@ -82,6 +86,10 @@ export default function SignUpCashFPL() {
             type="text"
             id="cash_fpl_username"
             name="username"
+            value={signUpState.username}
+            onChange={(e) =>
+              setSignUpState({ ...signUpState, username: e.target.value })
+            }
             required={true}
             style={{ height: "3rem" }}
             className="block w-full px-4 py-2 mb-4 text-base text-gray-900 placeholder-gray-900 bg-white border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900"
@@ -102,6 +110,10 @@ export default function SignUpCashFPL() {
           type="text"
           id="cash_fpl_team_id"
           name="teamId"
+          value={signUpState.teamId}
+          onChange={(e) =>
+            setSignUpState({ ...signUpState, teamId: e.target.value })
+          }
           required={true}
           style={{ height: "3rem" }}
           className="block w-full px-4 py-2 mb-4 text-base text-gray-900 placeholder-gray-900 bg-white border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900"
@@ -120,6 +132,7 @@ export default function SignUpCashFPL() {
           <Password
             id="cash_fpl_password"
             name="password"
+            value={signUpState.password}
             required={true}
             setSignUpState={setSignUpState}
             placeholder="Enter your password"
@@ -136,6 +149,7 @@ export default function SignUpCashFPL() {
           <Password
             id="cash_fpl_confirm_password"
             name="confirmPassword"
+            value={signUpState.confirmPassword}
             required={true}
             setSignUpState={setSignUpState}
             placeholder="Confirm your password"

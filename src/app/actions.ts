@@ -156,10 +156,12 @@ export async function createUser(prevState: any, formData: FormData) {
       }
     );
 
-    console.log(await newUser.json());
-
     if (!newUser.ok) {
-      throw new Error("Failed to submit the data. Please try again.");
+      let err = await newUser.json();
+      console.log(err);
+      throw new Error(
+        err.message || "Failed to submit the data. Please try again."
+      );
     }
 
     redirect("/auth/confirm-email");

@@ -8,33 +8,42 @@ import { SignUpState } from "../sign-up";
 type Props = {
   id: string;
   name: string;
+  value: string;
   required: boolean;
   placeholder: string;
   setSignUpState?: Dispatch<SetStateAction<SignUpState>>;
 };
 
-export default function Password({ id, name, required, placeholder,setSignUpState }: Props) {
+export default function Password({
+  id,
+  name,
+  value,
+  required,
+  placeholder,
+  setSignUpState,
+}: Props) {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const sendDetails = (password:string) => {
-    if(setSignUpState){
+  const sendDetails = (password: string) => {
+    if (setSignUpState) {
       setSignUpState((prevState) => ({
         ...prevState,
         [name]: password,
       }));
     }
-  }
+  };
 
   return (
     <Input
       id={id}
       name={name}
+      value={value}
       required={required}
       variant="bordered"
       placeholder={placeholder}
-      onChange={(e) =>sendDetails(e.target.value)}
+      onChange={(e) => sendDetails(e.target.value)}
       endContent={
         <button
           className="focus:outline-none"
