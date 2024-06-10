@@ -163,14 +163,13 @@ export async function createUser(prevState: any, formData: FormData) {
         err.message || "Failed to submit the data. Please try again."
       );
     }
-
-    redirect("/auth/confirm-email");
   } catch (error: any) {
     let err = error.message || "User could not be created";
     return {
       errors: [err],
     };
   }
+  redirect("/confirm-email");
 }
 
 export async function signInUser(prevState: any, formData: FormData) {
