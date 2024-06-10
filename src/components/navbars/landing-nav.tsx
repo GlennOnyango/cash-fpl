@@ -25,13 +25,13 @@ export default function PageTemplate({
           <NavbarToggle />
           <NavbarCollapse>
             <NavbarLink
-              href="#"
+              href="/"
               className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
             >
               Home
             </NavbarLink>
             <NavbarLink
-              href="#"
+              href="/notifications"
               className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
             >
               Notifications
@@ -39,7 +39,7 @@ export default function PageTemplate({
             <NavbarLink
               as={Link}
               className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-              href="#"
+              href="/about-us"
             >
               About
             </NavbarLink>
@@ -50,7 +50,7 @@ export default function PageTemplate({
               Contact
             </NavbarLink>
             <NavbarLink
-              href="#"
+              href="/faqs"
               className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
             >
               FAQS
