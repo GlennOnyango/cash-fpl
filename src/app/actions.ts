@@ -1,11 +1,10 @@
 "use server";
 import { z } from "zod";
-import { PrismaClient } from "@prisma/client";
 import { cookies } from "next/headers";
 
 import { redirect } from "next/navigation";
 
-const prisma = new PrismaClient();
+const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
 
 const User = z
   .object({
@@ -89,10 +88,22 @@ const League = z.object({
     invalid_type_error: "Invalid access",
     message: "Access should be a string",
   }),
-  avatar: z.string({
-    invalid_type_error: "Invalid avatar",
-    message: "Avatar should be a string",
+  currency: z.string({
+    required_error: "Currency is required",
+    invalid_type_error: "Invalid currency",
+    message: "Currency should be a string",
   }),
+  avatar: z
+    .instanceof(File)
+    .optional()
+    .refine((avatar: File | undefined) => {
+      console.log(avatar?.type);
+      return avatar?.type === "image/png" || avatar?.type === "image/jpeg";
+    }, "File must be a PNG or JPG")
+    .refine((avatar: File | undefined) => {
+      console.log(avatar?.size);
+      return !avatar || avatar?.size < MAX_UPLOAD_SIZE;
+    }, "File size should be less than 3MB"),
   types: z.array(
     z.string({
       required_error: "Types are required",
@@ -107,6 +118,38 @@ const League = z.object({
       message: "Rules should be a string",
     })
   ),
+  weeklyAmount: z
+    .number({
+      invalid_type_error: "Value should be a number",
+    })
+    .optional()
+    .refine((amount) => !amount || amount > 2, {
+      message: "Weekly amount should be above 2 dollars",
+    }),
+  monthlyAmount: z
+    .number({
+      invalid_type_error: "Value should be a number",
+    })
+    .optional()
+    .refine((amount) => !amount || amount > 2, {
+      message: "Monthly amount should be above 2 dollars",
+    }),
+  seasonalAmount: z
+    .number({
+      invalid_type_error: "Value should be a number",
+    })
+    .optional()
+    .refine((amount) => !amount || amount > 4, {
+      message: "Seasonal amount should be above 4 dollars",
+    }),
+  fineAmount: z
+    .number({
+      invalid_type_error: "Value should be a number",
+    })
+    .optional()
+    .refine((amount) => !amount || amount > 1, {
+      message: "Value should be above 1 dollars",
+    }),
 });
 
 export async function createUser(prevState: any, formData: FormData) {
@@ -232,6 +275,12 @@ export async function createLeague(prevState: any, formData: FormData) {
     access: formData.get("access") as string,
     rules: formData.getAll("rules"),
     types: formData.getAll("types"),
+    avatar: formData.get("avatar") as File,
+    currency: formData.get("currency") as string,
+    weeklyAmount: Number(formData.get("weeklyAmount")),
+    monthlyAmount: Number(formData.get("monthlyAmount")),
+    seasonalAmount: Number(formData.get("seasonalAmount")),
+    fineAmount: Number(formData.get("fineAmount")),
   });
 
   if (!league.success) {

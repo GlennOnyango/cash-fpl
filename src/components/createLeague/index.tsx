@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   CheckboxGroup,
@@ -8,11 +8,14 @@ import {
   SelectItem,
   Checkbox,
   Avatar,
+  RadioGroup,
+  Radio,
 } from "@nextui-org/react";
 import { useFormState } from "react-dom";
 import { createLeague } from "@/app/actions";
 import Link from "next/link";
-import { CameraIcon } from "../icons/CameraIcon";
+
+import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
 
 export const access = [
   { key: "public", label: "Public" },
@@ -30,6 +33,7 @@ export default function CreateLeagueComponent() {
   const [ur, setUr] = React.useState<string>(
     "https://images.unsplash.com/broken"
   );
+  const [currency, setCurrency] = React.useState("USD");
 
   const handleInputChange = (e: any) => {
     const { name } = e.target;
@@ -38,10 +42,13 @@ export default function CreateLeagueComponent() {
     }
   };
 
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
+
   return (
     <form
       action={formAction}
-      encType="multipart/form-data"
       className="w-full grid grid-cols-3 gap-2 p-2 overflow-auto"
       style={{
         maxHeight: "calc(100vh - 200px)",
@@ -70,9 +77,9 @@ export default function CreateLeagueComponent() {
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                     />
                   </svg>
@@ -138,6 +145,21 @@ export default function CreateLeagueComponent() {
             ))}
           </Select>
         </div>
+      </div>
+
+      <div className="col-span-3 flex flex-col  justify-center items-center mb-4">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white my-4">
+          Select currency
+        </h3>
+        <RadioGroup
+          name="currency"
+          value={currency}
+          onValueChange={setCurrency}
+          orientation="horizontal"
+        >
+          <Radio value="USD">USD</Radio>
+          <Radio value="KES">KES</Radio>
+        </RadioGroup>
       </div>
 
       <div className="col-span-3 flex flex-col  justify-center items-center mb-4">
@@ -227,6 +249,11 @@ export default function CreateLeagueComponent() {
               variant="bordered"
               name={`${type}Amount`}
               required
+              endContent={
+                <span className="text-gray-900 dark:text-white">
+                  {currency}
+                </span>
+              }
               placeholder={`Enter ${type} amount`}
               classNames={{
                 base: "w-full ",
@@ -257,6 +284,11 @@ export default function CreateLeagueComponent() {
               name="fineAmount"
               required
               placeholder="Enter fine amount"
+              endContent={
+                <span className="text-gray-900 dark:text-white">
+                  {currency}
+                </span>
+              }
               classNames={{
                 base: "w-full ",
                 inputWrapper: "border-1 border-gray-800",
