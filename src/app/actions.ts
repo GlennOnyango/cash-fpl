@@ -6,6 +6,18 @@ import { redirect } from "next/navigation";
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
 
+const limits = [
+  { currency: "USD", minWeekly: 5, minMonthly: 10, minSeasonal: 10 },
+  { currency: "KES", minWeekly: 100, minMonthly: 100, minSeasonal: 100 },
+];
+
+let min = {
+  currency: "KES",
+  minWeekly: 100,
+  minMonthly: 100,
+  minSeasonal: 100,
+};
+
 const User = z
   .object({
     email: z.string({
@@ -77,80 +89,144 @@ const signUser = z.object({
   }),
 });
 
-const League = z.object({
-  name: z.string({
-    required_error: "Name is required",
-    invalid_type_error: "Invalid name",
-    message: "Name should be a string",
-  }),
-  access: z.string({
-    required_error: "Access is required",
-    invalid_type_error: "Invalid access",
-    message: "Access should be a string",
-  }),
-  currency: z.string({
-    required_error: "Currency is required",
-    invalid_type_error: "Invalid currency",
-    message: "Currency should be a string",
-  }),
-  avatar: z
-    .instanceof(File)
-    .optional()
-    .refine((avatar: File | undefined) => {
-      console.log(avatar?.type);
-      return avatar?.type === "image/png" || avatar?.type === "image/jpeg";
-    }, "File must be a PNG or JPG")
-    .refine((avatar: File | undefined) => {
-      console.log(avatar?.size);
-      return !avatar || avatar?.size < MAX_UPLOAD_SIZE;
-    }, "File size should be less than 3MB"),
-  types: z.array(
-    z.string({
-      required_error: "Types are required",
-      invalid_type_error: "Invalid types",
-      message: "Types should be a string",
-    })
-  ),
-  rules: z.array(
-    z.string({
-      required_error: "Rules are required",
-      invalid_type_error: "Invalid rules",
-      message: "Rules should be a string",
-    })
-  ),
-  weeklyAmount: z
-    .number({
-      invalid_type_error: "Value should be a number",
-    })
-    .optional()
-    .refine((amount) => !amount || amount > 2, {
-      message: "Weekly amount should be above 2 dollars",
+const League = z
+  .object({
+    name: z.string({
+      required_error: "Name is required",
+      invalid_type_error: "Invalid name",
+      message: "Name should be a string",
     }),
-  monthlyAmount: z
-    .number({
-      invalid_type_error: "Value should be a number",
-    })
-    .optional()
-    .refine((amount) => !amount || amount > 2, {
-      message: "Monthly amount should be above 2 dollars",
+    access: z.string({
+      required_error: "Access is required",
+      invalid_type_error: "Invalid access",
+      message: "Access should be a string",
     }),
-  seasonalAmount: z
-    .number({
-      invalid_type_error: "Value should be a number",
-    })
-    .optional()
-    .refine((amount) => !amount || amount > 4, {
-      message: "Seasonal amount should be above 4 dollars",
+
+    currency: z.string({
+      required_error: "Currency is required",
+      invalid_type_error: "Invalid currency",
+      message: "Currency should be a string",
     }),
-  fineAmount: z
-    .number({
-      invalid_type_error: "Value should be a number",
+    avatar: z.optional(
+      z
+        .instanceof(File)
+
+        .refine((avatar: File | undefined) => {
+          console.log(avatar?.type);
+          return avatar?.type === "image/png" || avatar?.type === "image/jpeg";
+        }, "File must be a PNG or JPG")
+        .refine((avatar: File | undefined) => {
+          console.log(avatar?.size);
+          return !avatar || avatar?.size < MAX_UPLOAD_SIZE;
+        }, "File size should be less than 3MB")
+    ),
+    types: z.array(
+      z.string({
+        required_error: "Types are required",
+        invalid_type_error: "Invalid types",
+        message: "Types should be a string",
+      })
+    ),
+    rules: z.array(
+      z.string({
+        required_error: "Rules are required",
+        invalid_type_error: "Invalid rules",
+        message: "Rules should be a string",
+      })
+    ),
+    weeklyAmount: z.optional(
+      z.number({
+        invalid_type_error: "Weekly amount should be a number",
+      })
+    ),
+    monthlyAmount: z.optional(
+      z.number({
+        invalid_type_error: "Monthly amount should be a number",
+      })
+    ),
+    seasonalAmount: z.optional(
+      z.number({
+        invalid_type_error: "Seasonal amount should be a number",
+      })
+    ),
+    fineAmount: z
+      .number({
+        invalid_type_error: "Fine should be a number",
+      })
+      .optional()
+      .refine((amount) => !amount || amount >= 1, {
+        message: "Fine should be above 1 dollars",
+      }),
+  })
+  .refine(
+    (data) => {
+      if (data.weeklyAmount) {
+        let limiting_currency = limits.filter((limit) => {
+          if (limit.currency === data.currency) {
+            return limit;
+          }
+        })[0];
+
+        if (
+          !data.weeklyAmount ||
+          data.weeklyAmount < limiting_currency.minWeekly
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+    (data) => ({
+      message: `Weekly amount should be above ${min.minWeekly} ${data.currency}`,
     })
-    .optional()
-    .refine((amount) => !amount || amount > 1, {
-      message: "Value should be above 1 dollars",
-    }),
-});
+  )
+  .refine(
+    (data) => {
+      if (data.monthlyAmount) {
+        let limiting_currency = limits.filter((limit) => {
+          if (limit.currency === data.currency) {
+            return limit;
+          }
+        })[0];
+
+        if (
+          !data.monthlyAmount ||
+          data.monthlyAmount < limiting_currency.minMonthly
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+    (data) => ({
+      message: `Monthly amount should be above ${min.minMonthly} ${data.currency}`,
+    })
+  )
+  .refine(
+    (data) => {
+      if (data.seasonalAmount) {
+        let limiting_currency = limits.filter((limit) => {
+          if (limit.currency === data.currency) {
+            return limit;
+          }
+        })[0];
+
+        if (
+          !data.seasonalAmount ||
+          data.seasonalAmount < limiting_currency.minSeasonal
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+    (data) => ({
+      message: `Seasonal amount should be above ${min.minSeasonal} ${data.currency}`,
+    })
+  );
 
 export async function createUser(prevState: any, formData: FormData) {
   const user = await User.safeParseAsync({
@@ -270,6 +346,20 @@ export async function signOut() {
 // Leagues
 
 export async function createLeague(prevState: any, formData: FormData) {
+  let wkAmount =
+    formData.get("weeklyAmount") === null
+      ? undefined
+      : Number(formData.get("weeklyAmount"));
+  let mmAmount =
+    formData.get("monthlyAmount") === null
+      ? undefined
+      : Number(formData.get("monthlyAmount"));
+  let ssnAmount =
+    formData.get("seasonalAmount") === null
+      ? undefined
+      : Number(formData.get("seasonalAmount"));
+
+  console.log(formData.get("avatar"));
   const league = await League.safeParseAsync({
     name: formData.get("leageName") as string,
     access: formData.get("access") as string,
@@ -277,9 +367,9 @@ export async function createLeague(prevState: any, formData: FormData) {
     types: formData.getAll("types"),
     avatar: formData.get("avatar") as File,
     currency: formData.get("currency") as string,
-    weeklyAmount: Number(formData.get("weeklyAmount")),
-    monthlyAmount: Number(formData.get("monthlyAmount")),
-    seasonalAmount: Number(formData.get("seasonalAmount")),
+    weeklyAmount: wkAmount,
+    monthlyAmount: mmAmount,
+    seasonalAmount: ssnAmount,
     fineAmount: Number(formData.get("fineAmount")),
   });
 

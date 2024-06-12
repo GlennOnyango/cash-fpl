@@ -1,19 +1,18 @@
-import React from "react";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-} from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/react";
 import CreateLeagueComponent from "../createLeague";
-import { Poppins, Roboto } from "next/font/google";
+import { Poppins } from "next/font/google";
 
 type Props = {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
+};
+
+type currency = {
+  currency: string;
+  minWeekly: number;
+  minMonthly: number;
+  minSeasonal: number;
 };
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
@@ -23,6 +22,8 @@ export default function CreateLeagueModal({
   onOpen,
   onOpenChange,
 }: Props) {
+
+
   return (
     <Modal
       isOpen={isOpen}

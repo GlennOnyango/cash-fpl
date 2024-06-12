@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { use, useEffect, useMemo } from "react";
 import {
   Button,
   CheckboxGroup,
@@ -15,8 +15,6 @@ import { useFormState } from "react-dom";
 import { createLeague } from "@/app/actions";
 import Link from "next/link";
 
-import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
-
 export const access = [
   { key: "public", label: "Public" },
   { key: "private", label: "Private" },
@@ -26,10 +24,18 @@ const initialState = {
   errors: [],
 };
 
+type currency = {
+  currency: string;
+  minWeekly: number;
+  minMonthly: number;
+  minSeasonal: number;
+};
+
 export default function CreateLeagueComponent() {
   const [state, formAction] = useFormState(createLeague, initialState);
   const [selected, setSelected] = React.useState(["weekly"]);
   const [rules, rulesSelected] = React.useState(["tranasction-fine"]);
+  const [limits, setLimits] = React.useState<currency[]>([]);
   const [ur, setUr] = React.useState<string>(
     "https://images.unsplash.com/broken"
   );
@@ -45,6 +51,34 @@ export default function CreateLeagueComponent() {
   useEffect(() => {
     console.log(state);
   }, [state]);
+
+  useEffect(() => {
+    console.log(limits);
+    if (limits.length === 0) {
+      fetch("http://localhost:3000/api/limits")
+        .then((res) => res.json())
+        .then((data: { limits: currency[] }) => {
+          setLimits(data.limits);
+        });
+    }
+  }, [limits]);
+
+  const limit = useMemo(() => {
+    if (limits.length === 0) {
+      return {
+        currency: "",
+        minWeekly: 0,
+        minMonthly: 0,
+        minSeasonal: 0,
+      };
+    }
+
+    return limits.filter((limit) => {
+      if (limit.currency === currency) {
+        return limit;
+      }
+    })[0];
+  }, [limits, currency]);
 
   return (
     <form
@@ -253,6 +287,13 @@ export default function CreateLeagueComponent() {
                 <span className="text-gray-900 dark:text-white">
                   {currency}
                 </span>
+              }
+              min={
+                type === "weekly"
+                  ? limit.minWeekly
+                  : type === "monthly"
+                  ? limit.minMonthly
+                  : limit.minSeasonal
               }
               placeholder={`Enter ${type} amount`}
               classNames={{
