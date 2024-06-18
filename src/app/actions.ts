@@ -102,21 +102,29 @@ const League = z
       message: "Access should be a string",
     }),
 
-    currency: z.string({
-      required_error: "Currency is required",
-      invalid_type_error: "Invalid currency",
-      message: "Currency should be a string",
-    }),
+    currency: z
+      .string({
+        required_error: "Currency is required",
+        invalid_type_error: "Invalid currency",
+        message: "Currency should be a string",
+      })
+      .refine(async (currency) => {
+        const limits_fetched = await fetch(
+          `http://localhost:3000/api/limits?currency=${currency}`
+        );
+
+        const limits_json = await limits_fetched.json();
+
+        min = limits_json[0];
+      }),
     avatar: z.optional(
       z
         .instanceof(File)
 
         .refine((avatar: File | undefined) => {
-          console.log(avatar?.type);
           return avatar?.type === "image/png" || avatar?.type === "image/jpeg";
         }, "File must be a PNG or JPG")
         .refine((avatar: File | undefined) => {
-          console.log(avatar?.size);
           return !avatar || avatar?.size < MAX_UPLOAD_SIZE;
         }, "File size should be less than 3MB")
     ),
@@ -159,18 +167,9 @@ const League = z
       }),
   })
   .refine(
-    (data) => {
+    async (data) => {
       if (data.weeklyAmount) {
-        let limiting_currency = limits.filter((limit) => {
-          if (limit.currency === data.currency) {
-            return limit;
-          }
-        })[0];
-
-        if (
-          !data.weeklyAmount ||
-          data.weeklyAmount < limiting_currency.minWeekly
-        ) {
+        if (!data.weeklyAmount || data.weeklyAmount < min.minWeekly) {
           return false;
         }
       }
@@ -184,16 +183,7 @@ const League = z
   .refine(
     (data) => {
       if (data.monthlyAmount) {
-        let limiting_currency = limits.filter((limit) => {
-          if (limit.currency === data.currency) {
-            return limit;
-          }
-        })[0];
-
-        if (
-          !data.monthlyAmount ||
-          data.monthlyAmount < limiting_currency.minMonthly
-        ) {
+        if (!data.monthlyAmount || data.monthlyAmount < min.minMonthly) {
           return false;
         }
       }
@@ -207,16 +197,7 @@ const League = z
   .refine(
     (data) => {
       if (data.seasonalAmount) {
-        let limiting_currency = limits.filter((limit) => {
-          if (limit.currency === data.currency) {
-            return limit;
-          }
-        })[0];
-
-        if (
-          !data.seasonalAmount ||
-          data.seasonalAmount < limiting_currency.minSeasonal
-        ) {
+        if (!data.seasonalAmount || data.seasonalAmount < min.minSeasonal) {
           return false;
         }
       }
@@ -277,7 +258,6 @@ export async function createUser(prevState: any, formData: FormData) {
 
     if (!newUser.ok) {
       let err = await newUser.json();
-      console.log(err);
       throw new Error(
         err.message || "Failed to submit the data. Please try again."
       );
@@ -359,7 +339,6 @@ export async function createLeague(prevState: any, formData: FormData) {
       ? undefined
       : Number(formData.get("seasonalAmount"));
 
-  console.log(formData.get("avatar"));
   const league = await League.safeParseAsync({
     name: formData.get("leageName") as string,
     access: formData.get("access") as string,
@@ -397,7 +376,6 @@ export async function createLeague(prevState: any, formData: FormData) {
       data: "League created successfully",
     };
   } catch (error) {
-    console.log(error);
     return {
       errors: ["League could not be created"],
     };

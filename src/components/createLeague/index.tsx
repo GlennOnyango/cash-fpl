@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Button,
   CheckboxGroup,
@@ -53,32 +53,24 @@ export default function CreateLeagueComponent() {
   }, [state]);
 
   useEffect(() => {
-    console.log(limits);
-    if (limits.length === 0) {
-      fetch("http://localhost:3000/api/limits")
-        .then((res) => res.json())
-        .then((data: { limits: currency[] }) => {
-          setLimits(data.limits);
-        });
-    }
-  }, [limits]);
+    fetch(`http://localhost:3000/api/limits?currency=${currency}`)
+      .then((res) => res.json())
+      .then((data: currency[]) => {
+        setLimits(data);
+      });
+  }, [currency]);
 
   const limit = useMemo(() => {
-    if (limits.length === 0) {
-      return {
-        currency: "",
-        minWeekly: 0,
-        minMonthly: 0,
-        minSeasonal: 0,
-      };
+    if (limits?.length) {
+      return limits[0];
     }
-
-    return limits.filter((limit) => {
-      if (limit.currency === currency) {
-        return limit;
-      }
-    })[0];
-  }, [limits, currency]);
+    return {
+      currency: "",
+      minWeekly: 0,
+      minMonthly: 0,
+      minSeasonal: 0,
+    };
+  }, [limits]);
 
   return (
     <form
@@ -172,10 +164,17 @@ export default function CreateLeagueComponent() {
             placeholder="Select access type"
             required
             name="access"
-            className="w-full border-1 border-gray-800 rounded-xl"
+            color="primary"
+            radius="lg"
+            className="w-full"
           >
             {access.map((acc) => (
-              <SelectItem key={acc.key}>{acc.label}</SelectItem>
+              <SelectItem
+                key={acc.key}
+                className="text-black/90 dark:text-white/90"
+              >
+                {acc.label}
+              </SelectItem>
             ))}
           </Select>
         </div>
