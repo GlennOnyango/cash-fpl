@@ -116,14 +116,18 @@ const League = z
         const limits_json = await limits_fetched.json();
 
         min = limits_json[0];
+
+        return true;
       }),
     avatar: z.optional(
       z
         .instanceof(File)
         .refine((avatar: File | undefined) => {
+          if (avatar?.size === 0) return true;
           return avatar?.type === "image/png" || avatar?.type === "image/jpeg";
         }, "File must be a PNG or JPG")
         .refine((avatar: File | undefined) => {
+          if (avatar?.size === 0) return true;
           return !avatar || avatar?.size < MAX_UPLOAD_SIZE;
         }, "File size should be less than 3MB")
     ),
@@ -356,6 +360,8 @@ export async function createLeague(prevState: any, formData: FormData) {
 
     const errorObj: any = league.error.flatten().fieldErrors;
     const formErrors: any = league.error.flatten().formErrors;
+
+    console.log(errorObj);
 
     for (const key in errorObj) {
       errorArray.push(errorObj[key]);
