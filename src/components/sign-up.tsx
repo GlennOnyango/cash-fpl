@@ -3,6 +3,7 @@ import { createUser } from "../app/actions";
 import { useFormState } from "react-dom";
 import Password from "./inputs/password";
 import { useMemo, useState } from "react";
+import { SubmitButton } from "./submit";
 
 export type SignUpState = {
   email: string;
@@ -163,13 +164,7 @@ export default function SignUpCashFPL() {
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={disablSubmit}
-        className="w-full px-4 py-2 text-base font-semibold text-white bg-gray-900 rounded-lg hover:bg-gray-900 focus:outline-none focus:ring focus:bg-gray-900 focus:bg-gray-900"
-      >
-        Sign Up
-      </button>
+      <SubmitButton btnDisabled={disablSubmit} btnText="Sign Up" />
 
       <div className="flex justify-center w-full max-w-sm mx-auto py-2">
         <a href="/contact-us" className="text-black  hover:text-lg text-sm">

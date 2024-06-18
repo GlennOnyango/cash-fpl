@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { EyeFilledIcon } from "../components/icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../components/icons/EyeSlashFilledIcon";
+import { SubmitButton } from "./submit";
 
 export type SignInState = {
   email: string;
@@ -94,12 +95,7 @@ export default function SignInCashFPL() {
         />
       </div>
 
-      <button
-        type="submit"
-        className="w-full px-4 py-2 text-base font-semibold text-white bg-gray-900 rounded-lg hover:bg-gray-900 focus:outline-none focus:ring focus:bg-gray-900 focus:bg-gray-900"
-      >
-        Sign In
-      </button>
+      <SubmitButton btnText="Sign In" />
 
       <div className="flex justify-center w-full max-w-sm mx-auto py-2">
         <a href="/forgot-password" className="text-black hover:text-lg text-sm">
