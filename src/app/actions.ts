@@ -120,7 +120,6 @@ const League = z
     avatar: z.optional(
       z
         .instanceof(File)
-
         .refine((avatar: File | undefined) => {
           return avatar?.type === "image/png" || avatar?.type === "image/jpeg";
         }, "File must be a PNG or JPG")
