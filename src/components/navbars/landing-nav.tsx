@@ -1,12 +1,4 @@
-import customTheme from "../customTheme";
-import Link from "next/link";
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarCollapse,
-  NavbarLink,
-  NavbarToggle,
-} from "flowbite-react";
+import HomeNav from "./home-nav-client";
 
 export default function PageTemplate({
   children,
@@ -15,63 +7,7 @@ export default function PageTemplate({
 }>) {
   return (
     <>
-      <header className="grow-0 p-0 px-4 sm:p-4  bg-gray-800">
-        <Navbar fluid className="bg-gray-800 ">
-          <NavbarBrand as={Link} href="/">
-            <span className="self-center whitespace-nowrap text-white text-3xl font-semibold dark:text-white">
-              Bench Boasters
-            </span>
-          </NavbarBrand>
-          <NavbarToggle />
-          <NavbarCollapse>
-            <NavbarLink
-              href="/"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-            >
-              Home
-            </NavbarLink>
-            <NavbarLink
-              href="/notifications"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-            >
-              Notifications
-            </NavbarLink>
-            <NavbarLink
-              as={Link}
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-              href="/about-us"
-            >
-              About
-            </NavbarLink>
-            <NavbarLink
-              href="#"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-            >
-              Contact
-            </NavbarLink>
-            <NavbarLink
-              href="/faqs"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-            >
-              FAQS
-            </NavbarLink>
-          </NavbarCollapse>
-          <NavbarCollapse>
-            <NavbarLink
-              href="/sign-in"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-            >
-              Sign in
-            </NavbarLink>
-            <NavbarLink
-              href="/sign-up"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-            >
-              Sign up
-            </NavbarLink>
-          </NavbarCollapse>
-        </Navbar>
-      </header>
+      <HomeNav />
       <main className="grow flex flex-col bg-gray-800">{children}</main>
     </>
   );
