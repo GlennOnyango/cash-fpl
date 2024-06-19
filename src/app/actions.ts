@@ -6,11 +6,6 @@ import { redirect } from "next/navigation";
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
 
-const limits = [
-  { currency: "USD", minWeekly: 5, minMonthly: 10, minSeasonal: 10 },
-  { currency: "KES", minWeekly: 100, minMonthly: 100, minSeasonal: 100 },
-];
-
 let min = {
   currency: "KES",
   minWeekly: 100,
@@ -97,9 +92,7 @@ const League = z
       message: "Name should be a string",
     }),
     access: z.string({
-      required_error: "Access is required",
-      invalid_type_error: "Invalid access",
-      message: "Access should be a string",
+      required_error: "Select league access type",
     }),
 
     currency: z
@@ -116,6 +109,7 @@ const League = z
         const limits_json = await limits_fetched.json();
 
         min = limits_json[0];
+
 
         return true;
       }),
@@ -360,8 +354,6 @@ export async function createLeague(prevState: any, formData: FormData) {
 
     const errorObj: any = league.error.flatten().fieldErrors;
     const formErrors: any = league.error.flatten().formErrors;
-
-    console.log(errorObj);
 
     for (const key in errorObj) {
       errorArray.push(errorObj[key]);

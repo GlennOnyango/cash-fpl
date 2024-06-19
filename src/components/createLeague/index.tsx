@@ -14,6 +14,7 @@ import {
 import { useFormState } from "react-dom";
 import { createLeague } from "@/app/actions";
 import Link from "next/link";
+import { SelectorIcon } from "../icons/SelectorIcon";
 
 export const access = [
   { key: "public", label: "Public" },
@@ -71,6 +72,35 @@ export default function CreateLeagueComponent() {
       minSeasonal: 0,
     };
   }, [limits]);
+
+  const errors = useMemo(() => {
+    if (state.errors?.length === 0 || state.errors === undefined) {
+      return [];
+    }
+
+    return state.errors?.map((error) => {
+      if (Array.isArray(error)) {
+        return error.map((e) => {
+          return (
+            <p
+              key={e}
+              className="bg-red-100 rounded-md py-2 px-3 my-2 text-gray-900"
+            >
+              {e}
+            </p>
+          );
+        });
+      }
+      return (
+        <p
+          key={error}
+          className="bg-red-100 rounded-md py-2 px-3 my-2 text-gray-900"
+        >
+          {error}
+        </p>
+      );
+    });
+  }, [state.errors]);
 
   return (
     <form
@@ -164,9 +194,10 @@ export default function CreateLeagueComponent() {
             placeholder="Select access type"
             required
             name="access"
-            color="primary"
             radius="lg"
-            className="w-full"
+            defaultSelectedKeys={["public"]}
+            className="w-full border-1 border-gray-800 rounded-xl"
+            selectorIcon={<SelectorIcon />}
           >
             {access.map((acc) => (
               <SelectItem
@@ -343,6 +374,10 @@ export default function CreateLeagueComponent() {
             />
           </div>
         )}
+      </div>
+
+      <div className="col-span-3 flex flex-col items-center justify-center">
+        {errors.map((error) => error)}
       </div>
 
       <div className="col-span-3 flex justify-center py-2">

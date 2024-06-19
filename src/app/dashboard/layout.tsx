@@ -13,7 +13,6 @@ export default function Layout({
   open_leagues,
   my_leagues,
   invited_leagues,
-  play,
   statistics,
 }: Readonly<{
   children: React.ReactNode;
@@ -34,7 +33,6 @@ export default function Layout({
         {players}
         {notifications}
         {statistics}
-        {play}
       </div>
     </ManagerPageNavbar>
   );
