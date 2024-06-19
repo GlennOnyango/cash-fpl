@@ -8,9 +8,9 @@ export default function Home() {
     <PageTemplate>
       <div className="flex flex-col grow items-center justify-center bg-gray-800 gap-8 ">
         <div
-          className="bg-gray-800 animate-bounce rounded-full w-2/3 sm:w-1/4"
+          className="bg-gray-800 animate-bounce rounded-full w-2/3 sm:w-1/4 h-32"
           style={{
-            height: "14vh",
+            // height: "16vh",
             backgroundImage: "url(/resources/mini.jpg)",
             backgroundSize: "cover",
             backgroundPosition: "center",
