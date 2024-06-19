@@ -21,13 +21,10 @@ import {
   SortDescriptor,
   useDisclosure,
 } from "@nextui-org/react";
-import { PlusIcon } from "./PlusIcon";
-import { VerticalDotsIcon } from "./VerticalDotsIcon";
-import { ChevronDownIcon } from "./ChevronDownIcon";
-import { SearchIcon } from "./SearchIcon";
+import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
+import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns, users, statusOptions } from "./data";
-import { capitalize } from "./utils";
-import CreateLeagueComponent from "@/components/createLeague";
+import { capitalize } from "@/utils/utils";
 import CreateLeagueModal from "@/components/modals/create-league";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
@@ -36,7 +33,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   vacation: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "status", "actions"];
 
 type User = (typeof users)[0];
 
@@ -119,20 +116,11 @@ export default function AppComplexLeague() {
             classNames={{
               description: "text-default-500",
             }}
-            description={user.email}
+            description={user.name}
             name={cellValue}
           >
-            {user.email}
+            {user.name}
           </User>
-        );
-      case "role":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
-            <p className="text-bold text-tiny capitalize text-default-500">
-              {user.team}
-            </p>
-          </div>
         );
       case "status":
         return (
@@ -148,16 +136,7 @@ export default function AppComplexLeague() {
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Dropdown className="bg-background border-1 border-default-200">
-              <DropdownTrigger>
-                <Button isIconOnly radius="full" size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-400" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem>Manage</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            <Button>Join</Button>
           </div>
         );
       default:
@@ -189,7 +168,7 @@ export default function AppComplexLeague() {
           <Input
             isClearable
             classNames={{
-              base: "w-full sm:max-w-[35%]",
+              base: "w-full sm:max-w-[45%]",
               inputWrapper: "border-1",
               input: [
                 "bg-transparent",
@@ -228,46 +207,12 @@ export default function AppComplexLeague() {
                 onSelectionChange={setStatusFilter}
               >
                 {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
+                  <DropdownItem key={status.uid} className="capitalize text-danger-400">
                     {capitalize(status.name)}
                   </DropdownItem>
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={<ChevronDownIcon className="text-small" />}
-                  size="sm"
-                  variant="flat"
-                  className="bg-foreground text-background"
-                >
-                  Columns
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={visibleColumns}
-                selectionMode="multiple"
-                onSelectionChange={setVisibleColumns}
-              >
-                {columns.map((column) => (
-                  <DropdownItem key={column.uid} className="capitalize">
-                    {capitalize(column.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-            <Button
-              className="bg-foreground text-background"
-              onPress={onOpen}
-              endContent={<PlusIcon />}
-              size="sm"
-            >
-              Add New League
-            </Button>
           </div>
         </div>
       </div>
@@ -327,7 +272,11 @@ export default function AppComplexLeague() {
 
   return (
     <>
-    <CreateLeagueModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange} />
+      <CreateLeagueModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+      />
       <Table
         isCompact
         removeWrapper
