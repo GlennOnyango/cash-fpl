@@ -1,4 +1,4 @@
-import PageTemplate from "./components/navbars/landing-nav";
+import PageTemplate from "../components/navbars/landing-nav";
 import { Button } from "flowbite-react";
 
 import { PlayCircleIcon } from "@heroicons/react/24/outline";

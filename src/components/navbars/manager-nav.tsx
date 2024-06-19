@@ -1,21 +1,16 @@
+
 import customTheme from "../customTheme";
 import Link from "next/link";
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarCollapse,
-  NavbarLink,
-  NavbarToggle,
-} from "flowbite-react";
+import { Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react";
 
-export default function PageTemplate({
+export default function ManagerPageNavbar({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <>
-      <header className="grow-0 p-0 px-4 sm:p-4  bg-gray-800">
+      <header className="grow-0 p-0 px-4 sm:p-2 bg-gray-800">
         <Navbar fluid className="bg-gray-800 ">
           <NavbarBrand as={Link} href="/">
             <span className="self-center whitespace-nowrap text-white text-3xl font-semibold dark:text-white">
@@ -28,7 +23,26 @@ export default function PageTemplate({
               href="#"
               className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
             >
-              Home
+              Leagues
+            </NavbarLink>
+            <NavbarLink
+              href="#"
+              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
+            >
+              Users
+            </NavbarLink>
+            <NavbarLink
+              as={Link}
+              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
+              href="#"
+            >
+              Play
+            </NavbarLink>
+            <NavbarLink
+              href="#"
+              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
+            >
+              Statistics
             </NavbarLink>
             <NavbarLink
               href="#"
@@ -37,42 +51,16 @@ export default function PageTemplate({
               Notifications
             </NavbarLink>
             <NavbarLink
-              as={Link}
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-              href="#"
-            >
-              About
-            </NavbarLink>
-            <NavbarLink
-              href="#"
+              href="/api/auth/logout"
               className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
             >
-              Contact
-            </NavbarLink>
-            <NavbarLink
-              href="#"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-            >
-              FAQS
-            </NavbarLink>
-          </NavbarCollapse>
-          <NavbarCollapse>
-            <NavbarLink
-              href="/sign-in"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-            >
-              Sign in
-            </NavbarLink>
-            <NavbarLink
-              href="/sign-up"
-              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-lg font-medium"
-            >
-              Sign up
+              Logout
             </NavbarLink>
           </NavbarCollapse>
         </Navbar>
       </header>
-      <main className="grow flex flex-col bg-gray-800">{children}</main>
+      <main className="grow flex flex-col bg-gray-700 pt-4 overflow-y-auto scroll-smooth">{children}</main>
     </>
+
   );
 }
