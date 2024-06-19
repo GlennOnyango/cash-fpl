@@ -29,8 +29,8 @@ import CreateLeagueModal from "@/components/modals/create-league";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
-  paused: "danger",
-  vacation: "warning",
+  paused: "warning",
+  cancelled: "danger",
 };
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "status", "actions"];
@@ -115,8 +115,9 @@ export default function InvitedLeagues() {
             avatarProps={{ radius: "full", size: "sm", src: user.avatar }}
             classNames={{
               description: "text-default-500",
+              name: "text-default-900",
             }}
-            description={user.name}
+            description={user.creator}
             name={cellValue}
           >
             {user.name}
@@ -136,7 +137,7 @@ export default function InvitedLeagues() {
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Button>Join</Button>
+            <Button>Checkout league</Button>
           </div>
         );
       default:

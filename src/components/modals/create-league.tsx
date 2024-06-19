@@ -34,7 +34,7 @@ export default function CreateLeagueModal({
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className={`flex flex-col text-2xl gap-1`}>
+            <ModalHeader className={`text-default-900 flex flex-col text-2xl gap-1`}>
               Create League
             </ModalHeader>
             <ModalBody>

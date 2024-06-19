@@ -3,6 +3,7 @@ type user = {
   name: string;
   status: string;
   avatar: string;
+  creator: string;
 };
 
 const columns = [
@@ -13,129 +14,59 @@ const columns = [
 
 const statusOptions = [
   { name: "Active", uid: "active" },
+  { name: "Paused", uid: "paused" },
   { name: "Cancelled", uid: "cancelled" },
 ];
 
 const users: user[] = [
   {
     id: 1,
-    name: "Tony Reichert",
+    name: "FPL Invitational League",
     status: "active",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+    avatar: "/resources/mini.jpg",
+    creator: "Tony Reichert",
   },
   {
     id: 2,
-    name: "Zoey Lang",
+    name: "Legacy League",
     status: "cancelled",
     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
+    creator: "Zoey Lang",
   },
   {
     id: 3,
-    name: "Jane Fisher",
+    name: "FPL Invitational League",
     status: "active",
     avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+    creator: "Jane Fisher",
   },
   {
     id: 4,
-    name: "William Howard",
-    status: "vacation",
+    name: "Legacy League",
+    status: "paused",
     avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
+    creator: "William Howard",
   },
   {
     id: 5,
-    name: "Kristen Copper",
+    name: "FPL Invitational League",
     status: "active",
     avatar: "https://i.pravatar.cc/150?u=a092581d4ef9026700d",
+    creator: "Kristen Copper",
   },
   {
     id: 6,
-    name: "Brian Kim",
+    name: "Legacy League",
     status: "cancelled",
     avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+    creator: "Brian Kim",
   },
   {
     id: 7,
-    name: "Michael Hunt",
+    name: "FPL Invitational League",
     status: "paused",
     avatar: "https://i.pravatar.cc/150?u=a042581f4e29027007d",
-  },
-  {
-    id: 8,
-    name: "Samantha Brooks",
-    status: "active",
-    avatar: "https://i.pravatar.cc/150?u=a042581f4e27027008d",
-  },
-  {
-    id: 9,
-    name: "Frank Harrison",
-    status: "vacation",
-    avatar: "https://i.pravatar.cc/150?img=4",
-  },
-  {
-    id: 10,
-    name: "Emma Adams",
-    status: "active",
-    avatar: "https://i.pravatar.cc/150?img=5",
-  },
-  {
-    id: 11,
-    name: "Brandon Stevens",
-    status: "active",
-    avatar: "https://i.pravatar.cc/150?img=8",
-  },
-  {
-    id: 12,
-    name: "Megan Richards",
-    status: "paused",
-    avatar: "https://i.pravatar.cc/150?img=10",
-  },
-  {
-    id: 13,
-    name: "Oliver Scott",
-    status: "active",
-    avatar: "https://i.pravatar.cc/150?img=12",
-  },
-  {
-    id: 14,
-    name: "Grace Allen",
-    status: "active",
-    avatar: "https://i.pravatar.cc/150?img=16",
-  },
-  {
-    id: 15,
-    name: "Noah Carter",
-    status: "paused",
-    avatar: "https://i.pravatar.cc/150?img=15",
-  },
-  {
-    id: 16,
-    name: "Ava Perez",
-    status: "active",
-    avatar: "https://i.pravatar.cc/150?img=20",
-  },
-  {
-    id: 17,
-    name: "Liam Johnson",
-    status: "active",
-    avatar: "https://i.pravatar.cc/150?img=33",
-  },
-  {
-    id: 18,
-    name: "Sophia Taylor",
-    status: "active",
-    avatar: "https://i.pravatar.cc/150?img=29",
-  },
-  {
-    id: 19,
-    name: "Lucas Harris",
-    status: "paused",
-    avatar: "https://i.pravatar.cc/150?img=50",
-  },
-  {
-    id: 20,
-    name: "Mia Robinson",
-    status: "active",
-    avatar: "https://i.pravatar.cc/150?img=45",
+    creator: "Michael Hunt",
   },
 ];
 
