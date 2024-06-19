@@ -27,7 +27,7 @@ export default function Home() {
             your FPL mastery by winning big on every game week.
           </p>
 
-          <div className="flex flex-col justify-center gap-3 sm:flex-row">
+          <div className="flex flex-col justify-center gap-3 mb-9 sm:mb-0 sm:flex-row">
             <Button size={"xl"} color={"light"} pill>
               Get Started
             </Button>
