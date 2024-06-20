@@ -137,7 +137,8 @@ export default function AppComplexLeague() {
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Button>Manage</Button>
+            {/* <Button size="sm">Manage</Button> */}
+            <Chip color="warning" variant="shadow">Manage</Chip>
           </div>
         );
       default:

@@ -136,7 +136,8 @@ export default function AppComplexLeague() {
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Button>Join</Button>
+            {/* <Button size="sm">Join</Button> */}
+            <Chip color="warning" variant="shadow">Request join</Chip>
           </div>
         );
       default:
@@ -207,7 +208,10 @@ export default function AppComplexLeague() {
                 onSelectionChange={setStatusFilter}
               >
                 {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize text-danger-400">
+                  <DropdownItem
+                    key={status.uid}
+                    className="capitalize text-danger-400"
+                  >
                     {capitalize(status.name)}
                   </DropdownItem>
                 ))}
@@ -289,6 +293,7 @@ export default function AppComplexLeague() {
         topContentPlacement="outside"
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
+        
       >
         <TableHeader columns={headerColumns}>
           {(column) => (
