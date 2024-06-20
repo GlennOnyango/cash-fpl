@@ -110,18 +110,7 @@ export default function AppComplexLeague() {
 
     switch (columnKey) {
       case "name":
-        return (
-          <User
-            avatarProps={{ radius: "full", size: "sm", src: user.avatar }}
-            classNames={{
-              description: "text-default-500",
-            }}
-            description={user.name}
-            name={cellValue}
-          >
-            {user.name}
-          </User>
-        );
+        return <p className="text-default-700">{user.name}</p>;
       case "status":
         return (
           <Chip
