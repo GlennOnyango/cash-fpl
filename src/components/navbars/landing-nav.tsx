@@ -8,7 +8,7 @@ export default function PageTemplate({
   return (
     <>
       <HomeNav />
-      <main className="grow flex flex-col bg-gray-700 pt-4 overflow-y-auto scroll-smooth">{children}</main>
+      <main className="grow flex flex-col bg-gray-700 pt-0 overflow-y-auto scroll-smooth">{children}</main>
     </>
   );
 }

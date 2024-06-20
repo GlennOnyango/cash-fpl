@@ -8,7 +8,7 @@ export default function Home() {
     <PageTemplate>
       <div className="flex flex-col items-center justify-center gap-8">
         <div
-          className="bg-gray-800 animate-bounce rounded-full w-2/3 sm:w-1/4 h-32 mt-6"
+          className="bg-gray-800 animate-bounce rounded-full w-2/3 sm:w-1/4 h-32 mt-10"
           style={{
             // height: "16vh",
             backgroundImage: "url(/resources/mini.jpg)",
@@ -27,11 +27,11 @@ export default function Home() {
             your FPL mastery by winning big on every game week.
           </p>
 
-          <div className="flex flex-col justify-center gap-3 mb-9 sm:mb-0 sm:flex-row">
+          <div className="flex flex-col justify-center gap-3 sm:flex-row">
             <Button size={"xl"} color={"light"} pill>
               Get Started
             </Button>
-            <Button size={"xl"} color={"light"} pill>
+            <Button size={"xl"} color={"light"} pill className="mb-32 sm:mb-0">
               <PlayCircleIcon
                 className="block h-6 w-6 pr-1"
                 aria-hidden="true"

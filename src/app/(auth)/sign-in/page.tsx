@@ -5,9 +5,9 @@ export default function SignIn() {
   return (
     <PageTemplate>
       <div
-        className="grow flex flex-col items-center justify-center bg-transparent px-4 sm:px-2"
+        className="grow flex flex-col items-center justify-center px-4 sm:px-0"
       >
-        <div className="flex flex-col bg-white p-6 rounded-lg">
+        <div className="flex flex-col bg-white p-6 rounded-lg overflow-auto mb-20 sm:mb-0">
           <SignInCashFPL />
         </div>
       </div>
