@@ -7,7 +7,9 @@ export default function Leagues() {
         Participating Leagues
       </h4>
 
-      <InvitedLeagues />
+      <div className="overflow-x-auto overflow-y-hidden">
+        <InvitedLeagues />
+      </div>
     </div>
   );
 }

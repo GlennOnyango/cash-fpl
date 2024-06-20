@@ -137,7 +137,9 @@ export default function AppComplexLeague() {
         return (
           <div className="relative flex justify-end items-center gap-2">
             {/* <Button size="sm">Join</Button> */}
-            <Chip color="warning" variant="shadow">Request join</Chip>
+            <Chip color="warning" variant="shadow">
+              Request join
+            </Chip>
           </div>
         );
       default:
@@ -164,60 +166,58 @@ export default function AppComplexLeague() {
 
   const topContent = React.useMemo(() => {
     return (
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-3 items-end">
-          <Input
-            isClearable
-            classNames={{
-              base: "w-full sm:max-w-[45%]",
-              inputWrapper: "border-1",
-              input: [
-                "bg-transparent",
-                "border-none",
-                "focus:ring-0",
-                "text-black/90 dark:text-white/90",
-                "placeholder:text-default-700/50 dark:placeholder:text-white/60",
-              ],
-            }}
-            placeholder="Search by name..."
-            size="sm"
-            startContent={<SearchIcon className="text-default-300 " />}
-            value={filterValue}
-            variant="bordered"
-            onClear={() => setFilterValue("")}
-            onValueChange={onSearchChange}
-          />
-          <div className="flex gap-3">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={<ChevronDownIcon className="text-small" />}
-                  size="sm"
-                  variant="flat"
-                  className="bg-foreground text-background"
-                >
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Input
+          isClearable
+          classNames={{
+            base: "w-full ",
+            inputWrapper: "border-1",
+            input: [
+              "bg-transparent",
+              "border-none",
+              "focus:ring-0",
+              "text-black/90 dark:text-white/90",
+              "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+            ],
+          }}
+          placeholder="Search by name..."
+          size="sm"
+          startContent={<SearchIcon className="text-default-300 " />}
+          value={filterValue}
+          variant="bordered"
+          onClear={() => setFilterValue("")}
+          onValueChange={onSearchChange}
+        />
+        <div className="flex gap-3">
+          <Dropdown>
+            <DropdownTrigger className="hidden sm:flex">
+              <Button
+                endContent={<ChevronDownIcon className="text-small" />}
+                size="sm"
+                variant="flat"
+                className="bg-foreground text-background"
               >
-                {statusOptions.map((status) => (
-                  <DropdownItem
-                    key={status.uid}
-                    className="capitalize text-danger-400"
-                  >
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-          </div>
+                Status
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              disallowEmptySelection
+              aria-label="Table Columns"
+              closeOnSelect={false}
+              selectedKeys={statusFilter}
+              selectionMode="multiple"
+              onSelectionChange={setStatusFilter}
+            >
+              {statusOptions.map((status) => (
+                <DropdownItem
+                  key={status.uid}
+                  className="capitalize text-danger-400"
+                >
+                  {capitalize(status.name)}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </div>
     );
@@ -293,7 +293,6 @@ export default function AppComplexLeague() {
         topContentPlacement="outside"
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
-        
       >
         <TableHeader columns={headerColumns}>
           {(column) => (

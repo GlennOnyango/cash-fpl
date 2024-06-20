@@ -6,7 +6,9 @@ export default function Leagues() {
       <h4 className="text-3xl text-black/90 dark:text-white/90 mb-4">
         My Leagues
       </h4>
-      <AppComplexLeague />
+      <div className="overflow-x-auto overflow-y-hidden">
+        <AppComplexLeague />
+      </div>
     </div>
   );
 }
