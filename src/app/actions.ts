@@ -1,7 +1,6 @@
 "use server";
 import { z } from "zod";
 import { cookies } from "next/headers";
-
 import { redirect } from "next/navigation";
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
@@ -110,21 +109,9 @@ const League = z
 
         min = limits_json[0];
 
-
         return true;
       }),
-    avatar: z.optional(
-      z
-        .instanceof(File)
-        .refine((avatar: File | undefined) => {
-          if (avatar?.size === 0) return true;
-          return avatar?.type === "image/png" || avatar?.type === "image/jpeg";
-        }, "File must be a PNG or JPG")
-        .refine((avatar: File | undefined) => {
-          if (avatar?.size === 0) return true;
-          return !avatar || avatar?.size < MAX_UPLOAD_SIZE;
-        }, "File size should be less than 3MB")
-    ),
+
     types: z.array(
       z.string({
         required_error: "Types are required",
@@ -341,7 +328,6 @@ export async function createLeague(prevState: any, formData: FormData) {
     access: formData.get("access") as string,
     rules: formData.getAll("rules"),
     types: formData.getAll("types"),
-    avatar: formData.get("avatar") as File,
     currency: formData.get("currency") as string,
     weeklyAmount: wkAmount,
     monthlyAmount: mmAmount,
@@ -369,6 +355,8 @@ export async function createLeague(prevState: any, formData: FormData) {
   }
 
   try {
+    //upload avatar on folder public/images/leagues
+
     return {
       data: "League created successfully",
     };

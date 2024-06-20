@@ -110,19 +110,7 @@ export default function InvitedLeagues() {
 
     switch (columnKey) {
       case "name":
-        return (
-          <User
-            avatarProps={{ radius: "full", size: "sm", src: user.avatar }}
-            classNames={{
-              description: "text-default-500",
-              name: "text-default-900",
-            }}
-            description={user.creator}
-            name={cellValue}
-          >
-            {user.name}
-          </User>
-        );
+        return <p className="text-default-700">{user.name}</p>;
       case "status":
         return (
           <Chip
@@ -137,7 +125,9 @@ export default function InvitedLeagues() {
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Chip color="warning" variant="shadow">Checkout league</Chip>
+            <Chip color="warning" variant="shadow">
+              Checkout league
+            </Chip>
           </div>
         );
       default:
@@ -208,7 +198,10 @@ export default function InvitedLeagues() {
                 onSelectionChange={setStatusFilter}
               >
                 {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize text-danger-400">
+                  <DropdownItem
+                    key={status.uid}
+                    className="capitalize text-danger-400"
+                  >
                     {capitalize(status.name)}
                   </DropdownItem>
                 ))}
