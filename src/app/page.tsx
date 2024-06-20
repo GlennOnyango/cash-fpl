@@ -6,9 +6,9 @@ import { PlayCircleIcon } from "@heroicons/react/24/outline";
 export default function Home() {
   return (
     <PageTemplate>
-      <div className="flex flex-col grow items-center justify-center bg-gray-800 gap-8 scroll-smooth">
+      <div className="flex flex-col items-center justify-center gap-8">
         <div
-          className="bg-gray-800 animate-bounce rounded-full w-2/3 sm:w-1/4 h-32"
+          className="bg-gray-800 animate-bounce rounded-full w-2/3 sm:w-1/4 h-32 mt-10"
           style={{
             // height: "16vh",
             backgroundImage: "url(/resources/mini.jpg)",
@@ -31,7 +31,7 @@ export default function Home() {
             <Button size={"xl"} color={"light"} pill>
               Get Started
             </Button>
-            <Button size={"xl"} color={"light"} pill>
+            <Button size={"xl"} color={"light"} pill className="mb-32 sm:mb-0">
               <PlayCircleIcon
                 className="block h-6 w-6 pr-1"
                 aria-hidden="true"

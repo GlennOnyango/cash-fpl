@@ -37,7 +37,7 @@ export default function SignInCashFPL() {
         </p>
       )}
 
-      <h1 className="text-center text-black text-4xl py-3 font-medium">
+      <h1 className="text-center text-black text-2xl sm:text-4xl py-3 font-medium">
         Welcome back, login to access your account.
       </h1>
       <div className="w-full max-w-sm mx-auto ">

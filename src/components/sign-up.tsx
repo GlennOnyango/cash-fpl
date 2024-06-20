@@ -37,7 +37,7 @@ export default function SignUpCashFPL() {
       autoComplete="off"
       className="w-full min-w-sm mx-auto"
     >
-      <h1 className="text-center text-4xl pb-8 text-black font-medium">
+      <h1 className="text-center  text-2xl sm:text-4xl  pb-8 text-black font-medium">
         Join our growing community
       </h1>
 

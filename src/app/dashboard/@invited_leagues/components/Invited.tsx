@@ -137,7 +137,7 @@ export default function InvitedLeagues() {
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Button>Checkout league</Button>
+            <Chip color="warning" variant="shadow">Checkout league</Chip>
           </div>
         );
       default:
