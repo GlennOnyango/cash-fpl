@@ -12,7 +12,7 @@ const columns = [
 const statusOptions = [
   { name: "Active", uid: "active" },
   { name: "Paused", uid: "paused" },
-  { name: "Vacation", uid: "vacation" },
+  { name: "Cancelled", uid: "cancelled" },
 ];
 
 const users = [
@@ -51,7 +51,7 @@ const users = [
     name: "William Howard",
     role: "C.M.",
     team: "Marketing",
-    status: "vacation",
+    status: "cancelled",
     age: "28",
     avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
     email: "william.howard@example.com",
@@ -101,7 +101,7 @@ const users = [
     name: "Frank Harrison",
     role: "F. Manager",
     team: "Finance",
-    status: "vacation",
+    status: "cancelled",
     age: "33",
     avatar: "https://i.pravatar.cc/150?img=4",
     email: "frank.harrison@example.com",

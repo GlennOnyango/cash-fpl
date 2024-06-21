@@ -67,7 +67,7 @@ export default function HomeNav() {
             className="sm:hidden"
           />
           <NavbarBrand>
-            <p className="font-bold text-xl text-inherit">Bench Boasters</p>
+            <p className="font-bold text-xl text-white">Bench Boasters</p>
           </NavbarBrand>
         </NavbarContent>
 

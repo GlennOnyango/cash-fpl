@@ -30,8 +30,8 @@ import CreateLeagueModal from "@/components/modals/create-league";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
-  paused: "danger",
-  vacation: "warning",
+  paused: "warning",
+  cancelled: "danger",
 };
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "status", "actions"];
