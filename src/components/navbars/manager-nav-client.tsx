@@ -2,22 +2,31 @@
 import React from "react";
 import { usePathname } from "next/navigation.js";
 import {
-    Navbar,
-    NavbarBrand,
-    NavbarContent,
-    NavbarItem,
-    NavbarMenuToggle,
-    NavbarMenu,
-    NavbarMenuItem,
-    Link,
-    Button,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  Link,
+  Button,
+  DropdownTrigger,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
 } from "@nextui-org/react";
+import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 
 export default function ManagerNav() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const pathname = usePathname();
 
   const menuItemsExpand = [
+    {
+      name: "Dashboard",
+      url: "/dashboard",
+    },
     {
       name: "Leagues",
       url: "/leagues",
@@ -63,26 +72,85 @@ export default function ManagerNav() {
             className="sm:hidden"
           />
           <NavbarBrand>
-            <p className="font-bold text-xl text-inherit text-white">Bench Boasters</p>
+            <p className="font-bold text-xl text-inherit text-white">
+              Bench Boasters
+            </p>
           </NavbarBrand>
         </NavbarContent>
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          {menuItemsExpand.map((item, index) => (
-            <NavbarItem isActive={pathname === item.url} key={index}>
-              <Link
-                aria-current={pathname === item.url ? "page" : "false"}
-                href={item.url}
-                color={pathname === item.url ? "primary" : "foreground"}
-              >
-                {item.name}
-              </Link>
-            </NavbarItem>
-          ))}
+          {menuItemsExpand.map((item, index) => {
+            if (item.name === "Leagues") {
+              return (
+                <Dropdown key={item.name}>
+                  <NavbarItem isActive={pathname === item.url} key={index}>
+                    <DropdownTrigger>
+                      <Button
+                        disableRipple
+                        className="p-0 bg-transparent data-[hover=true]:bg-transparent"
+                        endContent={<ChevronDownIcon className="text-small" />}
+                        radius="sm"
+                        variant="light"
+                      >
+                        {item.name}
+                      </Button>
+                    </DropdownTrigger>
+                  </NavbarItem>
+
+                  <DropdownMenu
+                    aria-label="ACME features"
+                    className="w-[340px]"
+                    itemClasses={{
+                      base: "gap-4",
+                    }}
+                  >
+                    <DropdownItem
+                      key="open-leagues"
+                      description="See all leagues that are currently open"
+                      href="/leagues/open-leagues"
+                    >
+                      Open Leagues
+                    </DropdownItem>
+                    <DropdownItem
+                      key="my-leagues"
+                      description="See all leagues that you have created"
+                      href="/leagues/my-leagues"
+                    >
+                      My Leagues
+                    </DropdownItem>
+                    <DropdownItem
+                      key="participating-leagues"
+                      description="See all leagues that you are participating in"
+                      href="/leagues/participating-leagues"
+                    >
+                      Participating Leagues
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              );
+            }
+
+            return (
+              <NavbarItem isActive={pathname === item.url} key={index}>
+                <Link
+                  aria-current={pathname === item.url ? "page" : "false"}
+                  href={item.url}
+                  color={pathname === item.url ? "primary" : "foreground"}
+                >
+                  {item.name}
+                </Link>
+              </NavbarItem>
+            );
+          })}
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
-            <Button as={Link} color="primary" href="/api/auth/logout" variant="flat">
+            <Button
+              as={Link}
+              color="primary"
+              href="/api/auth/logout"
+              variant="flat"
+            >
               Logout
             </Button>
           </NavbarItem>
