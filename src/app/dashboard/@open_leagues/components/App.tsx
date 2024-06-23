@@ -124,10 +124,9 @@ export default function AppComplexLeague() {
         );
       case "actions":
         return (
-          <div className="relative flex justify-end items-center gap-2">
-            <Button size="sm" radius="full" color="warning">Request join</Button>
-
-          </div>
+          <Button size="sm" radius="full" color="warning">
+            Request join
+          </Button>
         );
       default:
         return cellValue;

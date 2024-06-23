@@ -85,15 +85,16 @@ export default function ManagerNav() {
                 <Dropdown key={item.name}>
                   <NavbarItem isActive={pathname === item.url} key={index}>
                     <DropdownTrigger>
-                      <Button
-                        disableRipple
-                        className="p-0 bg-transparent data-[hover=true]:bg-transparent"
-                        endContent={<ChevronDownIcon className="text-small" />}
-                        radius="sm"
-                        variant="light"
+                      <Link
+                        aria-current={pathname.includes("leagues") ? "page" : "false"}
+                        color={pathname.includes("leagues") ? "primary" : "foreground"}
+                        className="cursor-pointer"
                       >
                         {item.name}
-                      </Button>
+                        <span className="ml-1">
+                          <ChevronDownIcon className="text-small" />
+                        </span>
+                      </Link>
                     </DropdownTrigger>
                   </NavbarItem>
 
@@ -156,19 +157,69 @@ export default function ManagerNav() {
           </NavbarItem>
         </NavbarContent>
         <NavbarMenu>
-          {menuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                className="w-full"
-                href={item.url}
-                aria-current={pathname === item.url ? "page" : "false"}
-                color={pathname === item.url ? "primary" : "foreground"}
-                size="lg"
-              >
-                {item.name}
-              </Link>
-            </NavbarMenuItem>
-          ))}
+          {menuItems.map((item, index) => {
+            if (item.name === "Leagues") {
+              return (
+                <Dropdown key={item.name}>
+                  <NavbarItem isActive={pathname === item.url} key={index}>
+                    <DropdownTrigger>
+                    <Link
+                        aria-current={pathname.includes("leagues") ? "page" : "false"}
+                        color={pathname.includes("leagues") ? "primary" : "foreground"}
+                        className="cursor-pointer"
+                      >
+                        {item.name}
+                        <span className="ml-1">
+                          <ChevronDownIcon className="text-small" />
+                        </span>
+                      </Link>
+                    </DropdownTrigger>
+                  </NavbarItem>
+
+                  <DropdownMenu
+                    aria-label="ACME features"
+                    itemClasses={{
+                      base: "gap-4",
+                    }}
+                  >
+                    <DropdownItem
+                      key="open-leagues"
+                      description="See all leagues that are currently open"
+                      href="/leagues/open-leagues"
+                    >
+                      Open Leagues
+                    </DropdownItem>
+                    <DropdownItem
+                      key="my-leagues"
+                      description="See all leagues that you have created"
+                      href="/leagues/my-leagues"
+                    >
+                      My Leagues
+                    </DropdownItem>
+                    <DropdownItem
+                      key="participating-leagues"
+                      description="See all leagues that you are participating in"
+                      href="/leagues/participating-leagues"
+                    >
+                      Participating Leagues
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              );
+            }
+
+            return (
+              <NavbarItem isActive={pathname === item.url} key={index}>
+                <Link
+                  aria-current={pathname === item.url ? "page" : "false"}
+                  href={item.url}
+                  color={pathname === item.url ? "primary" : "foreground"}
+                >
+                  {item.name}
+                </Link>
+              </NavbarItem>
+            );
+          })}
         </NavbarMenu>
       </Navbar>
     </header>
