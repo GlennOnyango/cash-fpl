@@ -36,7 +36,7 @@ export default function HomeNav() {
     },
     {
       name: "Contact us",
-      url: "/contact",
+      url: "/contact-us",
     },
   ];
 

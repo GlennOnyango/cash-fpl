@@ -45,7 +45,7 @@ export default function ManagerNav() {
     },
     {
       name: "Contact us",
-      url: "/contact",
+      url: "/contact-us",
     },
   ];
 
@@ -130,6 +130,7 @@ export default function ManagerNav() {
                 </Dropdown>
               );
             }
+            
 
             return (
               <NavbarItem isActive={pathname === item.url} key={index}>
