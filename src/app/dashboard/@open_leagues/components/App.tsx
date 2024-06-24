@@ -29,8 +29,8 @@ import CreateLeagueModal from "@/components/modals/create-league";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
-  paused: "danger",
-  vacation: "warning",
+  paused: "warning",
+  cancelled: "danger",
 };
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "status", "actions"];
@@ -124,12 +124,9 @@ export default function AppComplexLeague() {
         );
       case "actions":
         return (
-          <div className="relative flex justify-end items-center gap-2">
-            {/* <Button size="sm">Join</Button> */}
-            <Chip color="warning" variant="shadow">
-              Request join
-            </Chip>
-          </div>
+          <Button size="sm" radius="full" color="warning">
+            Request join
+          </Button>
         );
       default:
         return cellValue;

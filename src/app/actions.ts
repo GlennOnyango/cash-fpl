@@ -3,8 +3,6 @@ import { z } from "zod";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
-
 let min = {
   currency: "KES",
   minWeekly: 100,
@@ -243,7 +241,7 @@ export async function createUser(prevState: any, formData: FormData) {
     if (!newUser.ok) {
       let err = await newUser.json();
       throw new Error(
-        err.message || "Failed to submit the data. Please try again."
+        err.message || "Failed to create user. Please try again or contact us."
       );
     }
   } catch (error: any) {
@@ -285,7 +283,8 @@ export async function signInUser(prevState: any, formData: FormData) {
     );
 
     if (!response.ok) {
-      throw new Error("Failed to submit the data. Please try again.");
+      const err = await response.json();
+      throw new Error(err.message || "Login failed. Please try again or contact us.");
     }
 
     const res = await response.json();

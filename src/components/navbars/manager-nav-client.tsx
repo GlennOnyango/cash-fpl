@@ -2,22 +2,31 @@
 import React from "react";
 import { usePathname } from "next/navigation.js";
 import {
-    Navbar,
-    NavbarBrand,
-    NavbarContent,
-    NavbarItem,
-    NavbarMenuToggle,
-    NavbarMenu,
-    NavbarMenuItem,
-    Link,
-    Button,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  Link,
+  Button,
+  DropdownTrigger,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
 } from "@nextui-org/react";
+import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 
 export default function ManagerNav() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const pathname = usePathname();
 
   const menuItemsExpand = [
+    {
+      name: "Dashboard",
+      url: "/dashboard",
+    },
     {
       name: "Leagues",
       url: "/leagues",
@@ -27,8 +36,8 @@ export default function ManagerNav() {
       url: "/users",
     },
     {
-      name: "Statistics",
-      url: "/statistics",
+      name: "Analytics",
+      url: "/analytics",
     },
     {
       name: "Notifications",
@@ -36,7 +45,7 @@ export default function ManagerNav() {
     },
     {
       name: "Contact us",
-      url: "/contact",
+      url: "/contact-us",
     },
   ];
 
@@ -63,44 +72,157 @@ export default function ManagerNav() {
             className="sm:hidden"
           />
           <NavbarBrand>
-            <p className="font-bold text-xl text-inherit">Bench Boasters</p>
+            <p className="font-bold text-xl text-inherit text-white">
+              Bench Boasters
+            </p>
           </NavbarBrand>
         </NavbarContent>
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          {menuItemsExpand.map((item, index) => (
-            <NavbarItem isActive={pathname === item.url} key={index}>
-              <Link
-                aria-current={pathname === item.url ? "page" : "false"}
-                href={item.url}
-                color={pathname === item.url ? "primary" : "foreground"}
-              >
-                {item.name}
-              </Link>
-            </NavbarItem>
-          ))}
+          {menuItemsExpand.map((item, index) => {
+            if (item.name === "Leagues") {
+              return (
+                <Dropdown key={item.name}>
+                  <NavbarItem isActive={pathname === item.url} key={index}>
+                    <DropdownTrigger>
+                      <Link
+                        aria-current={pathname.includes("leagues") ? "page" : "false"}
+                        color={pathname.includes("leagues") ? "primary" : "foreground"}
+                        className="cursor-pointer"
+                      >
+                        {item.name}
+                        <span className="ml-1">
+                          <ChevronDownIcon className="text-small" />
+                        </span>
+                      </Link>
+                    </DropdownTrigger>
+                  </NavbarItem>
+
+                  <DropdownMenu
+                    aria-label="ACME features"
+                    className="w-[340px]"
+                    itemClasses={{
+                      base: "gap-4",
+                    }}
+                  >
+                    <DropdownItem
+                      key="open-leagues"
+                      description="See all leagues that are currently open"
+                      href="/leagues/open-leagues"
+                    >
+                      Open Leagues
+                    </DropdownItem>
+                    <DropdownItem
+                      key="my-leagues"
+                      description="See all leagues that you have created"
+                      href="/leagues/my-leagues"
+                    >
+                      My Leagues
+                    </DropdownItem>
+                    <DropdownItem
+                      key="participating-leagues"
+                      description="See all leagues that you are participating in"
+                      href="/leagues/participating-leagues"
+                    >
+                      Participating Leagues
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              );
+            }
+            
+
+            return (
+              <NavbarItem isActive={pathname === item.url} key={index}>
+                <Link
+                  aria-current={pathname === item.url ? "page" : "false"}
+                  href={item.url}
+                  color={pathname === item.url ? "primary" : "foreground"}
+                >
+                  {item.name}
+                </Link>
+              </NavbarItem>
+            );
+          })}
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
-            <Button as={Link} color="primary" href="/api/auth/logout" variant="flat">
+            <Button
+              as={Link}
+              color="primary"
+              href="/api/auth/logout"
+              variant="flat"
+            >
               Logout
             </Button>
           </NavbarItem>
         </NavbarContent>
+
+        
         <NavbarMenu>
-          {menuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                className="w-full"
-                href={item.url}
-                aria-current={pathname === item.url ? "page" : "false"}
-                color={pathname === item.url ? "primary" : "foreground"}
-                size="lg"
-              >
-                {item.name}
-              </Link>
-            </NavbarMenuItem>
-          ))}
+          {menuItems.map((item, index) => {
+            if (item.name === "Leagues") {
+              return (
+                <Dropdown key={item.name}>
+                  <NavbarItem isActive={pathname === item.url} key={index}>
+                    <DropdownTrigger>
+                    <Link
+                        aria-current={pathname.includes("leagues") ? "page" : "false"}
+                        color={pathname.includes("leagues") ? "primary" : "foreground"}
+                        className="cursor-pointer"
+                      >
+                        {item.name}
+                        <span className="ml-1">
+                          <ChevronDownIcon className="text-small" />
+                        </span>
+                      </Link>
+                    </DropdownTrigger>
+                  </NavbarItem>
+
+                  <DropdownMenu
+                    aria-label="ACME features"
+                    itemClasses={{
+                      base: "gap-4",
+                    }}
+                  >
+                    <DropdownItem
+                      key="open-leagues"
+                      description="See all leagues that are currently open"
+                      href="/leagues/open-leagues"
+                    >
+                      Open Leagues
+                    </DropdownItem>
+                    <DropdownItem
+                      key="my-leagues"
+                      description="See all leagues that you have created"
+                      href="/leagues/my-leagues"
+                    >
+                      My Leagues
+                    </DropdownItem>
+                    <DropdownItem
+                      key="participating-leagues"
+                      description="See all leagues that you are participating in"
+                      href="/leagues/participating-leagues"
+                    >
+                      Participating Leagues
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              );
+            }
+
+            return (
+              <NavbarItem isActive={pathname === item.url} key={index}>
+                <Link
+                  aria-current={pathname === item.url ? "page" : "false"}
+                  href={item.url}
+                  color={pathname === item.url ? "primary" : "foreground"}
+                >
+                  {item.name}
+                </Link>
+              </NavbarItem>
+            );
+          })}
         </NavbarMenu>
       </Navbar>
     </header>
