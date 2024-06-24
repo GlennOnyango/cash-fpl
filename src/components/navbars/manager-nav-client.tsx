@@ -36,8 +36,8 @@ export default function ManagerNav() {
       url: "/users",
     },
     {
-      name: "Statistics",
-      url: "/statistics",
+      name: "Analytics",
+      url: "/analytics",
     },
     {
       name: "Notifications",
@@ -157,6 +157,8 @@ export default function ManagerNav() {
             </Button>
           </NavbarItem>
         </NavbarContent>
+
+        
         <NavbarMenu>
           {menuItems.map((item, index) => {
             if (item.name === "Leagues") {
