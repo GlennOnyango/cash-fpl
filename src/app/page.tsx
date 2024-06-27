@@ -1,5 +1,5 @@
+import { Button } from "@nextui-org/react";
 import PageTemplate from "../components/navbars/landing-nav";
-import { Button } from "flowbite-react";
 
 import { PlayCircleIcon } from "@heroicons/react/24/outline";
 
@@ -28,12 +28,10 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button size={"xl"} color={"light"} pill>
-              Get Started
-            </Button>
-            <Button size={"xl"} color={"light"} pill className="mb-32 sm:mb-0">
+            <Button size="lg" radius="full">Get Started</Button>
+            <Button size="lg" variant="bordered" radius="full" className="mb-32 sm:mb-0 text-white">
               <PlayCircleIcon
-                className="block h-6 w-6 pr-1"
+                className="block h-6 w-6 pr-1 "
                 aria-hidden="true"
               />
               Learn More
