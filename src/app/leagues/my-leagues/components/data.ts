@@ -8,8 +8,8 @@ type User = {
 
 const columns = [
   { name: "ID", uid: "id", sortable: true },
-  { name: "NAME", uid: "name", sortable: true },
-  { name: "STATUS", uid: "status", sortable: true },
+  { name: "League Name", uid: "name", sortable: true },
+  { name: "Status", uid: "status", sortable: true },
   { name: "Access", uid: "access", sortable: true },
   { name: "Currency", uid: "currency", sortable: true },
   { name: "ACTIONS", uid: "actions" },
