@@ -1,7 +1,9 @@
-import { Button } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 import PageTemplate from "../components/navbars/landing-nav";
-
-import { PlayCircleIcon } from "@heroicons/react/24/outline";
+import {
+  PlayCircleIcon,
+  CubeTransparentIcon,
+} from "@heroicons/react/24/outline";
 
 export default function Home() {
   return (
@@ -28,9 +30,19 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button size="lg" radius="full">Get Started</Button>
-            <Button size="lg" variant="bordered" radius="full" className="mb-32 sm:mb-0 text-white">
-              <PlayCircleIcon
+            <Button size="lg" radius="full">
+              Get Started
+            </Button>
+
+            <Button
+              as={Link}
+              href="/about"
+              size="lg"
+              variant="bordered"
+              radius="full"
+              className="mb-32 sm:mb-0 text-white"
+            >
+              <CubeTransparentIcon
                 className="block h-6 w-6 pr-1 "
                 aria-hidden="true"
               />

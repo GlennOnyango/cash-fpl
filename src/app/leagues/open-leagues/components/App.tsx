@@ -15,7 +15,6 @@ import {
   Selection,
   ChipProps,
   SortDescriptor,
-  useDisclosure,
   Link,
   Dropdown,
   DropdownTrigger,
@@ -26,7 +25,6 @@ import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns, users, currencyOptions } from "./data";
 import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 import { capitalize } from "@/utils/utils";
-import { PlusIcon } from "@/components/icons/PlusIcon";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -45,9 +43,6 @@ const INITIAL_VISIBLE_COLUMNS = [
 type User = (typeof users)[0];
 
 export default function OpenLeaguesTable() {
-  // Modal create league
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -294,7 +289,16 @@ export default function OpenLeaguesTable() {
 
   const classNames = React.useMemo(
     () => ({
+      base: ["shadow-sm", "rounded-none", "p-2"],
       wrapper: ["max-h-[382px]", "max-w-3xl"],
+      table: ["bg-transparent", "border-divider","overflow-auto"],
+      header: [
+        "bg-transparent",
+        "text-default-500",
+        "border-b",
+        "border-divider",
+      ],
+
       th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
       td: [
         // changing the rows border radius

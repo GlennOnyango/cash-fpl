@@ -25,7 +25,7 @@ const currencyOptions = [
 const users: User[] = [
   {
     id: 1,
-    name: "League 1",
+    name: "FPL League 1",
     weeklyCompetition: true,
     monthlyCompetition: false,
     seasonalCompetition: true,
@@ -33,7 +33,7 @@ const users: User[] = [
   },
   {
     id: 2,
-    name: "League 2",
+    name: "FPL Hunters ",
     weeklyCompetition: false,
     monthlyCompetition: true,
     seasonalCompetition: false,
@@ -41,7 +41,7 @@ const users: User[] = [
   },
   {
     id: 3,
-    name: "League 3",
+    name: "Random League 3",
     weeklyCompetition: true,
     monthlyCompetition: false,
     seasonalCompetition: true,
@@ -49,7 +49,7 @@ const users: User[] = [
   },
   {
     id: 4,
-    name: "League 4",
+    name: "Standard League 4",
     weeklyCompetition: false,
     monthlyCompetition: true,
     seasonalCompetition: false,
@@ -57,7 +57,7 @@ const users: User[] = [
   },
   {
     id: 5,
-    name: "League 5",
+    name: "Stay Winning League 5",
     weeklyCompetition: true,
     monthlyCompetition: false,
     seasonalCompetition: true,
