@@ -284,13 +284,17 @@ export async function signInUser(prevState: any, formData: FormData) {
 
     if (!response.ok) {
       const err = await response.json();
-      throw new Error(err.message || "Login failed. Please try again or contact us.");
+      console.log(err);
+      throw new Error(
+        err.message || "Login failed. Please try again or contact us."
+      );
     }
 
     const res = await response.json();
 
     cookies().set("accessToken", `${res.accessToken}`, { secure: true });
   } catch (error: any) {
+    console.log("My error", error);
     let err = error.message || "User could not be created";
     return {
       errors: err,
@@ -338,30 +342,85 @@ export async function createLeague(prevState: any, formData: FormData) {
     const errorArray: string[] = [];
 
     const errorObj: any = league.error.flatten().fieldErrors;
-    const formErrors: any = league.error.flatten().formErrors;
+    const formErrors: string[] = league.error.flatten().formErrors;
 
     for (const key in errorObj) {
       errorArray.push(errorObj[key]);
     }
 
     if (formErrors) {
-      errorArray.push(formErrors);
+      errorArray.push(...formErrors);
     }
 
     return {
-      errors: errorArray,
+      message: errorArray[0],
     };
   }
 
   try {
-    //upload avatar on folder public/images/leagues
+    const competitionTypes = league.data.types.map((competition: string) => {
+      if (competition === "weekly") {
+        return {
+          competitionTypeId: 1,
+          amount: league.data.weeklyAmount,
+        };
+      } else if (competition === "monthly") {
+        return {
+          competitionTypeId: 2,
+          amount: league.data.monthlyAmount,
+        };
+      } else if (competition === "seasonal") {
+        return {
+          competitionTypeId: 3,
+          amount: league.data.seasonalAmount,
+        };
+      }
+    });
+    const raw = JSON.stringify({
+      name: league.data.name,
+      isPublic: league.data.access === "public",
+      currencyId: league.data.currency === "KES" ? 1 : 2,
+      competitionType: competitionTypes,
+      paymentDeadline: "2024-07-29T00:00:00",
+      penalties: [
+        {
+          penaltyType: "AMOUNT",
+          value: league.data.fineAmount,
+        },
+      ],
+    });
 
+    //create league
+    const newLeague = await fetch(
+      "https://ms-leagues.onrender.com/api/v1/league/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+        },
+        body: raw,
+      }
+    );
+
+    if (!newLeague.ok) {
+      let err = await newLeague.json();
+      console.log(err);
+      throw new Error(
+        err.message ||
+          "Failed to create league. Please try again or contact us."
+      );
+    }
+
+    console.log(newLeague);
+  } catch (error: any) {
+    let err = error.message || "League could not be created";
     return {
-      data: "League created successfully",
-    };
-  } catch (error) {
-    return {
-      errors: ["League could not be created"],
+      message: err,
     };
   }
+
+  return {
+    message: "League created successfully",
+  };
 }

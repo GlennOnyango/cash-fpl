@@ -23,12 +23,12 @@ export const currency_select = [
 ];
 
 export const rules_select = [
-  { key: "YES", label: "YES" },
-  { key: "NO", label: "NO" },
+  { key: "Yes", label: "Yes" },
+  { key: "No", label: "No" },
 ];
 
 const initialState = {
-  errors: [],
+  message: "",
 };
 
 type currency = {
@@ -71,35 +71,6 @@ export default function CreateLeagueComponent() {
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrency(e.target.value);
   };
-
-  const errors = useMemo(() => {
-    if (state.errors?.length === 0 || state.errors === undefined) {
-      return [];
-    }
-
-    return state.errors?.map((error) => {
-      if (Array.isArray(error)) {
-        return error.map((e) => {
-          return (
-            <p
-              key={e}
-              className="bg-red-100 rounded-md py-2 px-3 my-2 text-gray-900"
-            >
-              {e}
-            </p>
-          );
-        });
-      }
-      return (
-        <p
-          key={error}
-          className="bg-red-100 rounded-md py-2 px-3 my-2 text-gray-900"
-        >
-          {error}
-        </p>
-      );
-    });
-  }, [state.errors]);
 
   return (
     <form
@@ -190,15 +161,15 @@ export default function CreateLeagueComponent() {
 
         <div className="flex flex-col gap-2 w-full">
           <label className="text-black/90 dark:text-white/90">
-            Deduct points for extra transactions *
+            Deduct points for excess transfers *
           </label>
 
           <Select
             placeholder="Select access type"
             required
-            name="currency"
+            name="rules"
             radius="lg"
-            defaultSelectedKeys={["YES"]}
+            defaultSelectedKeys={["Yes"]}
             className="w-full border-1 border-gray-800 rounded-xl"
             selectorIcon={<SelectorIcon />}
           >
@@ -260,7 +231,7 @@ export default function CreateLeagueComponent() {
         <CheckboxGroup
           color="warning"
           orientation="horizontal"
-          name="rules"
+          name="types"
           isRequired
           value={selected}
           onValueChange={setSelected}
@@ -323,7 +294,20 @@ export default function CreateLeagueComponent() {
       </div>
 
       <div className="col-span-3 flex flex-col items-center justify-center">
-        {errors.map((error) => error)}
+        {state.message !== "" &&
+        state.message !== "League created successfully" ? (
+          <p className="bg-red-100 rounded-md py-2 px-3 my-2 text-gray-900">
+            {state.message}
+          </p>
+        ) : null}
+      </div>
+
+      <div className="col-span-3 flex flex-col items-center justify-center">
+        {state.message === "League created successfully" ? (
+          <p className="bg-green-400 rounded-md py-2 px-3 my-2 text-gray-900">
+            {state.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="col-span-3 flex justify-center py-2">
