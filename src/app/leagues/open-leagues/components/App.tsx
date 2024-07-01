@@ -291,7 +291,7 @@ export default function OpenLeaguesTable() {
     () => ({
       base: ["shadow-sm", "rounded-none", "p-2"],
       wrapper: ["max-h-[382px]", "max-w-3xl"],
-      table: ["bg-transparent", "border-divider","overflow-auto"],
+      table: ["bg-transparent", "border-divider","overflow-x-scroll"],
       header: [
         "bg-transparent",
         "text-default-500",
