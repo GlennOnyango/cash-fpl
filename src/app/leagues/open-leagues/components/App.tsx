@@ -9,38 +9,40 @@ import {
   TableCell,
   Input,
   Button,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
   Chip,
   User,
   Pagination,
   Selection,
   ChipProps,
   SortDescriptor,
-  useDisclosure,
+  Link,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from "@nextui-org/react";
-import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 import { SearchIcon } from "@/components/icons/SearchIcon";
-import { columns, users, statusOptions } from "./data";
+import { columns, users, currencyOptions } from "./data";
+import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 import { capitalize } from "@/utils/utils";
-import CreateLeagueModal from "@/components/modals/create-league";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
-  paused: "warning",
-  cancelled: "danger",
+  closed: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "name",
+  "weeklyCompetition",
+  "monthlyCompetition",
+  "seasonalCompetition",
+  "currency",
+  "actions",
+];
 
 type User = (typeof users)[0];
 
-export default function AppComplexLeague() {
-  // Modal create league
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+export default function OpenLeaguesTable() {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -78,10 +80,12 @@ export default function AppComplexLeague() {
     }
     if (
       statusFilter !== "all" &&
-      Array.from(statusFilter).length !== statusOptions.length
+      Array.from(statusFilter).length !== currencyOptions.length
     ) {
       filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status)
+        Array.from(statusFilter).includes(
+          user.currency as keyof (typeof currencyOptions)[0]
+        )
       );
     }
 
@@ -110,22 +114,64 @@ export default function AppComplexLeague() {
 
     switch (columnKey) {
       case "name":
-        return <p className="text-default-700">{user.name}</p>;
-      case "status":
+        return (
+          <Link
+            href={`/leagues/open-leagues/${user.id}`}
+            className="text-default-700"
+          >
+            {user.name}
+          </Link>
+        );
+      case "weeklyCompetition":
         return (
           <Chip
             className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[user.status]}
+            color={statusColorMap[user.weeklyCompetition ? "active" : "closed"]}
             size="sm"
             variant="dot"
           >
-            {cellValue}
+            {user.weeklyCompetition ? "active" : "closed"}
           </Chip>
         );
+      case "monthlyCompetition":
+        return (
+          <Chip
+            className="capitalize border-none gap-1 text-default-600"
+            color={
+              statusColorMap[user.monthlyCompetition ? "active" : "closed"]
+            }
+            size="sm"
+            variant="dot"
+          >
+            {user.monthlyCompetition ? "active" : "closed"}
+          </Chip>
+        );
+      case "seasonalCompetition":
+        return (
+          <Chip
+            className="capitalize border-none gap-1 text-default-600"
+            color={
+              statusColorMap[user.seasonalCompetition ? "active" : "closed"]
+            }
+            size="sm"
+            variant="dot"
+          >
+            {user.seasonalCompetition ? "active" : "closed"}
+          </Chip>
+        );
+      case "currency":
+        return <p className="text-default-700">{user.currency}</p>;
       case "actions":
         return (
-          <Button size="sm" radius="full" color="warning">
-            Request join
+          <Button
+            as={Link}
+            size="sm"
+            color="warning"
+            variant="shadow"
+            radius="full"
+            href={`/leagues/open-leagues/${user.id}`}
+          >
+            Request Join
           </Button>
         );
       default:
@@ -152,58 +198,58 @@ export default function AppComplexLeague() {
 
   const topContent = React.useMemo(() => {
     return (
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Input
-          isClearable
-          classNames={{
-            base: "w-full ",
-            inputWrapper: "border-1",
-            input: [
-              "bg-transparent",
-              "border-none",
-              "focus:ring-0",
-              "text-black/90 dark:text-white/90",
-              "placeholder:text-default-700/50 dark:placeholder:text-white/60",
-            ],
-          }}
-          placeholder="Search by name..."
-          size="sm"
-          startContent={<SearchIcon className="text-default-300 " />}
-          value={filterValue}
-          variant="bordered"
-          onClear={() => setFilterValue("")}
-          onValueChange={onSearchChange}
-        />
-        <div className="flex gap-3">
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
-              <Button
-                endContent={<ChevronDownIcon className="text-small" />}
-                size="sm"
-                variant="flat"
-                className="bg-foreground text-background"
-              >
-                Status
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              disallowEmptySelection
-              aria-label="Table Columns"
-              closeOnSelect={false}
-              selectedKeys={statusFilter}
-              selectionMode="multiple"
-              onSelectionChange={setStatusFilter}
-            >
-              {statusOptions.map((status) => (
-                <DropdownItem
-                  key={status.uid}
-                  className="capitalize text-danger-400"
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between gap-3 items-end">
+          <Input
+            isClearable
+            classNames={{
+              base: "w-full sm:max-w-[35%]",
+              inputWrapper: "border-1",
+              input: [
+                "bg-transparent",
+                "border-none",
+                "focus:ring-0",
+                "text-black/90 dark:text-white/90",
+                "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+              ],
+            }}
+            placeholder="Search by name..."
+            size="sm"
+            startContent={<SearchIcon className="text-default-300 " />}
+            value={filterValue}
+            variant="bordered"
+            onClear={() => setFilterValue("")}
+            onValueChange={onSearchChange}
+          />
+
+          <div className="flex gap-3">
+            <Dropdown>
+              <DropdownTrigger className="hidden sm:flex">
+                <Button
+                  endContent={<ChevronDownIcon className="text-small" />}
+                  size="sm"
+                  variant="flat"
+                  className="bg-foreground text-background"
                 >
-                  {capitalize(status.name)}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
+                  Currency
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                aria-label="Table Columns"
+                closeOnSelect={false}
+                selectedKeys={statusFilter}
+                selectionMode="multiple"
+                onSelectionChange={setStatusFilter}
+              >
+                {currencyOptions.map((currency) => (
+                  <DropdownItem key={currency.uid} className="capitalize">
+                    {capitalize(currency.name)}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          </div>
         </div>
       </div>
     );
@@ -243,7 +289,16 @@ export default function AppComplexLeague() {
 
   const classNames = React.useMemo(
     () => ({
+      base: ["shadow-sm", "rounded-none", "p-2"],
       wrapper: ["max-h-[382px]", "max-w-3xl"],
+      table: ["bg-transparent", "border-divider","overflow-auto"],
+      header: [
+        "bg-transparent",
+        "text-default-500",
+        "border-b",
+        "border-divider",
+      ],
+
       th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
       td: [
         // changing the rows border radius
@@ -262,11 +317,6 @@ export default function AppComplexLeague() {
 
   return (
     <>
-      <CreateLeagueModal
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onOpenChange={onOpenChange}
-      />
       <Table
         isCompact
         removeWrapper

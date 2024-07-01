@@ -20,7 +20,9 @@ import {
   ChipProps,
   SortDescriptor,
   useDisclosure,
+  Link,
 } from "@nextui-org/react";
+import { PlusIcon } from "@/components/icons/PlusIcon";
 import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns, users, statusOptions } from "./data";
@@ -33,11 +35,17 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   cancelled: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "name",
+  "status",
+  "access",
+  "currency",
+  "actions",
+];
 
 type User = (typeof users)[0];
 
-export default function AppComplexLeague() {
+export default function MYLeagueTable() {
   // Modal create league
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -122,10 +130,22 @@ export default function AppComplexLeague() {
             {cellValue}
           </Chip>
         );
+      case "access":
+        return <p className="text-default-700">{user.access}</p>;
+
+      case "currency":
+        return <p className="text-default-700">{user.currency}</p>;
       case "actions":
         return (
-          <Button size="sm" radius="full" color="warning">
-            Request join
+          <Button
+            as={Link}
+            size="sm"
+            color="warning"
+            variant="shadow"
+            radius="full"
+            href={`/leagues/my-leagues/${user.id}`}
+          >
+            Manage
           </Button>
         );
       default:
@@ -152,58 +172,65 @@ export default function AppComplexLeague() {
 
   const topContent = React.useMemo(() => {
     return (
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Input
-          isClearable
-          classNames={{
-            base: "w-full ",
-            inputWrapper: "border-1",
-            input: [
-              "bg-transparent",
-              "border-none",
-              "focus:ring-0",
-              "text-black/90 dark:text-white/90",
-              "placeholder:text-default-700/50 dark:placeholder:text-white/60",
-            ],
-          }}
-          placeholder="Search by name..."
-          size="sm"
-          startContent={<SearchIcon className="text-default-300 " />}
-          value={filterValue}
-          variant="bordered"
-          onClear={() => setFilterValue("")}
-          onValueChange={onSearchChange}
-        />
-        <div className="flex gap-3">
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
-              <Button
-                endContent={<ChevronDownIcon className="text-small" />}
-                size="sm"
-                variant="flat"
-                className="bg-foreground text-background"
-              >
-                Status
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              disallowEmptySelection
-              aria-label="Table Columns"
-              closeOnSelect={false}
-              selectedKeys={statusFilter}
-              selectionMode="multiple"
-              onSelectionChange={setStatusFilter}
-            >
-              {statusOptions.map((status) => (
-                <DropdownItem
-                  key={status.uid}
-                  className="capitalize text-danger-400"
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between gap-3 items-end">
+          <Input
+            isClearable
+            classNames={{
+              base: "w-full sm:max-w-[35%]",
+              inputWrapper: "border-1",
+              input: [
+                "bg-transparent",
+                "border-none",
+                "focus:ring-0",
+                "text-black/90 dark:text-white/90",
+                "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+              ],
+            }}
+            placeholder="Search by name..."
+            size="sm"
+            startContent={<SearchIcon className="text-default-300 " />}
+            value={filterValue}
+            variant="bordered"
+            onClear={() => setFilterValue("")}
+            onValueChange={onSearchChange}
+          />
+          <div className="flex gap-3">
+            <Dropdown>
+              <DropdownTrigger className="hidden sm:flex">
+                <Button
+                  endContent={<ChevronDownIcon className="text-small" />}
+                  size="sm"
+                  variant="flat"
+                  className="bg-foreground text-background"
                 >
-                  {capitalize(status.name)}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
+                  Status
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                aria-label="Table Columns"
+                closeOnSelect={false}
+                selectedKeys={statusFilter}
+                selectionMode="multiple"
+                onSelectionChange={setStatusFilter}
+              >
+                {statusOptions.map((status) => (
+                  <DropdownItem key={status.uid} className="capitalize">
+                    {capitalize(status.name)}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+            <Button
+              className="bg-foreground text-background"
+              onPress={onOpen}
+              endContent={<PlusIcon />}
+              size="sm"
+            >
+              Add New League
+            </Button>
+          </div>
         </div>
       </div>
     );
