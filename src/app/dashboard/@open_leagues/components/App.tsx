@@ -7,37 +7,31 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Input,
-  Button,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  Chip,
-  User,
-  Pagination,
+  Input, Pagination,
   Selection,
   ChipProps,
   SortDescriptor,
   useDisclosure,
+  Chip
 } from "@nextui-org/react";
-import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 import { SearchIcon } from "@/components/icons/SearchIcon";
-import { columns, users, statusOptions } from "./data";
+import { columns, availability } from "./data";
 import { capitalize } from "@/utils/utils";
 import CreateLeagueModal from "@/components/modals/create-league";
+import { Content } from "../page";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  active: "success",
-  paused: "warning",
-  cancelled: "danger",
+  public: "success",
+  private: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "active", "actions"];
 
-type User = (typeof users)[0];
+type Props = {
+  loadedData: Content[];
+};
 
-export default function AppComplexLeague() {
+export default function OpenLeagues({ loadedData }: Props) {
   // Modal create league
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -56,7 +50,7 @@ export default function AppComplexLeague() {
   });
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(users.length / rowsPerPage);
+  const pages = Math.ceil(loadedData.length / rowsPerPage);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -69,7 +63,7 @@ export default function AppComplexLeague() {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredUsers = [...loadedData];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
@@ -78,15 +72,17 @@ export default function AppComplexLeague() {
     }
     if (
       statusFilter !== "all" &&
-      Array.from(statusFilter).length !== statusOptions.length
+      Array.from(statusFilter).length !== availability.length
     ) {
       filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status)
+        Array.from(statusFilter).includes(
+          user.publiclyAvailable ? "public" : "private"
+        )
       );
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+  }, [loadedData, filterValue, statusFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -96,42 +92,45 @@ export default function AppComplexLeague() {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: User, b: User) => {
-      const first = a[sortDescriptor.column as keyof User] as number;
-      const second = b[sortDescriptor.column as keyof User] as number;
+    return [...items].sort((a: Content, b: Content) => {
+      const first = a[sortDescriptor.column as keyof Content] as number;
+      const second = b[sortDescriptor.column as keyof Content] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
-    const cellValue = user[columnKey as keyof User];
+  const renderCell = React.useCallback(
+    (user: Content, columnKey: React.Key) => {
+      const cellValue = user[columnKey as keyof Content];
 
-    switch (columnKey) {
-      case "name":
-        return <p className="text-default-700">{user.name}</p>;
-      case "status":
-        return (
-          <Chip
-            className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[user.status]}
-            size="sm"
-            variant="dot"
-          >
-            {cellValue}
-          </Chip>
-        );
-      case "actions":
-        return (
-          <Button size="sm" radius="full" color="warning">
-            Request join
-          </Button>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+      switch (columnKey) {
+        case "name":
+          return <p className="text-default-700">{user.name}</p>;
+        case "active":
+          return (
+            <p
+              className={`${user.active ? "text-green-700" : "text-amber-700"}`}
+            >
+              {capitalize(user.active ? "active" : "cancelled")}
+            </p>
+          );
+        case "actions":
+          return (
+            <div className="relative flex justify-start items-center gap-2">
+              {/* <Button size="sm">Manage</Button> */}
+              <Chip color="warning" variant="shadow">
+                Join
+              </Chip>
+            </div>
+          );
+        default:
+          return user.name;
+      }
+    },
+    []
+  );
 
   const onRowsPerPageChange = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -152,58 +151,29 @@ export default function AppComplexLeague() {
 
   const topContent = React.useMemo(() => {
     return (
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Input
-          isClearable
-          classNames={{
-            base: "w-full ",
-            inputWrapper: "border-1",
-            input: [
-              "bg-transparent",
-              "border-none",
-              "focus:ring-0",
-              "text-black/90 dark:text-white/90",
-              "placeholder:text-default-700/50 dark:placeholder:text-white/60",
-            ],
-          }}
-          placeholder="Search by name..."
-          size="sm"
-          startContent={<SearchIcon className="text-default-300 " />}
-          value={filterValue}
-          variant="bordered"
-          onClear={() => setFilterValue("")}
-          onValueChange={onSearchChange}
-        />
-        <div className="flex gap-3">
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
-              <Button
-                endContent={<ChevronDownIcon className="text-small" />}
-                size="sm"
-                variant="flat"
-                className="bg-foreground text-background"
-              >
-                Status
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              disallowEmptySelection
-              aria-label="Table Columns"
-              closeOnSelect={false}
-              selectedKeys={statusFilter}
-              selectionMode="multiple"
-              onSelectionChange={setStatusFilter}
-            >
-              {statusOptions.map((status) => (
-                <DropdownItem
-                  key={status.uid}
-                  className="capitalize text-danger-400"
-                >
-                  {capitalize(status.name)}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between gap-3 items-end">
+          <Input
+            isClearable
+            classNames={{
+              base: "w-6/12 ",
+              inputWrapper: "border-1",
+              input: [
+                "bg-transparent",
+                "border-none",
+                "focus:ring-0",
+                "text-black/90 dark:text-white/90",
+                "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+              ],
+            }}
+            placeholder="Search by name..."
+            size="sm"
+            startContent={<SearchIcon className="text-default-300 " />}
+            value={filterValue}
+            variant="bordered"
+            onClear={() => setFilterValue("")}
+            onValueChange={onSearchChange}
+          />
         </div>
       </div>
     );
@@ -213,7 +183,7 @@ export default function AppComplexLeague() {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    users.length,
+    loadedData.length,
     hasSearchFilter,
   ]);
 

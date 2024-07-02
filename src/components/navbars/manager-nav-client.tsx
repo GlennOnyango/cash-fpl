@@ -7,14 +7,12 @@ import {
   NavbarContent,
   NavbarItem,
   NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem,
-  Link,
+  NavbarMenu, Link,
   Button,
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
-  DropdownItem,
+  DropdownItem
 } from "@nextui-org/react";
 import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 
@@ -109,6 +107,7 @@ export default function ManagerNav() {
                       key="open-leagues"
                       description="See all leagues that are currently open"
                       href="/leagues/open-leagues"
+                      className="text-default-900"
                     >
                       Open Leagues
                     </DropdownItem>
@@ -116,6 +115,7 @@ export default function ManagerNav() {
                       key="my-leagues"
                       description="See all leagues that you have created"
                       href="/leagues/my-leagues"
+                      className="text-default-900"
                     >
                       My Leagues
                     </DropdownItem>
@@ -123,6 +123,7 @@ export default function ManagerNav() {
                       key="participating-leagues"
                       description="See all leagues that you are participating in"
                       href="/leagues/participating-leagues"
+                      className="text-default-900"
                     >
                       Participating Leagues
                     </DropdownItem>

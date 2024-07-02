@@ -19,6 +19,7 @@ import {
   SortDescriptor,
   useDisclosure,
   Chip,
+  Link,
 } from "@nextui-org/react";
 import { PlusIcon } from "@/components/icons/PlusIcon";
 import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
@@ -115,42 +116,50 @@ export default function AppComplexLeague({ loadedData }: Props) {
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback(
-    (user: Content, columnKey: React.Key) => {
-      const cellValue = user[columnKey as keyof Content];
+    (league: Content, columnKey: React.Key) => {
+      const cellValue = league[columnKey as keyof Content];
 
       switch (columnKey) {
         case "name":
-          return <p className="text-default-700">{user.name}</p>;
+          return <p className="text-default-700">{league.name}</p>;
         case "publiclyAvailable":
           return (
             <Chip
               className="capitalize border-none gap-1 text-default-600"
               color={
-                statusColorMap[user.publiclyAvailable ? "public" : "private"]
+                statusColorMap[league.publiclyAvailable ? "public" : "private"]
               }
               size="sm"
               variant="dot"
             >
-              {capitalize(user.publiclyAvailable ? "public" : "private")}
+              {capitalize(league.publiclyAvailable ? "public" : "private")}
             </Chip>
           );
         case "active":
           return (
-            <p className={`${user.active ? "text-green-500" : "text-amber-700" }`}>
-              {capitalize(user.active ? "active" : "cancelled")}
+            <p
+              className={`${league.active ? "text-green-700" : "text-amber-700"}`}
+            >
+              {capitalize(league.active ? "active" : "cancelled")}
             </p>
           );
         case "actions":
           return (
             <div className="relative flex justify-end items-center gap-2">
-              {/* <Button size="sm">Manage</Button> */}
-              <Chip color="warning" variant="shadow">
+              <Button
+                size="sm"
+                variant="shadow"
+                radius="full"
+                color="warning"
+                as={Link}
+                href={`/leagues/my-leagues/${league.id}`}
+              >
                 Manage
-              </Chip>
+              </Button>
             </div>
           );
         default:
-          return user.name;
+          return league.name;
       }
     },
     []
@@ -221,7 +230,7 @@ export default function AppComplexLeague({ loadedData }: Props) {
                 {availability.map((status) => (
                   <DropdownItem
                     key={status.uid}
-                    className="capitalize text-danger-400"
+                    className="capitalize text-default-900"
                   >
                     {capitalize(status.name)}
                   </DropdownItem>

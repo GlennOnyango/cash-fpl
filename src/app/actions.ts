@@ -454,3 +454,38 @@ export async function fetchMyLeagues(page: number = 0, size: number = 10) {
     };
   }
 }
+
+// Fetch public leagues
+export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
+  try {
+    const response = await fetch(
+      `https://ms-leagues.onrender.com/api/v1/league/public?page=${page}&size=${size}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+        },
+        redirect: "follow",
+      }
+    );
+
+    if (!response.ok) {
+      let err = await response.json();
+      console.log("-------",err);
+      throw new Error(
+        err.message ||
+          "Failed to fetch leagues. Please try again or contact us."
+      );
+    }
+
+    const res = await response.json();
+
+    
+    return res;
+  } catch (error: any) {
+    let err = error.message || "Leagues could not be fetched";
+    return {
+      message: err,
+    };
+  }
+}
