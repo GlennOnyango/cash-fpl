@@ -284,7 +284,6 @@ export async function signInUser(prevState: any, formData: FormData) {
 
     if (!response.ok) {
       const err = await response.json();
-      console.log(err);
       throw new Error(
         err.message || "Login failed. Please try again or contact us."
       );
@@ -294,7 +293,6 @@ export async function signInUser(prevState: any, formData: FormData) {
 
     cookies().set("accessToken", `${res.accessToken}`, { secure: true });
   } catch (error: any) {
-    console.log("My error", error);
     let err = error.message || "User could not be created";
     return {
       errors: err,
@@ -405,14 +403,11 @@ export async function createLeague(prevState: any, formData: FormData) {
 
     if (!newLeague.ok) {
       let err = await newLeague.json();
-      console.log(err);
       throw new Error(
         err.message ||
           "Failed to create league. Please try again or contact us."
       );
     }
-
-    console.log(newLeague);
   } catch (error: any) {
     let err = error.message || "League could not be created";
     return {
@@ -423,4 +418,39 @@ export async function createLeague(prevState: any, formData: FormData) {
   return {
     message: "League created successfully",
   };
+}
+
+// Fetch my leagues
+export async function fetchMyLeagues(page: number = 0, size: number = 10) {
+  try {
+    const response = await fetch(
+      `https://ms-leagues.onrender.com/api/v1/league/user-leagues?page=${page}&size=${size}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+        },
+        redirect: "follow",
+      }
+    );
+
+    if (!response.ok) {
+      let err = await response.json();
+      console.log("-------",err);
+      throw new Error(
+        err.message ||
+          "Failed to fetch leagues. Please try again or contact us."
+      );
+    }
+
+    const res = await response.json();
+
+    
+    return res;
+  } catch (error: any) {
+    let err = error.message || "Leagues could not be fetched";
+    return {
+      message: err,
+    };
+  }
 }
