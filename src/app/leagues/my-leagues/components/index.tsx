@@ -28,7 +28,7 @@ export const rules_select = [
 ];
 
 const initialState = {
-  errors: [],
+  message: "",
 };
 
 type currency = {
@@ -76,34 +76,6 @@ export default function UpdateLeagueComponent({ id }: Props) {
     setCurrency(e.target.value);
   };
 
-  const errors = useMemo(() => {
-    if (state.errors?.length === 0 || state.errors === undefined) {
-      return [];
-    }
-
-    return state.errors?.map((error) => {
-      if (Array.isArray(error)) {
-        return error.map((e) => {
-          return (
-            <p
-              key={e}
-              className="bg-red-100 rounded-md py-2 px-3 my-2 text-gray-900"
-            >
-              {e}
-            </p>
-          );
-        });
-      }
-      return (
-        <p
-          key={error}
-          className="bg-red-100 rounded-md py-2 px-3 my-2 text-gray-900"
-        >
-          {error}
-        </p>
-      );
-    });
-  }, [state.errors]);
 
   return (
     <form
@@ -330,7 +302,20 @@ export default function UpdateLeagueComponent({ id }: Props) {
       </div>
 
       <div className="col-span-3 flex flex-col items-center justify-center">
-        {errors.map((error) => error)}
+        {state.message !== "" &&
+        state.message !== "League created successfully" ? (
+          <p className="bg-red-100 rounded-md py-2 px-3 my-2 text-gray-900">
+            {state.message}
+          </p>
+        ) : null}
+      </div>
+
+      <div className="col-span-3 flex flex-col items-center justify-center">
+        {state.message === "League created successfully" ? (
+          <p className="bg-green-400 rounded-md py-2 px-3 my-2 text-gray-900">
+            {state.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="col-span-3 flex justify-center py-2">
