@@ -284,7 +284,9 @@ export async function signInUser(prevState: any, formData: FormData) {
 
     if (!response.ok) {
       const err = await response.json();
-      throw new Error(err.message || "Login failed. Please try again or contact us.");
+      throw new Error(
+        err.message || "Login failed. Please try again or contact us."
+      );
     }
 
     const res = await response.json();
@@ -338,30 +340,152 @@ export async function createLeague(prevState: any, formData: FormData) {
     const errorArray: string[] = [];
 
     const errorObj: any = league.error.flatten().fieldErrors;
-    const formErrors: any = league.error.flatten().formErrors;
+    const formErrors: string[] = league.error.flatten().formErrors;
 
     for (const key in errorObj) {
       errorArray.push(errorObj[key]);
     }
 
     if (formErrors) {
-      errorArray.push(formErrors);
+      errorArray.push(...formErrors);
     }
 
     return {
-      errors: errorArray,
+      message: errorArray[0],
     };
   }
 
   try {
-    //upload avatar on folder public/images/leagues
+    const competitionTypes = league.data.types.map((competition: string) => {
+      if (competition === "weekly") {
+        return {
+          competitionTypeId: 1,
+          amount: league.data.weeklyAmount,
+        };
+      } else if (competition === "monthly") {
+        return {
+          competitionTypeId: 2,
+          amount: league.data.monthlyAmount,
+        };
+      } else if (competition === "seasonal") {
+        return {
+          competitionTypeId: 3,
+          amount: league.data.seasonalAmount,
+        };
+      }
+    });
+    const raw = JSON.stringify({
+      name: league.data.name,
+      isPublic: league.data.access === "public",
+      currencyId: league.data.currency === "KES" ? 1 : 2,
+      competitionType: competitionTypes,
+      paymentDeadline: "2024-07-29T00:00:00",
+      penalties: [
+        {
+          penaltyType: "AMOUNT",
+          value: league.data.fineAmount,
+        },
+      ],
+    });
 
+    //create league
+    const newLeague = await fetch(
+      "https://ms-leagues.onrender.com/api/v1/league/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+        },
+        body: raw,
+      }
+    );
+
+    if (!newLeague.ok) {
+      let err = await newLeague.json();
+      throw new Error(
+        err.message ||
+          "Failed to create league. Please try again or contact us."
+      );
+    }
+  } catch (error: any) {
+    let err = error.message || "League could not be created";
     return {
-      data: "League created successfully",
+      message: err,
     };
-  } catch (error) {
+  }
+
+  return {
+    message: "League created successfully",
+  };
+}
+
+// Fetch my leagues
+export async function fetchMyLeagues(page: number = 0, size: number = 10) {
+  try {
+    const response = await fetch(
+      `https://ms-leagues.onrender.com/api/v1/league/user-leagues?page=${page}&size=${size}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+        },
+        redirect: "follow",
+      }
+    );
+
+    if (!response.ok) {
+      let err = await response.json();
+      console.log("-------",err);
+      throw new Error(
+        err.message ||
+          "Failed to fetch leagues. Please try again or contact us."
+      );
+    }
+
+    const res = await response.json();
+
+    
+    return res;
+  } catch (error: any) {
+    let err = error.message || "Leagues could not be fetched";
     return {
-      errors: ["League could not be created"],
+      message: err,
+    };
+  }
+}
+
+// Fetch public leagues
+export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
+  try {
+    const response = await fetch(
+      `https://ms-leagues.onrender.com/api/v1/league/public?page=${page}&size=${size}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+        },
+        redirect: "follow",
+      }
+    );
+
+    if (!response.ok) {
+      let err = await response.json();
+      console.log("-------",err);
+      throw new Error(
+        err.message ||
+          "Failed to fetch leagues. Please try again or contact us."
+      );
+    }
+
+    const res = await response.json();
+
+    
+    return res;
+  } catch (error: any) {
+    let err = error.message || "Leagues could not be fetched";
+    return {
+      message: err,
     };
   }
 }
