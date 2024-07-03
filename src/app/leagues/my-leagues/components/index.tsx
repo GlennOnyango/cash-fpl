@@ -53,7 +53,7 @@ export default function UpdateLeagueComponent({ id }: Props) {
   }, [state]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/limits?currency=${currency}`)
+    fetch(`/api/limits?currency=${currency}`)
       .then((res) => res.json())
       .then((data: currency[]) => {
         setLimits(data);

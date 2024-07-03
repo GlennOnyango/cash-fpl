@@ -100,7 +100,7 @@ const League = z
       })
       .refine(async (currency) => {
         const limits_fetched = await fetch(
-          `http://localhost:3000/api/limits?currency=${currency}`
+          `/api/limits?currency=${currency}`
         );
 
         const limits_json = await limits_fetched.json();
