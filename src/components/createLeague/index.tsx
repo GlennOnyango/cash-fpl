@@ -301,6 +301,7 @@ export default function CreateLeagueComponent() {
           </p>
         ) : null}
       </div>
+      
 
       <div className="col-span-3 flex flex-col items-center justify-center">
         {state.message === "League created successfully" ? (
