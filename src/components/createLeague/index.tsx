@@ -44,12 +44,10 @@ export default function CreateLeagueComponent() {
   const [limits, setLimits] = React.useState<currency[]>([]);
   const [currency, setCurrency] = React.useState("USD");
 
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
+  const local_url = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
 
   useEffect(() => {
-    fetch(`/api/limits?currency=${currency}`)
+    fetch(`${local_url}/api/limits?currency=${currency}`)
       .then((res) => res.json())
       .then((data: currency[]) => {
         setLimits(data);

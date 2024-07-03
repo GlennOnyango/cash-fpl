@@ -3,6 +3,10 @@ import { z } from "zod";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+const local_url = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
+const authentication_url = process.env.NEXT_PUBLIC_EXTERNAL_AUTHENTICATION_API_URL;
+const leagues_url = process.env.NEXT_PUBLIC_EXTERNAL_LEAGUES_API_URL;
+
 let min = {
   currency: "KES",
   minWeekly: 100,
@@ -100,7 +104,7 @@ const League = z
       })
       .refine(async (currency) => {
         const limits_fetched = await fetch(
-          `/api/limits?currency=${currency}`
+          `${local_url}/api/limits?currency=${currency}`
         );
 
         const limits_json = await limits_fetched.json();
@@ -220,23 +224,20 @@ export async function createUser(prevState: any, formData: FormData) {
   }
 
   try {
-    const newUser = await fetch(
-      "https://ms-authentication-abof.onrender.com/api/v1/auth/create",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify({
-          username: user.data.username,
-          email: user.data.email,
-          password: user.data.password,
-          teamId: user.data.teamId,
-        }),
-        redirect: "follow",
-      }
-    );
+    const newUser = await fetch(`${authentication_url}/api/v1/auth/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        username: user.data.username,
+        email: user.data.email,
+        password: user.data.password,
+        teamId: user.data.teamId,
+      }),
+      redirect: "follow",
+    });
 
     if (!newUser.ok) {
       let err = await newUser.json();
@@ -266,21 +267,18 @@ export async function signInUser(prevState: any, formData: FormData) {
   }
 
   try {
-    const response = await fetch(
-      "https://ms-authentication-abof.onrender.com/api/v1/auth/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify({
-          username: user.data.email,
-          password: user.data.password,
-        }),
-        redirect: "follow",
-      }
-    );
+    const response = await fetch(`${authentication_url}/api/v1/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        username: user.data.email,
+        password: user.data.password,
+      }),
+      redirect: "follow",
+    });
 
     if (!response.ok) {
       const err = await response.json();
@@ -390,7 +388,7 @@ export async function createLeague(prevState: any, formData: FormData) {
 
     //create league
     const newLeague = await fetch(
-      "https://ms-leagues.onrender.com/api/v1/league/create",
+      `${leagues_url}/api/v1/league/create`,
       {
         method: "POST",
         headers: {
@@ -424,7 +422,7 @@ export async function createLeague(prevState: any, formData: FormData) {
 export async function fetchMyLeagues(page: number = 0, size: number = 10) {
   try {
     const response = await fetch(
-      `https://ms-leagues.onrender.com/api/v1/league/user-leagues?page=${page}&size=${size}`,
+      `${leagues_url}/api/v1/league/user-leagues?page=${page}&size=${size}`,
       {
         method: "GET",
         headers: {
@@ -436,7 +434,7 @@ export async function fetchMyLeagues(page: number = 0, size: number = 10) {
 
     if (!response.ok) {
       let err = await response.json();
-      console.log("-------",err);
+      console.log("-------", err);
       throw new Error(
         err.message ||
           "Failed to fetch leagues. Please try again or contact us."
@@ -445,7 +443,6 @@ export async function fetchMyLeagues(page: number = 0, size: number = 10) {
 
     const res = await response.json();
 
-    
     return res;
   } catch (error: any) {
     let err = error.message || "Leagues could not be fetched";
@@ -459,7 +456,7 @@ export async function fetchMyLeagues(page: number = 0, size: number = 10) {
 export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
   try {
     const response = await fetch(
-      `https://ms-leagues.onrender.com/api/v1/league/public?page=${page}&size=${size}`,
+      `${leagues_url}/api/v1/league/public?page=${page}&size=${size}`,
       {
         method: "GET",
         headers: {
@@ -471,7 +468,7 @@ export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
 
     if (!response.ok) {
       let err = await response.json();
-      console.log("-------",err);
+      console.log("-------", err);
       throw new Error(
         err.message ||
           "Failed to fetch leagues. Please try again or contact us."
@@ -480,7 +477,6 @@ export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
 
     const res = await response.json();
 
-    
     return res;
   } catch (error: any) {
     let err = error.message || "Leagues could not be fetched";
