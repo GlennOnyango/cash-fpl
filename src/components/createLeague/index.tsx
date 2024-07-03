@@ -49,7 +49,7 @@ export default function CreateLeagueComponent() {
   }, [state]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/limits?currency=${currency}`)
+    fetch(`/api/limits?currency=${currency}`)
       .then((res) => res.json())
       .then((data: currency[]) => {
         setLimits(data);
@@ -301,7 +301,6 @@ export default function CreateLeagueComponent() {
           </p>
         ) : null}
       </div>
-      
 
       <div className="col-span-3 flex flex-col items-center justify-center">
         {state.message === "League created successfully" ? (
