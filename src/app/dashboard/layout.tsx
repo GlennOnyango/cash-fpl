@@ -8,7 +8,6 @@ export const metadata: Metadata = {
 
 export default function Layout({
   children,
-  players,
   notifications,
   open_leagues,
   my_leagues,
@@ -16,7 +15,6 @@ export default function Layout({
   statistics,
 }: Readonly<{
   children: React.ReactNode;
-  players: React.ReactNode;
   notifications: React.ReactNode;
   open_leagues: React.ReactNode;
   my_leagues: React.ReactNode;
@@ -31,7 +29,6 @@ export default function Layout({
         {my_leagues}
         {invited_leagues}
         {notifications}
-        {players}
         {statistics}
       </div>
     </ManagerPageNavbar>

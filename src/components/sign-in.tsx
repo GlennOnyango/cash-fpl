@@ -30,7 +30,7 @@ export default function SignInCashFPL() {
     >
       {state.errors && (
         <p
-          className="bg-red-100 rounded-md py-2 px-3 my-2 text-gray-900"
+          className="bg-red-100 rounded-md py-2 px-3 my-2 text-center text-gray-900"
           key={"error"}
         >
           {`${state.errors}`}

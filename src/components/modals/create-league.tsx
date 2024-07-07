@@ -22,23 +22,24 @@ export default function CreateLeagueModal({
   onOpen,
   onOpenChange,
 }: Props) {
-
-
   return (
     <Modal
       isOpen={isOpen}
       className={`${poppins.className}`}
       size="4xl"
       onOpenChange={onOpenChange}
+      isDismissable={false}
     >
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className={`text-default-900 flex flex-col text-2xl gap-1`}>
+            <ModalHeader
+              className={`text-default-900 flex flex-col text-2xl gap-1`}
+            >
               Create League
             </ModalHeader>
             <ModalBody>
-              <CreateLeagueComponent />
+              <CreateLeagueComponent onClose={onClose}/>
             </ModalBody>
           </>
         )}

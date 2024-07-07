@@ -261,7 +261,7 @@ export default function OpenLeagues({ loadedData }: Props) {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No users found"} items={sortedItems}>
+        <TableBody emptyContent={"Open leagues not found"} items={sortedItems}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (
