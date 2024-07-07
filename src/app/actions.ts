@@ -404,7 +404,6 @@ export async function createLeague(prevState: any, formData: FormData) {
 
     revalidateTag("fetchMyLeagues");
     revalidateTag("fetchOpenLeagues");
-
   } catch (error: any) {
     return {
       message: error.message,
@@ -427,7 +426,7 @@ export async function fetchMyLeagues(page: number = 0, size: number = 10) {
           Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
         },
         redirect: "follow",
-        next:{ tags: ["fetchMyLeagues"] }
+        next: { tags: ["fetchMyLeagues"] },
       }
     );
 
@@ -462,7 +461,7 @@ export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
           Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
         },
         redirect: "follow",
-        next:{ tags: ["fetchOpenLeagues"] }
+        next: { tags: ["fetchOpenLeagues"], revalidate: 600 },
       }
     );
 
