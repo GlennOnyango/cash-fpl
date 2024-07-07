@@ -29,10 +29,10 @@ export default function ManagerNav() {
       name: "Leagues",
       url: "/leagues",
     },
-    {
-      name: "Users",
-      url: "/users",
-    },
+    // {
+    //   name: "Users",
+    //   url: "/users",
+    // },
     {
       name: "Analytics",
       url: "/analytics",
