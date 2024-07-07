@@ -216,7 +216,7 @@ export default function AppComplexLeague({ loadedData }: Props) {
                   variant="flat"
                   className="bg-foreground text-background"
                 >
-                  Status
+                  Availability
                 </Button>
               </DropdownTrigger>
               <DropdownMenu

@@ -2,9 +2,11 @@
 import { z } from "zod";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidateTag } from "next/cache";
 
 const local_url = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
-const authentication_url = process.env.NEXT_PUBLIC_EXTERNAL_AUTHENTICATION_API_URL;
+const authentication_url =
+  process.env.NEXT_PUBLIC_EXTERNAL_AUTHENTICATION_API_URL;
 const leagues_url = process.env.NEXT_PUBLIC_EXTERNAL_LEAGUES_API_URL;
 
 let min = {
@@ -281,19 +283,15 @@ export async function signInUser(prevState: any, formData: FormData) {
     });
 
     if (!response.ok) {
-      const err = await response.json();
-      throw new Error(
-        err.message || "Login failed. Please try again or contact us."
-      );
+      throw new Error("Login failed. Please try again or contact us.");
     }
 
     const res = await response.json();
 
     cookies().set("accessToken", `${res.accessToken}`, { secure: true });
   } catch (error: any) {
-    let err = error.message || "User could not be created";
     return {
-      errors: err,
+      errors: error.message,
     };
   }
 
@@ -387,29 +385,29 @@ export async function createLeague(prevState: any, formData: FormData) {
     });
 
     //create league
-    const newLeague = await fetch(
-      `${leagues_url}/api/v1/league/create`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
-        },
-        body: raw,
-      }
-    );
+    const newLeague = await fetch(`${leagues_url}/api/v1/league/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+      },
+      body: raw,
+    });
 
     if (!newLeague.ok) {
       let err = await newLeague.json();
+      console.log("Create League<------->", err);
       throw new Error(
-        err.message ||
-          "Failed to create league. Please try again or contact us."
+        "Failed to create league. Please try again or contact us."
       );
     }
+
+    revalidateTag("fetchMyLeagues");
+    revalidateTag("fetchOpenLeagues");
+
   } catch (error: any) {
-    let err = error.message || "League could not be created";
     return {
-      message: err,
+      message: error.message,
     };
   }
 
@@ -429,6 +427,7 @@ export async function fetchMyLeagues(page: number = 0, size: number = 10) {
           Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
         },
         redirect: "follow",
+        next:{ tags: ["fetchMyLeagues"] }
       }
     );
 
@@ -463,6 +462,7 @@ export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
           Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
         },
         redirect: "follow",
+        next:{ tags: ["fetchOpenLeagues"] }
       }
     );
 

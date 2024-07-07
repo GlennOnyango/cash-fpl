@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
 import {
-  Button,
   CheckboxGroup,
   Input,
   Select,
@@ -11,6 +10,7 @@ import {
 import { useFormState } from "react-dom";
 import { createLeague } from "@/app/actions";
 import { SelectorIcon } from "../icons/SelectorIcon";
+import { SubmitButton } from "../submit";
 
 export const access = [
   { key: "public", label: "Public" },
@@ -38,7 +38,11 @@ type currency = {
   minSeasonal: number;
 };
 
-export default function CreateLeagueComponent() {
+type Props = {
+  onClose: () => void;
+};
+
+export default function CreateLeagueComponent({ onClose }: Props) {
   const [state, formAction] = useFormState(createLeague, initialState);
   const [selected, setSelected] = React.useState(["weekly"]);
   const [limits, setLimits] = React.useState<currency[]>([]);
@@ -69,6 +73,12 @@ export default function CreateLeagueComponent() {
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrency(e.target.value);
   };
+
+  useEffect(() => {
+    if (state.message === "League created successfully") {
+      onClose();
+    }
+  }, [state.message]);
 
   return (
     <form
@@ -309,10 +319,9 @@ export default function CreateLeagueComponent() {
       </div>
 
       <div className="col-span-3 flex justify-center py-2">
-        <Button type="submit" className="bg-gray-900 text-white">
-          {" "}
-          Create{" "}
-        </Button>
+        <div className="flex flex-col gap-2 w-3/12 ">
+          <SubmitButton btnText="Create" />
+        </div>
       </div>
     </form>
   );
