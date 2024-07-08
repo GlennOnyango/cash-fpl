@@ -23,8 +23,8 @@ export const currency_select = [
 ];
 
 export const rules_select = [
-  { key: "Yes", label: "Yes" },
-  { key: "No", label: "No" },
+  { key: true, label: "Yes" },
+  { key: false, label: "No" },
 ];
 
 const initialState = {
@@ -183,7 +183,7 @@ export default function CreateLeagueComponent({ onClose }: Props) {
           >
             {rules_select.map((acc) => (
               <SelectItem
-                key={acc.key}
+                key={acc.label}
                 className="text-black/90 dark:text-white/90"
               >
                 {acc.label}

@@ -22,7 +22,7 @@ import { OpenLeaguesTableProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
-  cancelled: "warning",
+  disabled: "danger",
 };
 
 const INITIAL_VISIBLE_COLUMNS = [
@@ -127,22 +127,22 @@ export default function OpenLeagues({ loadedData }: Props) {
           return (
             <Chip
               className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[user.weekly ? "active" : "cancelled"]}
+              color={statusColorMap[user.weekly ? "active" : "disabled"]}
               size="sm"
               variant="dot"
             >
-              {"Weekly"}
+              {user.weekly ? "active" : "not available"}
             </Chip>
           );
         case "monthly":
           return (
             <Chip
               className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[user.monthly ? "active" : "cancelled"]}
+              color={statusColorMap[user.monthly ? "active" : "disabled"]}
               size="sm"
               variant="dot"
             >
-              {"Monthly"}
+              {user.monthly ? "active" : "not available"}
             </Chip>
           );
           
@@ -150,11 +150,11 @@ export default function OpenLeagues({ loadedData }: Props) {
           return (
             <Chip
               className="capitalize border-none gap-1 text-default-600 justify-start"
-              color={statusColorMap[user.seasonal ? "active" : "cancelled"]}
+              color={statusColorMap[user.seasonal ? "active" : "disabled"]}
               size="sm"
               variant="dot"
             >
-              {"Seasonal"}
+              {user.seasonal ? "active" : "not available"}
             </Chip>
           );
         case "currency":
@@ -200,7 +200,7 @@ export default function OpenLeagues({ loadedData }: Props) {
           <Input
             isClearable
             classNames={{
-              base: "w-6/12 ",
+              base: "w-4/12 ",
               inputWrapper: "border-1",
               input: [
                 "bg-transparent",
