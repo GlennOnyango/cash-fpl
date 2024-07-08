@@ -200,7 +200,7 @@ export default function OpenLeagues({ loadedData }: Props) {
           <Input
             isClearable
             classNames={{
-              base: "w-6/12 ",
+              base: "w-4/12 ",
               inputWrapper: "border-1",
               input: [
                 "bg-transparent",
