@@ -1,7 +1,43 @@
 import ManagerPageNavbar from "@/components/navbars/manager-nav";
 import OpenLeaguesTable from "./components/App";
+import { Content, OpenLeaguesTableProps } from "@/utils/types";
+import { fetchOpenLeagues } from "@/app/actions";
+import { redirect } from "next/navigation";
 
-export default function Page() {
+export default async function Page() {
+  let leagues: Content[] = [];
+
+  const leaguesFetch = await fetchOpenLeagues();
+
+  if (leaguesFetch?.message === "UNAUTHORIZED") {
+    redirect("/api/auth/logout");
+  }
+
+  if (leaguesFetch?.content) {
+    leagues = leaguesFetch.content;
+  }
+
+  const openLeagueData: OpenLeaguesTableProps[] = leagues.map((league) => {
+    let competitions = league.competitionTypes.map((competition) => {
+      if (competition.competitionTypeId === 1) {
+        return "Weekly";
+      } else if (competition.competitionTypeId === 2) {
+        return "Monthly";
+      } else if (competition.competitionTypeId === 3) {
+        return "Yearly";
+      }
+    });
+
+    return {
+      id: league.id,
+      name: league.name,
+      weekly: competitions.includes("Weekly"),
+      monthly: competitions.includes("Monthly"),
+      seasonal: competitions.includes("Yearly"),
+      currency: league.currencyId === 1 ? "KES" : "USD",
+    };
+  });
+
   return (
     <ManagerPageNavbar>
       <div
@@ -13,7 +49,7 @@ export default function Page() {
         <h4 className="text-3xl text-black/90 dark:text-white/90 mb-4">
           Open Leagues
         </h4>
-        <OpenLeaguesTable />
+        <OpenLeaguesTable loadedData={openLeagueData} />
       </div>
     </ManagerPageNavbar>
   );

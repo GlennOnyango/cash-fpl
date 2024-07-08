@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -8,41 +8,40 @@ import {
   TableRow,
   TableCell,
   Input,
-  Button,
-  Chip,
-  User,
   Pagination,
   Selection,
   ChipProps,
   SortDescriptor,
-  Link,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
+  useDisclosure,
+  Chip,
 } from "@nextui-org/react";
 import { SearchIcon } from "@/components/icons/SearchIcon";
-import { columns, users, currencyOptions } from "./data";
-import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
-import { capitalize } from "@/utils/utils";
+import { columns, availability } from "./data";
+import CreateLeagueModal from "@/components/modals/create-league";
+import { OpenLeaguesTableProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
-  closed: "danger",
+  cancelled: "warning",
 };
 
 const INITIAL_VISIBLE_COLUMNS = [
   "name",
-  "weeklyCompetition",
-  "monthlyCompetition",
-  "seasonalCompetition",
+  "weekly",
+  "monthly",
+  "seasonal",
   "currency",
   "actions",
 ];
 
-type User = (typeof users)[0];
+type Props = {
+  loadedData: OpenLeaguesTableProps[];
+};
 
-export default function OpenLeaguesTable() {
+export default function OpenLeagues({ loadedData }: Props) {
+  // Modal create league
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -51,16 +50,20 @@ export default function OpenLeaguesTable() {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
   });
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(users.length / rowsPerPage);
+  const pages = Math.ceil(loadedData.length / rowsPerPage);
 
   const hasSearchFilter = Boolean(filterValue);
+
+  useEffect(() => {
+    console.log("loadedData", loadedData);
+  }, [loadedData]);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
@@ -71,7 +74,7 @@ export default function OpenLeaguesTable() {
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredUsers = [...loadedData];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
@@ -80,17 +83,15 @@ export default function OpenLeaguesTable() {
     }
     if (
       statusFilter !== "all" &&
-      Array.from(statusFilter).length !== currencyOptions.length
+      Array.from(statusFilter).length !== availability.length
     ) {
       filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(
-          user.currency as keyof (typeof currencyOptions)[0]
-        )
+        Array.from(statusFilter).includes(user.weekly ? "public" : "private")
       );
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+  }, [loadedData, filterValue, statusFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -100,84 +101,80 @@ export default function OpenLeaguesTable() {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: User, b: User) => {
-      const first = a[sortDescriptor.column as keyof User] as number;
-      const second = b[sortDescriptor.column as keyof User] as number;
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
+    return [...items].sort(
+      (a: OpenLeaguesTableProps, b: OpenLeaguesTableProps) => {
+        const first = a[
+          sortDescriptor.column as keyof OpenLeaguesTableProps
+        ] as boolean;
+        const second = b[
+          sortDescriptor.column as keyof OpenLeaguesTableProps
+        ] as boolean;
+        const cmp = first < second ? -1 : first > second ? 1 : 0;
 
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
-    });
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+      }
+    );
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
-    const cellValue = user[columnKey as keyof User];
+  const renderCell = React.useCallback(
+    (user: OpenLeaguesTableProps, columnKey: React.Key) => {
+      const cellValue = user[columnKey as keyof OpenLeaguesTableProps];
 
-    switch (columnKey) {
-      case "name":
-        return (
-          <Link
-            href={`/leagues/open-leagues/${user.id}`}
-            className="text-default-700"
-          >
-            {user.name}
-          </Link>
-        );
-      case "weeklyCompetition":
-        return (
-          <Chip
-            className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[user.weeklyCompetition ? "active" : "closed"]}
-            size="sm"
-            variant="dot"
-          >
-            {user.weeklyCompetition ? "active" : "closed"}
-          </Chip>
-        );
-      case "monthlyCompetition":
-        return (
-          <Chip
-            className="capitalize border-none gap-1 text-default-600"
-            color={
-              statusColorMap[user.monthlyCompetition ? "active" : "closed"]
-            }
-            size="sm"
-            variant="dot"
-          >
-            {user.monthlyCompetition ? "active" : "closed"}
-          </Chip>
-        );
-      case "seasonalCompetition":
-        return (
-          <Chip
-            className="capitalize border-none gap-1 text-default-600"
-            color={
-              statusColorMap[user.seasonalCompetition ? "active" : "closed"]
-            }
-            size="sm"
-            variant="dot"
-          >
-            {user.seasonalCompetition ? "active" : "closed"}
-          </Chip>
-        );
-      case "currency":
-        return <p className="text-default-700">{user.currency}</p>;
-      case "actions":
-        return (
-          <Button
-            as={Link}
-            size="sm"
-            color="warning"
-            variant="shadow"
-            radius="full"
-            href={`/leagues/open-leagues/${user.id}`}
-          >
-            Request Join
-          </Button>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+      switch (columnKey) {
+        case "name":
+          return <p className="text-default-700">{user.name}</p>;
+        case "weekly":
+          return (
+            <Chip
+              className="capitalize border-none gap-1 text-default-600"
+              color={statusColorMap[user.weekly ? "active" : "cancelled"]}
+              size="sm"
+              variant="dot"
+            >
+              {"Weekly"}
+            </Chip>
+          );
+        case "monthly":
+          return (
+            <Chip
+              className="capitalize border-none gap-1 text-default-600"
+              color={statusColorMap[user.monthly ? "active" : "cancelled"]}
+              size="sm"
+              variant="dot"
+            >
+              {"Monthly"}
+            </Chip>
+          );
+          
+        case "seasonal":
+          return (
+            <Chip
+              className="capitalize border-none gap-1 text-default-600 justify-start"
+              color={statusColorMap[user.seasonal ? "active" : "cancelled"]}
+              size="sm"
+              variant="dot"
+            >
+              {"Seasonal"}
+            </Chip>
+          );
+        case "currency":
+          return <p className="text-default-700 justify-center">{user.currency}</p>;
+
+        case "actions":
+          return (
+            <div className="relative flex justify-start items-center gap-2">
+              {/* <Button size="sm">Manage</Button> */}
+              <Chip color="warning" variant="shadow">
+                Join
+              </Chip>
+            </div>
+          );
+        default:
+          return user.name;
+      }
+    },
+    []
+  );
 
   const onRowsPerPageChange = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -203,7 +200,7 @@ export default function OpenLeaguesTable() {
           <Input
             isClearable
             classNames={{
-              base: "w-full sm:max-w-[35%]",
+              base: "w-6/12 ",
               inputWrapper: "border-1",
               input: [
                 "bg-transparent",
@@ -221,35 +218,6 @@ export default function OpenLeaguesTable() {
             onClear={() => setFilterValue("")}
             onValueChange={onSearchChange}
           />
-
-          <div className="flex gap-3">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={<ChevronDownIcon className="text-small" />}
-                  size="sm"
-                  variant="flat"
-                  className="bg-foreground text-background"
-                >
-                  Currency
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {currencyOptions.map((currency) => (
-                  <DropdownItem key={currency.uid} className="capitalize">
-                    {capitalize(currency.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-          </div>
         </div>
       </div>
     );
@@ -259,7 +227,7 @@ export default function OpenLeaguesTable() {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    users.length,
+    loadedData.length,
     hasSearchFilter,
   ]);
 
@@ -289,16 +257,7 @@ export default function OpenLeaguesTable() {
 
   const classNames = React.useMemo(
     () => ({
-      base: ["shadow-sm", "rounded-none", "p-2"],
       wrapper: ["max-h-[382px]", "max-w-3xl"],
-      table: ["bg-transparent", "border-divider","overflow-x-scroll"],
-      header: [
-        "bg-transparent",
-        "text-default-500",
-        "border-b",
-        "border-divider",
-      ],
-
       th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
       td: [
         // changing the rows border radius
@@ -317,6 +276,11 @@ export default function OpenLeaguesTable() {
 
   return (
     <>
+      <CreateLeagueModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+      />
       <Table
         isCompact
         removeWrapper
@@ -341,7 +305,7 @@ export default function OpenLeaguesTable() {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No users found"} items={sortedItems}>
+        <TableBody emptyContent={"Open leagues not found"} items={sortedItems}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (

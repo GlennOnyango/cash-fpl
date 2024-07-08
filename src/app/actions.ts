@@ -288,7 +288,15 @@ export async function signInUser(prevState: any, formData: FormData) {
 
     const res = await response.json();
 
-    cookies().set("accessToken", `${res.accessToken}`, { secure: true });
+    cookies().set({
+      name: "accessToken",
+      value: res.accessToken,
+      secure: true,
+      sameSite: "strict",
+      httpOnly: true,
+      //expires in 50 minutes
+      expires: new Date(Date.now() + 1000 * 60 * 50),
+    });
   } catch (error: any) {
     return {
       errors: error.message,
@@ -296,12 +304,6 @@ export async function signInUser(prevState: any, formData: FormData) {
   }
 
   redirect("/dashboard");
-}
-
-export async function signOut() {
-  cookies().delete("accessToken");
-
-  redirect("/");
 }
 
 // Leagues
@@ -433,6 +435,11 @@ export async function fetchMyLeagues(page: number = 0, size: number = 10) {
     if (!response.ok) {
       let err = await response.json();
       console.log("-------", err);
+
+      if (err.httpStatus === "UNAUTHORIZED") {
+        throw new Error(err.httpStatus);
+      }
+
       throw new Error(
         err.message ||
           "Failed to fetch leagues. Please try again or contact us."
@@ -468,6 +475,11 @@ export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
     if (!response.ok) {
       let err = await response.json();
       console.log("-------", err);
+
+      if (err.httpStatus === "UNAUTHORIZED") {
+        throw new Error(err.httpStatus);
+      }
+
       throw new Error(
         err.message ||
           "Failed to fetch leagues. Please try again or contact us."

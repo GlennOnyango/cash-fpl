@@ -1,43 +1,19 @@
 import { fetchOpenLeagues } from "@/app/actions";
 import OpenLeagues from "./components/App";
+import { Content } from "@/utils/types";
+import { redirect } from "next/navigation";
 
-export type LeaguePenalties = {
-  createdAt: string;
-  lastModifiedAt: string;
-  id: string;
-  penaltyType: string;
-  value: number;
-  leagueId: string;
-};
-
-export type CompetitionTypes = {
-  createdAt: string;
-  lastModifiedAt: string;
-  id: string;
-  competitionTypeId: number;
-  amount: number;
-  leagueId: string;
-};
-
-export type Content = {
-  createdAt: string;
-  lastModifiedAt: string;
-  id: string;
-  name: string;
-  publiclyAvailable: boolean;
-  currencyId: number;
-  paymentDeadline: string;
-  active: boolean;
-  ownerId: string;
-  competitionTypes: CompetitionTypes[];
-  leaguePenalties: LeaguePenalties[];
-};
 
 export default async function Leagues() {
 
   let leagues: Content[] = [];
 
   const leaguesFetch = await fetchOpenLeagues();
+  
+  if (leaguesFetch?.message === "UNAUTHORIZED") {
+    redirect("/api/auth/logout");
+  }
+
 
   if (leaguesFetch?.content) {
     leagues = leaguesFetch.content;
