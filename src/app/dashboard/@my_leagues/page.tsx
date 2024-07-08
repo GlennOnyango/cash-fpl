@@ -1,5 +1,6 @@
 import { fetchMyLeagues } from "@/app/actions";
 import AppComplexLeague from "./components/App";
+import { redirect } from "next/navigation";
 
 export type LeaguePenalties = {
   createdAt: string;
@@ -37,6 +38,11 @@ export default async function Leagues() {
   let leagues: Content[] = [];
 
   const leaguesFetch = await fetchMyLeagues();
+
+  
+  if (leaguesFetch?.message === "UNAUTHORIZED") {
+    redirect("/api/auth/logout");
+  }
 
   if (leaguesFetch?.content) {
     leagues = leaguesFetch.content;
