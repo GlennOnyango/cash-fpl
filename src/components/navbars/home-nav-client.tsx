@@ -2,15 +2,15 @@
 import React from "react";
 import { usePathname } from "next/navigation.js";
 import {
-    Navbar,
-    NavbarBrand,
-    NavbarContent,
-    NavbarItem,
-    NavbarMenuToggle,
-    NavbarMenu,
-    NavbarMenuItem,
-    Link,
-    Button,
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
+  Link,
+  Button,
 } from "@nextui-org/react";
 
 export default function HomeNav() {
@@ -94,14 +94,16 @@ export default function HomeNav() {
             </Button>
           </NavbarItem>
         </NavbarContent>
-        <NavbarMenu>
+
+        <NavbarMenu className="bg-gray-800">
           {menuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
-                className="w-full"
                 href={item.url}
                 aria-current={pathname === item.url ? "page" : "false"}
-                color={pathname === item.url ? "primary" : "foreground"}
+                className={`w-full ${
+                  pathname === item.url ? "text-primary" : "text-white"
+                }`}
                 size="lg"
               >
                 {item.name}

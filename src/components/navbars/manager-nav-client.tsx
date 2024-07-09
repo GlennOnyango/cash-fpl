@@ -7,12 +7,13 @@ import {
   NavbarContent,
   NavbarItem,
   NavbarMenuToggle,
-  NavbarMenu, Link,
+  NavbarMenu,
+  Link,
   Button,
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
 } from "@nextui-org/react";
 import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 
@@ -84,8 +85,14 @@ export default function ManagerNav() {
                   <NavbarItem isActive={pathname === item.url} key={index}>
                     <DropdownTrigger>
                       <Link
-                        aria-current={pathname.includes("leagues") ? "page" : "false"}
-                        color={pathname.includes("leagues") ? "primary" : "foreground"}
+                        aria-current={
+                          pathname.includes("leagues") ? "page" : "false"
+                        }
+                        color={
+                          pathname.includes("leagues")
+                            ? "primary"
+                            : "foreground"
+                        }
                         className="cursor-pointer"
                       >
                         {item.name}
@@ -97,7 +104,7 @@ export default function ManagerNav() {
                   </NavbarItem>
 
                   <DropdownMenu
-                    aria-label="ACME features"
+                    aria-label="League features"
                     className="w-[340px]"
                     itemClasses={{
                       base: "gap-4",
@@ -131,7 +138,6 @@ export default function ManagerNav() {
                 </Dropdown>
               );
             }
-            
 
             return (
               <NavbarItem isActive={pathname === item.url} key={index}>
@@ -159,18 +165,20 @@ export default function ManagerNav() {
           </NavbarItem>
         </NavbarContent>
 
-        
-        <NavbarMenu>
+        <NavbarMenu className="bg-gray-800">
           {menuItems.map((item, index) => {
             if (item.name === "Leagues") {
               return (
                 <Dropdown key={item.name}>
                   <NavbarItem isActive={pathname === item.url} key={index}>
                     <DropdownTrigger>
-                    <Link
-                        aria-current={pathname.includes("leagues") ? "page" : "false"}
-                        color={pathname.includes("leagues") ? "primary" : "foreground"}
-                        className="cursor-pointer"
+                      <Link
+                        aria-current={
+                          pathname.includes("leagues") ? "page" : "false"
+                        }
+                        className={
+                          pathname === item.url ? "text-primary" : "text-white"
+                        }
                       >
                         {item.name}
                         <span className="ml-1">
@@ -181,7 +189,7 @@ export default function ManagerNav() {
                   </NavbarItem>
 
                   <DropdownMenu
-                    aria-label="ACME features"
+                    aria-label="League features"
                     itemClasses={{
                       base: "gap-4",
                     }}
@@ -190,6 +198,7 @@ export default function ManagerNav() {
                       key="open-leagues"
                       description="See all leagues that are currently open"
                       href="/leagues/open-leagues"
+                      className="text-default-900"
                     >
                       Open Leagues
                     </DropdownItem>
@@ -197,6 +206,7 @@ export default function ManagerNav() {
                       key="my-leagues"
                       description="See all leagues that you have created"
                       href="/leagues/my-leagues"
+                      className="text-default-900"
                     >
                       My Leagues
                     </DropdownItem>
@@ -204,6 +214,7 @@ export default function ManagerNav() {
                       key="participating-leagues"
                       description="See all leagues that you are participating in"
                       href="/leagues/participating-leagues"
+                      className="text-default-900"
                     >
                       Participating Leagues
                     </DropdownItem>
@@ -217,7 +228,9 @@ export default function ManagerNav() {
                 <Link
                   aria-current={pathname === item.url ? "page" : "false"}
                   href={item.url}
-                  color={pathname === item.url ? "primary" : "foreground"}
+                  className={
+                    pathname === item.url ? "text-primary" : "text-white"
+                  }
                 >
                   {item.name}
                 </Link>

@@ -189,7 +189,7 @@ export default function AppComplexLeague({ loadedData }: Props) {
           <Input
             isClearable
             classNames={{
-              base: "w-full sm:max-w-[35%]",
+              base: "w-full",
               inputWrapper: "border-1",
               input: [
                 "bg-transparent",
@@ -207,7 +207,9 @@ export default function AppComplexLeague({ loadedData }: Props) {
             onClear={() => setFilterValue("")}
             onValueChange={onSearchChange}
           />
-          <div className="flex gap-3">
+        </div>
+
+        <div className="flex w-full justify-center gap-3">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -243,10 +245,9 @@ export default function AppComplexLeague({ loadedData }: Props) {
               endContent={<PlusIcon />}
               size="sm"
             >
-              Add New League
+              Create League
             </Button>
           </div>
-        </div>
       </div>
     );
   }, [
