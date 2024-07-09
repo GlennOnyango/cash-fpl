@@ -24,7 +24,7 @@ import {
 import { PlusIcon } from "@/components/icons/PlusIcon";
 import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 import { SearchIcon } from "@/components/icons/SearchIcon";
-import { columns, availability } from "./data";
+import { columns, availability } from "@/utils/tableData/myLeagueData";
 import { capitalize } from "@/utils/utils";
 import CreateLeagueModal from "@/components/modals/create-league";
 import { MyLeaguesTableProps } from "@/utils/types";
