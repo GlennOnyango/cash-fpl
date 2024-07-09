@@ -48,12 +48,15 @@ export default function UpdateLeagueComponent({ id }: Props) {
   const [limits, setLimits] = React.useState<currency[]>([]);
   const [currency, setCurrency] = React.useState("USD");
 
+  const local_url = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
+
   useEffect(() => {
     console.log(state);
   }, [state]);
 
+
   useEffect(() => {
-    fetch(`/api/limits?currency=${currency}`)
+    fetch(`${local_url}/api/limits?currency=${currency}`)
       .then((res) => res.json())
       .then((data: currency[]) => {
         setLimits(data);

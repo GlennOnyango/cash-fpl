@@ -27,7 +27,7 @@ import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns, availability } from "./data";
 import { capitalize } from "@/utils/utils";
 import CreateLeagueModal from "@/components/modals/create-league";
-import { Content } from "../page";
+import { Content } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   public: "success",

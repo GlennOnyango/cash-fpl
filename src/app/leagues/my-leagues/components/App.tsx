@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -13,39 +13,48 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Chip,
-  User,
   Pagination,
   Selection,
   ChipProps,
   SortDescriptor,
   useDisclosure,
+  Chip,
   Link,
 } from "@nextui-org/react";
 import { PlusIcon } from "@/components/icons/PlusIcon";
 import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 import { SearchIcon } from "@/components/icons/SearchIcon";
-import { columns, users, statusOptions } from "./data";
+import { columns, availability } from "./data";
 import { capitalize } from "@/utils/utils";
 import CreateLeagueModal from "@/components/modals/create-league";
+import { MyLeaguesTableProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
+  public: "success",
+  private: "warning",
+};
+
+const statusColorMapCompetitions: Record<string, ChipProps["color"]> = {
   active: "success",
-  paused: "warning",
-  cancelled: "danger",
+  disabled: "danger",
 };
 
 const INITIAL_VISIBLE_COLUMNS = [
   "name",
-  "status",
-  "access",
-  "currency",
+  "publiclyAvailable",
+  "active",
+  "deductExcessTransfers",
+  "weekly",
+  "monthly",
+  "seasonal",
   "actions",
 ];
 
-type User = (typeof users)[0];
+type Props = {
+  loadedData: MyLeaguesTableProps[];
+};
 
-export default function MYLeagueTable() {
+export default function MYLeagueTable({ loadedData }: Props) {
   // Modal create league
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -57,14 +66,14 @@ export default function MYLeagueTable() {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
   });
   const [page, setPage] = React.useState(1);
 
-  const pages = Math.ceil(users.length / rowsPerPage);
+  const pages = Math.ceil(loadedData.length / rowsPerPage);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -76,8 +85,12 @@ export default function MYLeagueTable() {
     );
   }, [visibleColumns]);
 
+  useEffect(() => {
+    console.log(loadedData);
+  }, []);
+
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...users];
+    let filteredUsers = [...loadedData];
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
@@ -86,15 +99,17 @@ export default function MYLeagueTable() {
     }
     if (
       statusFilter !== "all" &&
-      Array.from(statusFilter).length !== statusOptions.length
+      Array.from(statusFilter).length !== availability.length
     ) {
       filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status)
+        Array.from(statusFilter).includes(
+          user.publiclyAvailable ? "public" : "private"
+        )
       );
     }
 
     return filteredUsers;
-  }, [users, filterValue, statusFilter]);
+  }, [loadedData, filterValue, statusFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -104,54 +119,126 @@ export default function MYLeagueTable() {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: User, b: User) => {
-      const first = a[sortDescriptor.column as keyof User] as number;
-      const second = b[sortDescriptor.column as keyof User] as number;
+    return [...items].sort((a: MyLeaguesTableProps, b: MyLeaguesTableProps) => {
+      const first = a[
+        sortDescriptor.column as keyof MyLeaguesTableProps
+      ] as boolean;
+      const second = b[
+        sortDescriptor.column as keyof MyLeaguesTableProps
+      ] as boolean;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
-    const cellValue = user[columnKey as keyof User];
+  const renderCell = React.useCallback(
+    (league: MyLeaguesTableProps, columnKey: React.Key) => {
+      const cellValue = league[columnKey as keyof MyLeaguesTableProps];
 
-    switch (columnKey) {
-      case "name":
-        return <p className="text-default-700">{user.name}</p>;
-      case "status":
-        return (
-          <Chip
-            className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[user.status]}
-            size="sm"
-            variant="dot"
-          >
-            {cellValue}
-          </Chip>
-        );
-      case "access":
-        return <p className="text-default-700">{user.access}</p>;
+      switch (columnKey) {
+        case "name":
+          return <p className="text-default-700">{league.name}</p>;
+        case "publiclyAvailable":
+          return (
+            <Chip
+              className="capitalize border-none gap-1 text-default-600"
+              color={
+                statusColorMap[league.publiclyAvailable ? "public" : "private"]
+              }
+              size="sm"
+              variant="dot"
+            >
+              {capitalize(league.publiclyAvailable ? "public" : "private")}
+            </Chip>
+          );
+        case "weekly":
+          return (
+            <Chip
+              className="capitalize border-none gap-1 text-default-600"
+              color={
+                statusColorMapCompetitions[
+                  league.weekly ? "active" : "disabled"
+                ]
+              }
+              size="sm"
+              variant="dot"
+            >
+              {league.weekly ? "active" : "not available"}
+            </Chip>
+          );
+        case "monthly":
+          return (
+            <Chip
+              className="capitalize border-none gap-1 text-default-600"
+              color={
+                statusColorMapCompetitions[
+                  league.monthly ? "active" : "disabled"
+                ]
+              }
+              size="sm"
+              variant="dot"
+            >
+              {league.monthly ? "active" : "not available"}
+            </Chip>
+          );
+        case "seasonal":
+          return (
+            <Chip
+              className="capitalize border-none gap-1 text-default-600 justify-start"
+              color={
+                statusColorMapCompetitions[
+                  league.seasonal ? "active" : "disabled"
+                ]
+              }
+              size="sm"
+              variant="dot"
+            >
+              {league.seasonal ? "active" : "not available"}
+            </Chip>
+          );
+        case "deductExcessTransfers":
+          return (
+            <p
+              className={`${
+                league.active ? "text-green-700" : "text-amber-700"
+              }`}
+            >
+              {capitalize(league.active ? "active" : "cancelled")}
+            </p>
+          );
 
-      case "currency":
-        return <p className="text-default-700">{user.currency}</p>;
-      case "actions":
-        return (
-          <Button
-            as={Link}
-            size="sm"
-            color="warning"
-            variant="shadow"
-            radius="full"
-            href={`/leagues/my-leagues/${user.id}`}
-          >
-            Manage
-          </Button>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+        case "active":
+          return (
+            <p
+              className={`${
+                league.active ? "text-green-700" : "text-amber-700"
+              }`}
+            >
+              {capitalize(league.active ? "active" : "cancelled")}
+            </p>
+          );
+        case "actions":
+          return (
+            <div className="relative flex justify-start items-center gap-2">
+              <Button
+                size="sm"
+                variant="shadow"
+                radius="full"
+                color="warning"
+                as={Link}
+                href={`/leagues/my-leagues/${league.id}`}
+              >
+                Manage
+              </Button>
+            </div>
+          );
+        default:
+          return league.name;
+      }
+    },
+    []
+  );
 
   const onRowsPerPageChange = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -204,7 +291,7 @@ export default function MYLeagueTable() {
                   variant="flat"
                   className="bg-foreground text-background"
                 >
-                  Status
+                  Availability
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
@@ -215,8 +302,11 @@ export default function MYLeagueTable() {
                 selectionMode="multiple"
                 onSelectionChange={setStatusFilter}
               >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
+                {availability.map((status) => (
+                  <DropdownItem
+                    key={status.uid}
+                    className="capitalize text-default-900"
+                  >
                     {capitalize(status.name)}
                   </DropdownItem>
                 ))}
@@ -240,7 +330,7 @@ export default function MYLeagueTable() {
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    users.length,
+    loadedData.length,
     hasSearchFilter,
   ]);
 
@@ -297,6 +387,7 @@ export default function MYLeagueTable() {
       <Table
         isCompact
         removeWrapper
+        isStriped
         aria-label="Example table with custom cells, pagination and sorting"
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
@@ -318,7 +409,7 @@ export default function MYLeagueTable() {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No users found"} items={sortedItems}>
+        <TableBody emptyContent={"Create your league"} items={sortedItems}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (
