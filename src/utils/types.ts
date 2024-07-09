@@ -7,6 +7,13 @@ export type LeaguePenalties = {
   leagueId: string;
 };
 
+export type currency = {
+  currency: string;
+  minWeekly: number;
+  minMonthly: number;
+  minSeasonal: number;
+};
+
 export type CompetitionTypes = {
   createdAt: string;
   lastModifiedAt: string;

@@ -318,7 +318,7 @@ export default function MYLeagueTable({ loadedData }: Props) {
               endContent={<PlusIcon />}
               size="sm"
             >
-              Add New League
+              Create League
             </Button>
           </div>
         </div>

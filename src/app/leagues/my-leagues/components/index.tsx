@@ -11,6 +11,7 @@ import {
 import { useFormState } from "react-dom";
 import { createLeague } from "@/app/actions";
 import { SelectorIcon } from "@/components/icons/SelectorIcon";
+import { SubmitButton } from "@/components/submit";
 
 export const access = [
   { key: "public", label: "Public" },
@@ -48,12 +49,14 @@ export default function UpdateLeagueComponent({ id }: Props) {
   const [limits, setLimits] = React.useState<currency[]>([]);
   const [currency, setCurrency] = React.useState("USD");
 
+  const [leagueDetails, setLeagueDetails] = React.useState({
+    leagueName: "",
+    access: "public",
+    currency: "USD",
+    rules: "YES",
+  });
+
   const local_url = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
-
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
-
 
   useEffect(() => {
     fetch(`${local_url}/api/limits?currency=${currency}`)
@@ -79,7 +82,6 @@ export default function UpdateLeagueComponent({ id }: Props) {
     setCurrency(e.target.value);
   };
 
-
   return (
     <form
       action={formAction}
@@ -88,9 +90,6 @@ export default function UpdateLeagueComponent({ id }: Props) {
         maxHeight: "calc(100vh - 200px)",
       }}
     >
-      <h1 className="col-span-3 text-4xl text-center mb-4 text-gray-900 dark:text-white">
-        View League
-      </h1>
       <div className="col-span-3 flex flex-col sm:flex-row gap-2">
         <div className="flex flex-col gap-2 w-full">
           <label className="text-black/90 dark:text-white/90">
@@ -100,7 +99,7 @@ export default function UpdateLeagueComponent({ id }: Props) {
           <Input
             type="text"
             variant="bordered"
-            name="leageName"
+            name="leagueName"
             required
             placeholder="Enter league name"
             classNames={{
@@ -172,21 +171,21 @@ export default function UpdateLeagueComponent({ id }: Props) {
 
         <div className="flex flex-col gap-2 w-full">
           <label className="text-black/90 dark:text-white/90">
-            Deduct points for extra transactions *
+            Deduct points for excess transfers *
           </label>
 
           <Select
             placeholder="Select access type"
             required
-            name="currency"
+            name="rules"
             radius="lg"
-            defaultSelectedKeys={["YES"]}
+            defaultSelectedKeys={["Yes"]}
             className="w-full border-1 border-gray-800 rounded-xl"
             selectorIcon={<SelectorIcon />}
           >
             {rules_select.map((acc) => (
               <SelectItem
-                key={acc.key}
+                key={acc.label}
                 className="text-black/90 dark:text-white/90"
               >
                 {acc.label}
@@ -242,7 +241,7 @@ export default function UpdateLeagueComponent({ id }: Props) {
         <CheckboxGroup
           color="warning"
           orientation="horizontal"
-          name="rules"
+          name="types"
           isRequired
           value={selected}
           onValueChange={setSelected}
@@ -322,10 +321,9 @@ export default function UpdateLeagueComponent({ id }: Props) {
       </div>
 
       <div className="col-span-3 flex justify-center py-2">
-        <Button type="submit" className="bg-gray-900 text-white">
-          {" "}
-          Create{" "}
-        </Button>
+        <div className="flex flex-col gap-2 w-3/12 ">
+          <SubmitButton btnText="Create" />
+        </div>
       </div>
     </form>
   );

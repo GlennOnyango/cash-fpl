@@ -496,3 +496,41 @@ export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
     };
   }
 }
+
+//Fetch league by id
+export async function fetchLeagueById(leagueId: string) {
+  try {
+    const response = await fetch(`${leagues_url}/api/v1/league/${leagueId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+      },
+      redirect: "follow",
+      next: { tags: ["fetchMyLeaguesById"] },
+    });
+
+    if (!response.ok) {
+      let err = await response.json();
+      console.log("-------", err);
+
+      if (err.httpStatus === "UNAUTHORIZED") {
+        throw new Error(err.httpStatus);
+      }
+
+      throw new Error(
+        err.message ||
+          "Failed to fetch your league. Please try again or contact us."
+      );
+    }
+
+    const res = await response.json();
+
+    console.log("League<------->", res);  
+
+    return res;
+  } catch (error: any) {
+    return {
+      message: error.message,
+    };
+  }
+}
