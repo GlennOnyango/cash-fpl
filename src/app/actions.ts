@@ -87,109 +87,6 @@ const signUser = z.object({
   }),
 });
 
-const League = z
-  .object({
-    name: z.string({
-      required_error: "Name is required",
-      invalid_type_error: "Invalid name",
-      message: "Name should be a string",
-    }),
-    access: z.string({
-      required_error: "Select league access type",
-    }),
-
-    currency: z
-      .string({
-        required_error: "Currency is required",
-        invalid_type_error: "Invalid currency",
-        message: "Currency should be a string",
-      })
-      .refine(async (currency) => {
-        const limits_fetched = await fetch(
-          `${local_url}/api/limits?currency=${currency}`
-        );
-
-        const limits_json = await limits_fetched.json();
-
-        min = limits_json[0];
-
-        return true;
-      }),
-
-    types: z.array(
-      z.string({
-        required_error: "Types are required",
-        invalid_type_error: "Invalid types",
-        message: "Types should be a string",
-      })
-    ),
-    weeklyAmount: z.optional(
-      z.number({
-        invalid_type_error: "Weekly amount should be a number",
-      })
-    ),
-    monthlyAmount: z.optional(
-      z.number({
-        invalid_type_error: "Monthly amount should be a number",
-      })
-    ),
-    seasonalAmount: z.optional(
-      z.number({
-        invalid_type_error: "Seasonal amount should be a number",
-      })
-    ),
-    fineAmount: z
-      .number({
-        invalid_type_error: "Fine should be a number",
-      })
-      .optional()
-      .refine((amount) => !amount || amount >= 1, {
-        message: "Fine should be above 1 dollars",
-      }),
-  })
-  .refine(
-    async (data) => {
-      if (data.weeklyAmount) {
-        if (!data.weeklyAmount || data.weeklyAmount < min.minWeekly) {
-          return false;
-        }
-      }
-
-      return true;
-    },
-    (data) => ({
-      message: `Weekly amount should be above ${min.minWeekly} ${data.currency}`,
-    })
-  )
-  .refine(
-    (data) => {
-      if (data.monthlyAmount) {
-        if (!data.monthlyAmount || data.monthlyAmount < min.minMonthly) {
-          return false;
-        }
-      }
-
-      return true;
-    },
-    (data) => ({
-      message: `Monthly amount should be above ${min.minMonthly} ${data.currency}`,
-    })
-  )
-  .refine(
-    (data) => {
-      if (data.seasonalAmount) {
-        if (!data.seasonalAmount || data.seasonalAmount < min.minSeasonal) {
-          return false;
-        }
-      }
-
-      return true;
-    },
-    (data) => ({
-      message: `Seasonal amount should be above ${min.minSeasonal} ${data.currency}`,
-    })
-  );
-
 export async function createUser(prevState: any, formData: FormData) {
   const user = await User.safeParseAsync({
     email: formData.get("email") as string,
@@ -306,30 +203,14 @@ export async function createLeague(prevState: any, formData: FormData) {
     name: formData.get("leageName") as string,
     types: formData.getAll("types"),
     currency: formData.get("currency") as string,
-    weeklyDetails: formData.getAll("types").includes("weekly")
-      ? {
-          amount: formData.get("weekly_amount"),
-          access: formData.get("weekly_access"),
-          penalty: (formData.get("weekly_penalty") as string) === "True",
-          fine: formData.get("weekly_fine_amount"),
-        }
-      : null,
-    monthlyDetails: formData.getAll("types").includes("monthly")
-      ? {
-          amount: formData.get("monthly_amount"),
-          access: formData.get("monthly_access"),
-          penalty: (formData.get("monthly_penalty") as string) === "True",
-          fine: formData.get("monthly_fine_amount"),
-        }
-      : null,
-    seasonalDetails: formData.getAll("types").includes("seasonal")
-      ? {
-          amount: formData.get("seasonal_amount"),
-          access: formData.get("seasonal_access"),
-          penalty: (formData.get("seasonal_penalty") as string) === "True",
-          fine: formData.get("seasonal_fine_amount"),
-        }
-      : null,
+    competitions: formData.getAll("types").map((comp) => {
+      return {
+        type: comp,
+        amount: formData.get(`${comp}_amount`),
+        access: formData.get(`${comp}_access`),
+        penalty: (formData.get(`${comp}_penalty`) as string) === "True",
+      };
+    }),
   };
 
   console.log("League Object<------->", league_object);

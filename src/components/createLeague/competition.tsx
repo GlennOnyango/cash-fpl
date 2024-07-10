@@ -28,11 +28,11 @@ type Props = {
 
 export default function Competition({ competition, limit }: Props) {
   return (
-    <div className="w-full col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-2 p-4">
-      <h4 className="text-2xl font-bold col-span-2 text-center mb-4 text-black/90 dark:text-white/90">
+    <div className="w-full col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-1 p-1">
+      <h4 className="text-2xl font-bold col-span-1 sm:col-span-3 text-center mb-4 text-black/90 dark:text-white/90">
         {`${capitalize(competition)}`}
       </h4>
-      <div key={"week"} className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col gap-2 w-full">
         <label className="text-black/90 dark:text-white/90">
           {competition} amount *
         </label>
@@ -75,7 +75,8 @@ export default function Competition({ competition, limit }: Props) {
           <Tooltip
             showArrow={true}
             size="lg"
-            content="Public access brodcasts the league to other users. Private access restricts the league to only users with the league code."
+            className="text-gray-900 dark:text-white"
+            content="Public access brodcasts the league to other users."
           >
             <InformationCircleIcon className="w-5 h-5 text-gray-900 dark:text-white" />
           </Tooltip>
@@ -102,9 +103,21 @@ export default function Competition({ competition, limit }: Props) {
       </div>
 
       <div className="flex flex-col gap-2 w-full">
-        <label className="text-black/90 dark:text-white/90">
-          Points deductions for excess transfers *
-        </label>
+        <div className="flex items-center gap-1">
+          <label className="text-black/90 dark:text-white/90">
+            {" "}
+            Excess transfers deductions *
+          </label>
+
+          <Tooltip
+            showArrow={true}
+            size="lg"
+            className="text-gray-900 dark:text-white"
+            content="If set to true, excess transfers will be deducted from the user's total points. "
+          >
+            <InformationCircleIcon className="w-5 h-5 text-gray-900 dark:text-white" />
+          </Tooltip>
+        </div>
 
         <Select
           placeholder="Select access type"
@@ -124,37 +137,6 @@ export default function Competition({ competition, limit }: Props) {
             </SelectItem>
           ))}
         </Select>
-      </div>
-
-      <div className="flex flex-col gap-2 w-full">
-        <label className="text-black/90 dark:text-white/90">
-          Late payment fine
-        </label>
-
-        <Input
-          type="text"
-          variant="bordered"
-          name={`${competition}_fine_amount`}
-          required
-          defaultValue="0"
-          placeholder="Enter fine amount"
-          endContent={
-            <span className="text-gray-900 dark:text-white">
-              {limit.currency}
-            </span>
-          }
-          classNames={{
-            base: "w-full ",
-            inputWrapper: "border-1 border-gray-800",
-            input: [
-              "bg-transparent",
-              "border-none",
-              "focus:ring-0",
-              "text-black/90 dark:text-white/90",
-              "placeholder:text-default-700/50 dark:placeholder:text-white/60",
-            ],
-          }}
-        />
       </div>
     </div>
   );
