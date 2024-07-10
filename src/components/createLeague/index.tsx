@@ -182,7 +182,7 @@ export default function CreateLeagueComponent({ onClose }: Props) {
 
       <div className="col-span-3 flex justify-center py-2">
         <div className="flex flex-col gap-2 w-3/12 ">
-          <SubmitButton btnText="Create" />
+          <SubmitButton btnText="Create" btnDisabled={selected.length === 0} />
         </div>
       </div>
     </form>

@@ -302,85 +302,40 @@ export async function signInUser(prevState: any, formData: FormData) {
 // Leagues
 
 export async function createLeague(prevState: any, formData: FormData) {
- 
-  console.log("Form Data<------->", formData);
- 
- 
-  let wkAmount =
-    formData.get("weeklyAmount") === null
-      ? undefined
-      : Number(formData.get("weeklyAmount"));
-  let mmAmount =
-    formData.get("monthlyAmount") === null
-      ? undefined
-      : Number(formData.get("monthlyAmount"));
-  let ssnAmount =
-    formData.get("seasonalAmount") === null
-      ? undefined
-      : Number(formData.get("seasonalAmount"));
-
-  const league = await League.safeParseAsync({
+  const league_object = {
     name: formData.get("leageName") as string,
-    access: formData.get("access") as string,
     types: formData.getAll("types"),
     currency: formData.get("currency") as string,
-    weeklyAmount: wkAmount,
-    monthlyAmount: mmAmount,
-    seasonalAmount: ssnAmount,
-    fineAmount: Number(formData.get("fineAmount")),
-  });
+    weeklyDetails: formData.getAll("types").includes("weekly")
+      ? {
+          amount: formData.get("weekly_amount"),
+          access: formData.get("weekly_access"),
+          penalty: (formData.get("weekly_penalty") as string) === "True",
+          fine: formData.get("weekly_fine_amount"),
+        }
+      : null,
+    monthlyDetails: formData.getAll("types").includes("monthly")
+      ? {
+          amount: formData.get("monthly_amount"),
+          access: formData.get("monthly_access"),
+          penalty: (formData.get("monthly_penalty") as string) === "True",
+          fine: formData.get("monthly_fine_amount"),
+        }
+      : null,
+    seasonalDetails: formData.getAll("types").includes("seasonal")
+      ? {
+          amount: formData.get("seasonal_amount"),
+          access: formData.get("seasonal_access"),
+          penalty: (formData.get("seasonal_penalty") as string) === "True",
+          fine: formData.get("seasonal_fine_amount"),
+        }
+      : null,
+  };
 
-  if (!league.success) {
-    const errorArray: string[] = [];
-
-    const errorObj: any = league.error.flatten().fieldErrors;
-    const formErrors: string[] = league.error.flatten().formErrors;
-
-    for (const key in errorObj) {
-      errorArray.push(errorObj[key]);
-    }
-
-    if (formErrors) {
-      errorArray.push(...formErrors);
-    }
-
-    return {
-      message: errorArray[0],
-    };
-  }
+  console.log("League Object<------->", league_object);
 
   try {
-    const competitionTypes = league.data.types.map((competition: string) => {
-      if (competition === "weekly") {
-        return {
-          competitionTypeId: 1,
-          amount: league.data.weeklyAmount,
-        };
-      } else if (competition === "monthly") {
-        return {
-          competitionTypeId: 2,
-          amount: league.data.monthlyAmount,
-        };
-      } else if (competition === "seasonal") {
-        return {
-          competitionTypeId: 3,
-          amount: league.data.seasonalAmount,
-        };
-      }
-    });
-    const raw = JSON.stringify({
-      name: league.data.name,
-      isPublic: league.data.access === "public",
-      currencyId: league.data.currency === "KES" ? 1 : 2,
-      competitionType: competitionTypes,
-      paymentDeadline: "2024-07-29T00:00:00",
-      penalties: [
-        {
-          penaltyType: "AMOUNT",
-          value: league.data.fineAmount,
-        },
-      ],
-    });
+    const raw = JSON.stringify(league_object);
 
     //create league
     const newLeague = await fetch(`${leagues_url}/api/v1/league/create`, {
@@ -522,7 +477,7 @@ export async function fetchLeagueById(leagueId: string) {
 
     const res = await response.json();
 
-    console.log("League<------->", res);  
+    console.log("League<------->", res);
 
     return res;
   } catch (error: any) {

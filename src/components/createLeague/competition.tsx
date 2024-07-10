@@ -39,7 +39,7 @@ export default function Competition({ competition, limit }: Props) {
         <Input
           type="text"
           variant="bordered"
-          name={`${competition}Amount`}
+          name={`${competition}_amount`}
           required
           endContent={
             <span className="text-gray-900 dark:text-white">
@@ -109,7 +109,7 @@ export default function Competition({ competition, limit }: Props) {
         <Select
           placeholder="Select access type"
           required
-          name={`${competition}Penalty`}
+          name={`${competition}_penalty`}
           radius="lg"
           defaultSelectedKeys={["True"]}
           className="w-full border-1 border-gray-800 rounded-xl"
@@ -134,7 +134,7 @@ export default function Competition({ competition, limit }: Props) {
         <Input
           type="text"
           variant="bordered"
-          name={`${competition}fineAmount`}
+          name={`${competition}_fine_amount`}
           required
           defaultValue="0"
           placeholder="Enter fine amount"
