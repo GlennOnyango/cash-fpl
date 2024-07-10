@@ -17,8 +17,8 @@ export const currency_select = [
 ];
 
 export const penalties = [
-  { key: true, label: "True" },
-  { key: false, label: "False" },
+  { key: "true", label: "True" },
+  { key: "false", label: "False" },
 ];
 
 type Props = {
@@ -27,7 +27,6 @@ type Props = {
 };
 
 export default function Competition({ competition, limit }: Props) {
-  console.log(limit);
   return (
     <div className="w-full col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-2 p-4">
       <h4 className="text-2xl font-bold col-span-2 text-center mb-4 text-black/90 dark:text-white/90">

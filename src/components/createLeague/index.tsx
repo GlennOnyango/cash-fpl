@@ -14,12 +14,10 @@ import { SubmitButton } from "../submit";
 import Competition from "./competition";
 import { currency } from "@/utils/types";
 
-
 export const currency_select = [
   { key: "USD", label: "USD" },
   { key: "KES", label: "KES" },
 ];
-
 
 const initialState = {
   message: "",
@@ -155,6 +153,16 @@ export default function CreateLeagueComponent({ onClose }: Props) {
         </CheckboxGroup>
       </div>
 
+      {selected.map((competition) => {
+        return (
+          <Competition
+            key={competition}
+            competition={competition}
+            limit={limit}
+          />
+        );
+      })}
+
       <div className="col-span-3 flex flex-col items-center justify-center">
         {state.message !== "" &&
         state.message !== "League created successfully" ? (
@@ -171,16 +179,6 @@ export default function CreateLeagueComponent({ onClose }: Props) {
           </p>
         ) : null}
       </div>
-
-      {selected.map((competition) => {
-        return (
-          <Competition
-            key={competition}
-            competition={competition}
-            limit={limit}
-          />
-        );
-      })}
 
       <div className="col-span-3 flex justify-center py-2">
         <div className="flex flex-col gap-2 w-3/12 ">

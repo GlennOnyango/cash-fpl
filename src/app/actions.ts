@@ -123,11 +123,6 @@ const League = z
         message: "Types should be a string",
       })
     ),
-    rules: z.string({
-      required_error: "Rules are required",
-      invalid_type_error: "Invalid rules",
-      message: "Rules should be a string",
-    }),
     weeklyAmount: z.optional(
       z.number({
         invalid_type_error: "Weekly amount should be a number",
@@ -307,6 +302,10 @@ export async function signInUser(prevState: any, formData: FormData) {
 // Leagues
 
 export async function createLeague(prevState: any, formData: FormData) {
+ 
+  console.log("Form Data<------->", formData);
+ 
+ 
   let wkAmount =
     formData.get("weeklyAmount") === null
       ? undefined
@@ -323,7 +322,6 @@ export async function createLeague(prevState: any, formData: FormData) {
   const league = await League.safeParseAsync({
     name: formData.get("leageName") as string,
     access: formData.get("access") as string,
-    rules: formData.get("rules") as string,
     types: formData.getAll("types"),
     currency: formData.get("currency") as string,
     weeklyAmount: wkAmount,
@@ -376,7 +374,6 @@ export async function createLeague(prevState: any, formData: FormData) {
       currencyId: league.data.currency === "KES" ? 1 : 2,
       competitionType: competitionTypes,
       paymentDeadline: "2024-07-29T00:00:00",
-      deductExcessTransfers: league.data.rules === "Yes" ? true : false,
       penalties: [
         {
           penaltyType: "AMOUNT",
