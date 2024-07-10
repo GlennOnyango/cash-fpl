@@ -106,7 +106,7 @@ export default function Competition({ competition, limit }: Props) {
         <div className="flex items-center gap-1">
           <label className="text-black/90 dark:text-white/90">
             {" "}
-            Excess transfers deductions *
+            Transfer penalty *
           </label>
 
           <Tooltip

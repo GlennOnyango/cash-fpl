@@ -28,7 +28,7 @@ export default function SignInCashFPL() {
       className="w-full max-w-sm mx-auto"
       autoComplete="off"
     >
-      {state.errors && (
+      {state?.errors && (
         <p
           className="bg-red-100 rounded-md py-2 px-3 my-2 text-center text-gray-900"
           key={"error"}
