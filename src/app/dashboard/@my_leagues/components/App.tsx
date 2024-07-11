@@ -24,10 +24,10 @@ import {
 import { PlusIcon } from "@/components/icons/PlusIcon";
 import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 import { SearchIcon } from "@/components/icons/SearchIcon";
-import { columns, availability } from "./data";
+import { columns, availability } from "@/utils/tableData/myLeagueData";
 import { capitalize } from "@/utils/utils";
 import CreateLeagueModal from "@/components/modals/create-league";
-import { Content } from "../page";
+import { Content, MyLeaguesTableProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   public: "success",
@@ -42,7 +42,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 type Props = {
-  loadedData: Content[];
+  loadedData: MyLeaguesTableProps[];
 };
 
 export default function AppComplexLeague({ loadedData }: Props) {
@@ -106,9 +106,9 @@ export default function AppComplexLeague({ loadedData }: Props) {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Content, b: Content) => {
-      const first = a[sortDescriptor.column as keyof Content] as number;
-      const second = b[sortDescriptor.column as keyof Content] as number;
+    return [...items].sort((a: MyLeaguesTableProps, b: MyLeaguesTableProps) => {
+      const first = a[sortDescriptor.column as keyof MyLeaguesTableProps] as string;
+      const second = b[sortDescriptor.column as keyof MyLeaguesTableProps] as string;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
@@ -116,8 +116,8 @@ export default function AppComplexLeague({ loadedData }: Props) {
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback(
-    (league: Content, columnKey: React.Key) => {
-      const cellValue = league[columnKey as keyof Content];
+    (league: MyLeaguesTableProps, columnKey: React.Key) => {
+      const cellValue = league[columnKey as keyof MyLeaguesTableProps];
 
       switch (columnKey) {
         case "name":
@@ -189,7 +189,7 @@ export default function AppComplexLeague({ loadedData }: Props) {
           <Input
             isClearable
             classNames={{
-              base: "w-full sm:max-w-[35%]",
+              base: "w-full",
               inputWrapper: "border-1",
               input: [
                 "bg-transparent",
@@ -207,7 +207,9 @@ export default function AppComplexLeague({ loadedData }: Props) {
             onClear={() => setFilterValue("")}
             onValueChange={onSearchChange}
           />
-          <div className="flex gap-3">
+        </div>
+
+        <div className="flex w-full justify-center gap-3">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
@@ -243,10 +245,9 @@ export default function AppComplexLeague({ loadedData }: Props) {
               endContent={<PlusIcon />}
               size="sm"
             >
-              Add New League
+              Create League
             </Button>
           </div>
-        </div>
       </div>
     );
   }, [

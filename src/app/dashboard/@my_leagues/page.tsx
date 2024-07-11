@@ -1,52 +1,47 @@
 import { fetchMyLeagues } from "@/app/actions";
 import AppComplexLeague from "./components/App";
 import { redirect } from "next/navigation";
+import { Content, MyLeaguesTableData, MyLeaguesTableProps } from "@/utils/types";
 
-export type LeaguePenalties = {
-  createdAt: string;
-  lastModifiedAt: string;
-  id: string;
-  penaltyType: string;
-  value: number;
-  leagueId: string;
-};
-
-export type CompetitionTypes = {
-  createdAt: string;
-  lastModifiedAt: string;
-  id: string;
-  competitionTypeId: number;
-  amount: number;
-  leagueId: string;
-};
-
-export type Content = {
-  createdAt: string;
-  lastModifiedAt: string;
-  id: string;
-  name: string;
-  publiclyAvailable: boolean;
-  currencyId: number;
-  paymentDeadline: string;
-  active: boolean;
-  ownerId: string;
-  competitionTypes: CompetitionTypes[];
-  leaguePenalties: LeaguePenalties[];
-};
 
 export default async function Leagues() {
-  let leagues: Content[] = [];
+  let leagues: MyLeaguesTableProps[] = [];
 
   const leaguesFetch = await fetchMyLeagues();
 
-  
   if (leaguesFetch?.message === "UNAUTHORIZED") {
     redirect("/api/auth/logout");
   }
 
   if (leaguesFetch?.content) {
-    leagues = leaguesFetch.content;
+    leagues = leaguesFetch.content.map(
+      (league: MyLeaguesTableData) => {
+        let competitions = league.competitionTypes.map((competition) => {
+          if (competition.competitionTypeId === 1) {
+            return "Weekly";
+          } else if (competition.competitionTypeId === 2) {
+            return "Monthly";
+          } else if (competition.competitionTypeId === 3) {
+            return "Yearly";
+          }
+        });
+
+        return {
+          id: league.id,
+          name: league.name,
+          publiclyAvailable: league.publiclyAvailable,
+          deductExcessTransfers: league.deductExcessTransfers,
+          currency: league.currencyId === 1 ? "KES" : "USD",
+          active: league.active,
+          ownerId: league.ownerId,
+          weekly: competitions.includes("Weekly"),
+          monthly: competitions.includes("Monthly"),
+          seasonal: competitions.includes("Yearly"),
+        };
+      }
+    );
   }
+
 
   return (
     <div className="col-span-12 sm:col-span-4 row-span-6 bg-white p-4 rounded-none overflow-x-auto">

@@ -87,114 +87,6 @@ const signUser = z.object({
   }),
 });
 
-const League = z
-  .object({
-    name: z.string({
-      required_error: "Name is required",
-      invalid_type_error: "Invalid name",
-      message: "Name should be a string",
-    }),
-    access: z.string({
-      required_error: "Select league access type",
-    }),
-
-    currency: z
-      .string({
-        required_error: "Currency is required",
-        invalid_type_error: "Invalid currency",
-        message: "Currency should be a string",
-      })
-      .refine(async (currency) => {
-        const limits_fetched = await fetch(
-          `${local_url}/api/limits?currency=${currency}`
-        );
-
-        const limits_json = await limits_fetched.json();
-
-        min = limits_json[0];
-
-        return true;
-      }),
-
-    types: z.array(
-      z.string({
-        required_error: "Types are required",
-        invalid_type_error: "Invalid types",
-        message: "Types should be a string",
-      })
-    ),
-    rules: z.string({
-      required_error: "Rules are required",
-      invalid_type_error: "Invalid rules",
-      message: "Rules should be a string",
-    }),
-    weeklyAmount: z.optional(
-      z.number({
-        invalid_type_error: "Weekly amount should be a number",
-      })
-    ),
-    monthlyAmount: z.optional(
-      z.number({
-        invalid_type_error: "Monthly amount should be a number",
-      })
-    ),
-    seasonalAmount: z.optional(
-      z.number({
-        invalid_type_error: "Seasonal amount should be a number",
-      })
-    ),
-    fineAmount: z
-      .number({
-        invalid_type_error: "Fine should be a number",
-      })
-      .optional()
-      .refine((amount) => !amount || amount >= 1, {
-        message: "Fine should be above 1 dollars",
-      }),
-  })
-  .refine(
-    async (data) => {
-      if (data.weeklyAmount) {
-        if (!data.weeklyAmount || data.weeklyAmount < min.minWeekly) {
-          return false;
-        }
-      }
-
-      return true;
-    },
-    (data) => ({
-      message: `Weekly amount should be above ${min.minWeekly} ${data.currency}`,
-    })
-  )
-  .refine(
-    (data) => {
-      if (data.monthlyAmount) {
-        if (!data.monthlyAmount || data.monthlyAmount < min.minMonthly) {
-          return false;
-        }
-      }
-
-      return true;
-    },
-    (data) => ({
-      message: `Monthly amount should be above ${min.minMonthly} ${data.currency}`,
-    })
-  )
-  .refine(
-    (data) => {
-      if (data.seasonalAmount) {
-        if (!data.seasonalAmount || data.seasonalAmount < min.minSeasonal) {
-          return false;
-        }
-      }
-
-      return true;
-    },
-    (data) => ({
-      message: `Seasonal amount should be above ${min.minSeasonal} ${data.currency}`,
-    })
-  );
-
 export async function createUser(prevState: any, formData: FormData) {
   const user = await User.safeParseAsync({
     email: formData.get("email") as string,
@@ -307,83 +199,24 @@ export async function signInUser(prevState: any, formData: FormData) {
 // Leagues
 
 export async function createLeague(prevState: any, formData: FormData) {
-  let wkAmount =
-    formData.get("weeklyAmount") === null
-      ? undefined
-      : Number(formData.get("weeklyAmount"));
-  let mmAmount =
-    formData.get("monthlyAmount") === null
-      ? undefined
-      : Number(formData.get("monthlyAmount"));
-  let ssnAmount =
-    formData.get("seasonalAmount") === null
-      ? undefined
-      : Number(formData.get("seasonalAmount"));
-
-  const league = await League.safeParseAsync({
+  const league_object = {
     name: formData.get("leageName") as string,
-    access: formData.get("access") as string,
-    rules: formData.get("rules") as string,
     types: formData.getAll("types"),
     currency: formData.get("currency") as string,
-    weeklyAmount: wkAmount,
-    monthlyAmount: mmAmount,
-    seasonalAmount: ssnAmount,
-    fineAmount: Number(formData.get("fineAmount")),
-  });
+    competitions: formData.getAll("types").map((comp) => {
+      return {
+        type: comp,
+        amount: formData.get(`${comp}_amount`),
+        access: formData.get(`${comp}_access`),
+        penalty: (formData.get(`${comp}_penalty`) as string) === "True",
+      };
+    }),
+  };
 
-  if (!league.success) {
-    const errorArray: string[] = [];
-
-    const errorObj: any = league.error.flatten().fieldErrors;
-    const formErrors: string[] = league.error.flatten().formErrors;
-
-    for (const key in errorObj) {
-      errorArray.push(errorObj[key]);
-    }
-
-    if (formErrors) {
-      errorArray.push(...formErrors);
-    }
-
-    return {
-      message: errorArray[0],
-    };
-  }
+  console.log("League Object<------->", league_object);
 
   try {
-    const competitionTypes = league.data.types.map((competition: string) => {
-      if (competition === "weekly") {
-        return {
-          competitionTypeId: 1,
-          amount: league.data.weeklyAmount,
-        };
-      } else if (competition === "monthly") {
-        return {
-          competitionTypeId: 2,
-          amount: league.data.monthlyAmount,
-        };
-      } else if (competition === "seasonal") {
-        return {
-          competitionTypeId: 3,
-          amount: league.data.seasonalAmount,
-        };
-      }
-    });
-    const raw = JSON.stringify({
-      name: league.data.name,
-      isPublic: league.data.access === "public",
-      currencyId: league.data.currency === "KES" ? 1 : 2,
-      competitionType: competitionTypes,
-      paymentDeadline: "2024-07-29T00:00:00",
-      deductExcessTransfers: league.data.rules === "Yes" ? true : false,
-      penalties: [
-        {
-          penaltyType: "AMOUNT",
-          value: league.data.fineAmount,
-        },
-      ],
-    });
+    const raw = JSON.stringify(league_object);
 
     //create league
     const newLeague = await fetch(`${leagues_url}/api/v1/league/create`, {
@@ -493,6 +326,44 @@ export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
     let err = error.message || "Leagues could not be fetched";
     return {
       message: err,
+    };
+  }
+}
+
+//Fetch league by id
+export async function fetchLeagueById(leagueId: string) {
+  try {
+    const response = await fetch(`${leagues_url}/api/v1/league/${leagueId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+      },
+      redirect: "follow",
+      next: { tags: ["fetchMyLeaguesById"] },
+    });
+
+    if (!response.ok) {
+      let err = await response.json();
+      console.log("-------", err);
+
+      if (err.httpStatus === "UNAUTHORIZED") {
+        throw new Error(err.httpStatus);
+      }
+
+      throw new Error(
+        err.message ||
+          "Failed to fetch your league. Please try again or contact us."
+      );
+    }
+
+    const res = await response.json();
+
+    console.log("League<------->", res);
+
+    return res;
+  } catch (error: any) {
+    return {
+      message: error.message,
     };
   }
 }
