@@ -69,3 +69,20 @@ export type MyLeaguesTableProps = {
   monthly: boolean;
   seasonal: boolean;
 };
+
+export type Competiton = {
+  amount: string;
+  access: string[];
+  penalty: string[];
+};
+
+export type UpdateLeague = {
+  id: string;
+  ownerId: string;
+  name: string;
+  types: string[];
+  currency: string;
+  weekly: Competiton | null;
+  monthly: Competiton | null;
+  seasonal: Competiton | null;
+};

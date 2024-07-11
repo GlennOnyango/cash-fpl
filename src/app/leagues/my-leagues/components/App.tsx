@@ -85,10 +85,6 @@ export default function MYLeagueTable({ loadedData }: Props) {
     );
   }, [visibleColumns]);
 
-  useEffect(() => {
-    console.log(loadedData);
-  }, []);
-
   const filteredItems = React.useMemo(() => {
     let filteredUsers = [...loadedData];
 

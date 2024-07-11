@@ -21,15 +21,34 @@ export const penalties = [
   { key: "false", label: "False" },
 ];
 
+type CompetitionData = {
+  amount: string;
+  access: string[];
+  penalty: string[];
+};
+
 type Props = {
   competition: string;
   limit: currency;
+  competitionProp?: CompetitionData;
 };
 
-export default function Competition({ competition, limit }: Props) {
+export default function Competition({
+  competition,
+  limit,
+  competitionProp,
+}: Props) {
+  const [competitionData, setCompetitionData] = React.useState<CompetitionData>(
+    competitionProp || {
+      amount: "",
+      access: ["public"],
+      penalty: ["True"],
+    }
+  );
+
   return (
     <div className="w-full col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-1 p-1">
-      <h4 className="text-2xl font-bold col-span-1 sm:col-span-3 text-center mb-4 text-black/90 dark:text-white/90">
+      <h4 className="text-xl  col-span-1 sm:col-span-3 text-center mb-4 text-black/90 dark:text-white/90">
         {`${capitalize(competition)}`}
       </h4>
       <div className="flex flex-col gap-2 w-full">
@@ -40,6 +59,7 @@ export default function Competition({ competition, limit }: Props) {
           type="text"
           variant="bordered"
           name={`${competition}_amount`}
+          value={competitionData.amount}
           required
           endContent={
             <span className="text-gray-900 dark:text-white">
@@ -53,6 +73,18 @@ export default function Competition({ competition, limit }: Props) {
               ? limit.minMonthly
               : limit.minSeasonal
           }
+          isInvalid={
+            //regex to check if the amount is a number when input is not empty
+            competitionData.amount.length > 0 &&
+            !/^\d+$/.test(competitionData.amount)
+          }
+          onChange={(e) => {
+            console.log(e.target.value);
+            setCompetitionData({
+              ...competitionData,
+              amount: e.target.value,
+            } as CompetitionData);
+          }}
           placeholder={`Enter ${competition} amount`}
           classNames={{
             base: "w-full ",
@@ -87,9 +119,15 @@ export default function Competition({ competition, limit }: Props) {
           required
           name={`${competition}_access`}
           radius="lg"
-          defaultSelectedKeys={["public"]}
+          defaultSelectedKeys={competitionData.access}
           className="w-full border-1 border-gray-800 rounded-xl"
           selectorIcon={<SelectorIcon />}
+          onChange={(e) => {
+            setCompetitionData({
+              ...competitionData,
+              access: [e.target.value],
+            } as CompetitionData);
+          }}
         >
           {access.map((acc) => (
             <SelectItem
@@ -124,9 +162,15 @@ export default function Competition({ competition, limit }: Props) {
           required
           name={`${competition}_penalty`}
           radius="lg"
-          defaultSelectedKeys={["True"]}
+          defaultSelectedKeys={competitionData.penalty}
           className="w-full border-1 border-gray-800 rounded-xl"
           selectorIcon={<SelectorIcon />}
+          onChange={(e) => {
+            setCompetitionData({
+              ...competitionData,
+              penalty: [e.target.value],
+            } as CompetitionData);
+          }}
         >
           {penalties.map((acc) => (
             <SelectItem

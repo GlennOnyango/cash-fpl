@@ -45,9 +45,9 @@ export default async function page() {
   return (
     <ManagerPageNavbar>
       <div
-        className="col-span-12 sm:col-span-4 row-span-6 bg-white mx-20 p-4 overflow-hidden"
+        className="col-span-12 sm:col-span-4 row-span-6 bg-white mx-20 p-4 mt-4 overflow-hidden"
         style={{
-          height: "calc(100vh - 8rem)",
+          height: "calc(100vh - 200px)",
         }}
       >
         <h1 className="text-black text-4xl mb-4">My Leagues</h1>

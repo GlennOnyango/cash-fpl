@@ -41,9 +41,9 @@ export default async function Page() {
   return (
     <ManagerPageNavbar>
       <div
-        className="col-span-12 sm:col-span-4 row-span-6 bg-white p-4 rounded-none mx-20 overflow-hidden"
+        className="col-span-12 sm:col-span-4 row-span-6 bg-white p-4 rounded-none mt-4 mx-20 overflow-hidden"
         style={{
-          height: "calc(100vh - 8rem)",
+          height: "calc(100vh - 200px)",
         }}
       >
         <h4 className="text-3xl text-black/90 dark:text-white/90 mb-4">
