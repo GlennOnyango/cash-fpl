@@ -1,7 +1,7 @@
 import { fetchMyLeagues } from "@/app/actions";
 import AppComplexLeague from "./components/App";
 import { redirect } from "next/navigation";
-import { Content, MyLeaguesTableData, MyLeaguesTableProps } from "@/utils/types";
+import { MyLeaguesTableData, MyLeaguesTableProps } from "@/utils/types";
 
 
 export default async function Leagues() {

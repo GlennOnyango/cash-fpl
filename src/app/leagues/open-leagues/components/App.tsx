@@ -14,6 +14,8 @@ import {
   SortDescriptor,
   useDisclosure,
   Chip,
+  Button,
+  Link,
 } from "@nextui-org/react";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns, availability } from "./data";
@@ -145,7 +147,7 @@ export default function OpenLeagues({ loadedData }: Props) {
               {user.monthly ? "active" : "not available"}
             </Chip>
           );
-          
+
         case "seasonal":
           return (
             <Chip
@@ -158,15 +160,23 @@ export default function OpenLeagues({ loadedData }: Props) {
             </Chip>
           );
         case "currency":
-          return <p className="text-default-700 justify-center">{user.currency}</p>;
+          return (
+            <p className="text-default-700 justify-center">{user.currency}</p>
+          );
 
         case "actions":
           return (
             <div className="relative flex justify-start items-center gap-2">
-              {/* <Button size="sm">Manage</Button> */}
-              <Chip color="warning" variant="shadow">
-                Join
-              </Chip>
+              <Button
+                size="sm"
+                variant="shadow"
+                radius="full"
+                color="warning"
+                as={Link}
+                href={`/leagues/open-leagues/${user.id}`}
+              >
+                Request join
+              </Button>
             </div>
           );
         default:

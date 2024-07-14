@@ -7,12 +7,15 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Input, Pagination,
+  Input,
+  Pagination,
   Selection,
   ChipProps,
   SortDescriptor,
   useDisclosure,
-  Chip
+  Chip,
+  Button,
+  Link,
 } from "@nextui-org/react";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns, availability } from "./data";
@@ -119,10 +122,16 @@ export default function OpenLeagues({ loadedData }: Props) {
         case "actions":
           return (
             <div className="relative flex justify-start items-center gap-2">
-              {/* <Button size="sm">Manage</Button> */}
-              <Chip color="warning" variant="shadow">
-                Join
-              </Chip>
+              <Button
+                size="sm"
+                variant="shadow"
+                radius="full"
+                color="warning"
+                as={Link}
+                href={`/leagues/open-leagues/${user.id}`}
+              >
+                Request join
+              </Button>
             </div>
           );
         default:
