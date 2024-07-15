@@ -107,8 +107,12 @@ export default function AppComplexLeague({ loadedData }: Props) {
 
   const sortedItems = React.useMemo(() => {
     return [...items].sort((a: MyLeaguesTableProps, b: MyLeaguesTableProps) => {
-      const first = a[sortDescriptor.column as keyof MyLeaguesTableProps] as string;
-      const second = b[sortDescriptor.column as keyof MyLeaguesTableProps] as string;
+      const first = a[
+        sortDescriptor.column as keyof MyLeaguesTableProps
+      ] as string;
+      const second = b[
+        sortDescriptor.column as keyof MyLeaguesTableProps
+      ] as string;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
@@ -138,7 +142,9 @@ export default function AppComplexLeague({ loadedData }: Props) {
         case "active":
           return (
             <p
-              className={`${league.active ? "text-green-700" : "text-amber-700"}`}
+              className={`${
+                league.active ? "text-green-700" : "text-amber-700"
+              }`}
             >
               {capitalize(league.active ? "active" : "cancelled")}
             </p>
@@ -189,7 +195,7 @@ export default function AppComplexLeague({ loadedData }: Props) {
           <Input
             isClearable
             classNames={{
-              base: "w-full",
+              base: "w-full ",
               inputWrapper: "border-1",
               input: [
                 "bg-transparent",
@@ -207,47 +213,48 @@ export default function AppComplexLeague({ loadedData }: Props) {
             onClear={() => setFilterValue("")}
             onValueChange={onSearchChange}
           />
+
+        <div className="flex w-4/12 justify-center gap-1">
+          <Dropdown>
+            <DropdownTrigger className="hidden sm:flex">
+              <Button
+                endContent={<ChevronDownIcon className="text-small" />}
+                size="sm"
+                variant="flat"
+                className="bg-foreground text-background"
+              >
+                Availability
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              disallowEmptySelection
+              aria-label="Table Columns"
+              closeOnSelect={false}
+              selectedKeys={statusFilter}
+              selectionMode="multiple"
+              onSelectionChange={setStatusFilter}
+            >
+              {availability.map((status) => (
+                <DropdownItem
+                  key={status.uid}
+                  className="capitalize text-default-900"
+                >
+                  {capitalize(status.name)}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+          <Button
+            className="bg-foreground text-background"
+            isIconOnly
+            onPress={onOpen}
+            size="sm"
+          >
+            <PlusIcon />
+          </Button>
+        </div>
         </div>
 
-        <div className="flex w-full justify-center gap-3">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={<ChevronDownIcon className="text-small" />}
-                  size="sm"
-                  variant="flat"
-                  className="bg-foreground text-background"
-                >
-                  Availability
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {availability.map((status) => (
-                  <DropdownItem
-                    key={status.uid}
-                    className="capitalize text-default-900"
-                  >
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-            <Button
-              className="bg-foreground text-background"
-              onPress={onOpen}
-              endContent={<PlusIcon />}
-              size="sm"
-            >
-              Create League
-            </Button>
-          </div>
       </div>
     );
   }, [

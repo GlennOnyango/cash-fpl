@@ -111,7 +111,7 @@ export default function OpenLeagues({ loadedData }: Props) {
 
       switch (columnKey) {
         case "name":
-          return <p className="text-default-700">{user.name}</p>;
+          return <Link href={`/leagues/open-leagues/${user.id}`}>{user.name}</Link>;
         case "weekly":
           return (
             <Chip
@@ -197,7 +197,7 @@ export default function OpenLeagues({ loadedData }: Props) {
           <Input
             isClearable
             classNames={{
-              base: "w-4/12 ",
+              base: "w-8/12 ",
               inputWrapper: "border-1",
               input: [
                 "bg-transparent",
