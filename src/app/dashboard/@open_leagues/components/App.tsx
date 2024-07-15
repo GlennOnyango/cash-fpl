@@ -25,14 +25,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   disabled: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = [
-  "name",
-  "weekly",
-  "monthly",
-  "seasonal",
-  "currency",
-  "actions",
-];
+const INITIAL_VISIBLE_COLUMNS = ["name", "currency", "actions"];
 
 type Props = {
   loadedData: OpenLeaguesTableProps[];
@@ -111,41 +104,10 @@ export default function OpenLeagues({ loadedData }: Props) {
 
       switch (columnKey) {
         case "name":
-          return <Link href={`/leagues/open-leagues/${user.id}`}>{user.name}</Link>;
-        case "weekly":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[user.weekly ? "active" : "disabled"]}
-              size="sm"
-              variant="dot"
-            >
-              {user.weekly ? "active" : "not available"}
-            </Chip>
-          );
-        case "monthly":
-          return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[user.monthly ? "active" : "disabled"]}
-              size="sm"
-              variant="dot"
-            >
-              {user.monthly ? "active" : "not available"}
-            </Chip>
+            <Link className="text-default-700 hover:text-xl hover:text-blue-500" href={`/leagues/open-leagues/${user.id}`}>{user.name}</Link>
           );
 
-        case "seasonal":
-          return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600 justify-start"
-              color={statusColorMap[user.seasonal ? "active" : "disabled"]}
-              size="sm"
-              variant="dot"
-            >
-              {user.seasonal ? "active" : "not available"}
-            </Chip>
-          );
         case "currency":
           return (
             <p className="text-default-700 justify-center">{user.currency}</p>
@@ -153,18 +115,16 @@ export default function OpenLeagues({ loadedData }: Props) {
 
         case "actions":
           return (
-            <div className="relative flex justify-start items-center gap-2">
-              <Button
-                size="sm"
-                variant="shadow"
-                radius="full"
-                color="warning"
-                as={Link}
-                href={`/leagues/open-leagues/${user.id}`}
-              >
-                Request join
-              </Button>
-            </div>
+            <Button
+              size="sm"
+              variant="shadow"
+              radius="full"
+              color="warning"
+              as={Link}
+              href={`/leagues/open-leagues/${user.id}`}
+            >
+              Request join
+            </Button>
           );
         default:
           return user.name;
