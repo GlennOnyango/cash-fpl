@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -12,32 +12,33 @@ import {
   Selection,
   ChipProps,
   SortDescriptor,
-  useDisclosure,
   Chip,
   Button,
   Link,
 } from "@nextui-org/react";
 import { SearchIcon } from "@/components/icons/SearchIcon";
-import { columns, availability } from "./data";
-import { capitalize } from "@/utils/utils";
-import CreateLeagueModal from "@/components/modals/create-league";
-import { Content } from "@/utils/types";
+import { columns } from "@/utils/tableData/openLeagueData";
+import { OpenLeaguesTableProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  public: "success",
-  private: "warning",
+  active: "success",
+  disabled: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "active", "actions"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "name",
+  "weekly",
+  "monthly",
+  "seasonal",
+  "currency",
+  "actions",
+];
 
 type Props = {
-  loadedData: Content[];
+  loadedData: OpenLeaguesTableProps[];
 };
 
 export default function OpenLeagues({ loadedData }: Props) {
-  // Modal create league
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -57,6 +58,10 @@ export default function OpenLeagues({ loadedData }: Props) {
 
   const hasSearchFilter = Boolean(filterValue);
 
+  useEffect(() => {
+    console.log("loadedData", loadedData);
+  }, [loadedData]);
+
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
 
@@ -73,16 +78,6 @@ export default function OpenLeagues({ loadedData }: Props) {
         user.name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== availability.length
-    ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(
-          user.publiclyAvailable ? "public" : "private"
-        )
-      );
-    }
 
     return filteredUsers;
   }, [loadedData, filterValue, statusFilter]);
@@ -95,30 +90,67 @@ export default function OpenLeagues({ loadedData }: Props) {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Content, b: Content) => {
-      const first = a[sortDescriptor.column as keyof Content] as number;
-      const second = b[sortDescriptor.column as keyof Content] as number;
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
+    return [...items].sort(
+      (a: OpenLeaguesTableProps, b: OpenLeaguesTableProps) => {
+        const first = a[
+          sortDescriptor.column as keyof OpenLeaguesTableProps
+        ] as boolean;
+        const second = b[
+          sortDescriptor.column as keyof OpenLeaguesTableProps
+        ] as boolean;
+        const cmp = first < second ? -1 : first > second ? 1 : 0;
 
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
-    });
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+      }
+    );
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback(
-    (user: Content, columnKey: React.Key) => {
-      const cellValue = user[columnKey as keyof Content];
+    (user: OpenLeaguesTableProps, columnKey: React.Key) => {
+      const cellValue = user[columnKey as keyof OpenLeaguesTableProps];
 
       switch (columnKey) {
         case "name":
           return <p className="text-default-700">{user.name}</p>;
-        case "active":
+        case "weekly":
           return (
-            <p
-              className={`${user.active ? "text-green-700" : "text-amber-700"}`}
+            <Chip
+              className="capitalize border-none gap-1 text-default-600"
+              color={statusColorMap[user.weekly ? "active" : "disabled"]}
+              size="sm"
+              variant="dot"
             >
-              {capitalize(user.active ? "active" : "cancelled")}
-            </p>
+              {user.weekly ? "active" : "not available"}
+            </Chip>
           );
+        case "monthly":
+          return (
+            <Chip
+              className="capitalize border-none gap-1 text-default-600"
+              color={statusColorMap[user.monthly ? "active" : "disabled"]}
+              size="sm"
+              variant="dot"
+            >
+              {user.monthly ? "active" : "not available"}
+            </Chip>
+          );
+
+        case "seasonal":
+          return (
+            <Chip
+              className="capitalize border-none gap-1 text-default-600 justify-start"
+              color={statusColorMap[user.seasonal ? "active" : "disabled"]}
+              size="sm"
+              variant="dot"
+            >
+              {user.seasonal ? "active" : "not available"}
+            </Chip>
+          );
+        case "currency":
+          return (
+            <p className="text-default-700 justify-center">{user.currency}</p>
+          );
+
         case "actions":
           return (
             <div className="relative flex justify-start items-center gap-2">
@@ -165,7 +197,7 @@ export default function OpenLeagues({ loadedData }: Props) {
           <Input
             isClearable
             classNames={{
-              base: "w-6/12 ",
+              base: "w-4/12 ",
               inputWrapper: "border-1",
               input: [
                 "bg-transparent",
@@ -240,46 +272,39 @@ export default function OpenLeagues({ loadedData }: Props) {
   );
 
   return (
-    <>
-      <CreateLeagueModal
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onOpenChange={onOpenChange}
-      />
-      <Table
-        isCompact
-        removeWrapper
-        aria-label="Example table with custom cells, pagination and sorting"
-        bottomContent={bottomContent}
-        bottomContentPlacement="outside"
-        classNames={classNames}
-        sortDescriptor={sortDescriptor}
-        topContent={topContent}
-        topContentPlacement="outside"
-        onSelectionChange={setSelectedKeys}
-        onSortChange={setSortDescriptor}
-      >
-        <TableHeader columns={headerColumns}>
-          {(column) => (
-            <TableColumn
-              key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-              allowsSorting={column.sortable}
-            >
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody emptyContent={"Open leagues not found"} items={sortedItems}>
-          {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </>
+    <Table
+      isCompact
+      removeWrapper
+      aria-label="Example table with custom cells, pagination and sorting"
+      bottomContent={bottomContent}
+      bottomContentPlacement="outside"
+      classNames={classNames}
+      sortDescriptor={sortDescriptor}
+      topContent={topContent}
+      topContentPlacement="outside"
+      onSelectionChange={setSelectedKeys}
+      onSortChange={setSortDescriptor}
+    >
+      <TableHeader columns={headerColumns}>
+        {(column) => (
+          <TableColumn
+            key={column.uid}
+            align={column.uid === "actions" ? "center" : "start"}
+            allowsSorting={column.sortable}
+          >
+            {column.name}
+          </TableColumn>
+        )}
+      </TableHeader>
+      <TableBody emptyContent={"Open leagues not found"} items={sortedItems}>
+        {(item) => (
+          <TableRow key={item.id}>
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 }

@@ -12,14 +12,12 @@ import {
   Selection,
   ChipProps,
   SortDescriptor,
-  useDisclosure,
   Chip,
   Button,
   Link,
 } from "@nextui-org/react";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns, availability } from "./data";
-import CreateLeagueModal from "@/components/modals/create-league";
 import { OpenLeaguesTableProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
@@ -41,9 +39,7 @@ type Props = {
 };
 
 export default function OpenLeagues({ loadedData }: Props) {
-  // Modal create league
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+  
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -285,12 +281,6 @@ export default function OpenLeagues({ loadedData }: Props) {
   );
 
   return (
-    <>
-      <CreateLeagueModal
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onOpenChange={onOpenChange}
-      />
       <Table
         isCompact
         removeWrapper
@@ -325,6 +315,5 @@ export default function OpenLeagues({ loadedData }: Props) {
           )}
         </TableBody>
       </Table>
-    </>
   );
 }
