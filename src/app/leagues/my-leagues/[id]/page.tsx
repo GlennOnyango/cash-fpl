@@ -26,7 +26,6 @@ export default async function page({ params }: { params: { id: string } }) {
   }
 
   if (leaguesFetch) {
-    console.log(leaguesFetch);
     leagueDetails = {
       id: leaguesFetch.id,
       ownerId: leaguesFetch.owner,

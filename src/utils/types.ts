@@ -18,23 +18,24 @@ export type CompetitionTypes = {
   createdAt: string;
   lastModifiedAt: string;
   id: string;
-  competitionTypeId: number;
+  competitionDuration: 'WEEKLY' | 'MONTHLY' | 'SEASONAL';
+  isPublic: boolean;
+  enableExcessTransferPenalty: boolean;
   amount: number;
   leagueId: string;
 };
 
 export type Content = {
+  createdBy: string;
   createdAt: string;
   lastModifiedAt: string;
   id: string;
   name: string;
-  publiclyAvailable: boolean;
+  leagueStatus: string;
   currencyId: number;
-  paymentDeadline: string;
-  active: boolean;
   ownerId: string;
+  newPlayerJoinsAll: boolean;
   competitionTypes: CompetitionTypes[];
-  leaguePenalties: LeaguePenalties[];
 };
 
 export type OpenLeaguesTableProps = {
@@ -48,22 +49,17 @@ export type OpenLeaguesTableProps = {
 export type MyLeaguesTableData = {
   id: string;
   name: string;
-  publiclyAvailable: boolean;
-  deductExcessTransfers: boolean;
   currencyId: number;
-  active: boolean;
+  active: string;
   ownerId: string;
   competitionTypes: CompetitionTypes[];
-  leaguePenalties: LeaguePenalties[];
 };
 
 export type MyLeaguesTableProps = {
   id: string;
   name: string;
-  publiclyAvailable: boolean;
-  deductExcessTransfers: boolean;
   currency: string;
-  active: boolean;
+  active: string;
   ownerId: string;
   weekly: boolean;
   monthly: boolean;

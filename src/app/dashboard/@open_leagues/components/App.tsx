@@ -51,10 +51,6 @@ export default function OpenLeagues({ loadedData }: Props) {
 
   const hasSearchFilter = Boolean(filterValue);
 
-  useEffect(() => {
-    console.log("loadedData", loadedData);
-  }, [loadedData]);
-
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
 
@@ -105,7 +101,12 @@ export default function OpenLeagues({ loadedData }: Props) {
       switch (columnKey) {
         case "name":
           return (
-            <Link className="text-default-700 hover:text-xl hover:text-blue-500" href={`/leagues/open-leagues/${user.id}`}>{user.name}</Link>
+            <Link
+              className="text-default-700 hover:text-xl hover:text-blue-500"
+              href={`/leagues/open-leagues/${user.id}`}
+            >
+              {user.name}
+            </Link>
           );
 
         case "currency":

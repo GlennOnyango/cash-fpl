@@ -49,10 +49,6 @@ export default function UpdateLeagueComponent({ id }: Props) {
   const [currency, setCurrency] = React.useState("USD");
 
   useEffect(() => {
-    console.log(state);
-  }, [state]);
-
-  useEffect(() => {
     fetch(`/api/limits?currency=${currency}`)
       .then((res) => res.json())
       .then((data: currency[]) => {
@@ -75,7 +71,6 @@ export default function UpdateLeagueComponent({ id }: Props) {
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrency(e.target.value);
   };
-
 
   return (
     <form

@@ -8,8 +8,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
     { currency: "KES", minWeekly: 100, minMonthly: 100, minSeasonal: 100 },
   ];
 
-  console.log("GET /api/limits", currency);
-
   return NextResponse.json(
     currency ? limits.filter((limit) => limit.currency === currency) : limits
   );

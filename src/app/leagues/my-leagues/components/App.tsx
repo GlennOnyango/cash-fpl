@@ -30,8 +30,10 @@ import CreateLeagueModal from "@/components/modals/create-league";
 import { MyLeaguesTableProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  public: "success",
-  private: "warning",
+  ACTIVE: "success",
+  PAUSED: "secondary",
+  CLOSED: "danger",
+  SUSPENDED: "warning",
 };
 
 const statusColorMapCompetitions: Record<string, ChipProps["color"]> = {
@@ -41,9 +43,7 @@ const statusColorMapCompetitions: Record<string, ChipProps["color"]> = {
 
 const INITIAL_VISIBLE_COLUMNS = [
   "name",
-  "publiclyAvailable",
   "active",
-  "deductExcessTransfers",
   "weekly",
   "monthly",
   "seasonal",
@@ -93,16 +93,16 @@ export default function MYLeagueTable({ loadedData }: Props) {
         user.name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== availability.length
-    ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(
-          user.publiclyAvailable ? "public" : "private"
-        )
-      );
-    }
+    // if (
+    //   statusFilter !== "all" &&
+    //   Array.from(statusFilter).length !== availability.length
+    // ) {
+    //   filteredUsers = filteredUsers.filter((user) =>
+    //     Array.from(statusFilter).includes(
+    //       user.publiclyAvailable ? "public" : "private"
+    //     )
+    //   );
+    // }
 
     return filteredUsers;
   }, [loadedData, filterValue, statusFilter]);
@@ -135,19 +135,7 @@ export default function MYLeagueTable({ loadedData }: Props) {
       switch (columnKey) {
         case "name":
           return <p className="text-default-700">{league.name}</p>;
-        case "publiclyAvailable":
-          return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={
-                statusColorMap[league.publiclyAvailable ? "public" : "private"]
-              }
-              size="sm"
-              variant="dot"
-            >
-              {capitalize(league.publiclyAvailable ? "public" : "private")}
-            </Chip>
-          );
+
         case "weekly":
           return (
             <Chip
@@ -193,27 +181,19 @@ export default function MYLeagueTable({ loadedData }: Props) {
               {league.seasonal ? "active" : "not available"}
             </Chip>
           );
-        case "deductExcessTransfers":
-          return (
-            <p
-              className={`${
-                league.active ? "text-green-700" : "text-amber-700"
-              }`}
-            >
-              {capitalize(league.active ? "active" : "cancelled")}
-            </p>
-          );
 
         case "active":
           return (
-            <p
-              className={`${
-                league.active ? "text-green-700" : "text-amber-700"
-              }`}
+            <Chip
+              className="capitalize border-none gap-1 text-default-600"
+              color={statusColorMap[league.active]}
+              size="sm"
+              variant="dot"
             >
-              {capitalize(league.active ? "active" : "cancelled")}
-            </p>
+              {league.active}
+            </Chip>
           );
+
         case "actions":
           return (
             <div className="relative flex justify-start items-center gap-2">

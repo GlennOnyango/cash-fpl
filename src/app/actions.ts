@@ -1,91 +1,13 @@
 "use server";
-import { z } from "zod";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidateTag } from "next/cache";
+import { User, signUser } from "@/utils/schemas";
 
 const local_url = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
 const authentication_url =
   process.env.NEXT_PUBLIC_EXTERNAL_AUTHENTICATION_API_URL;
 const leagues_url = process.env.NEXT_PUBLIC_EXTERNAL_LEAGUES_API_URL;
-
-let min = {
-  currency: "KES",
-  minWeekly: 100,
-  minMonthly: 100,
-  minSeasonal: 100,
-};
-
-const User = z
-  .object({
-    email: z.string({
-      invalid_type_error: "Invalid email",
-      required_error: "Email is required",
-    }),
-    username: z.string({
-      required_error: "Username is required",
-      invalid_type_error: "Invalid username",
-    }),
-    password: z
-      .string({
-        required_error: "Password is required",
-        invalid_type_error: "Invalid password",
-      })
-      .refine((password) => password.length >= 8, {
-        message: "Password should be at least 8 characters",
-      })
-      .refine((password) => password.length <= 20, {
-        message: "Password should be at most 20 characters",
-      }),
-    teamId: z
-      .number({
-        required_error: "Team is required",
-        invalid_type_error: "Invalid team",
-        message: "Team should be a number",
-      })
-      .refine(
-        async (teamId) => {
-          try {
-            const response = await fetch(
-              `https://fantasy.premierleague.com/api/entry/${teamId}/`
-            );
-
-            const data = await response.json();
-
-            return data.id === teamId;
-          } catch (e) {
-            return false;
-          }
-        },
-        {
-          message: "Team ID does not exist",
-        }
-      ),
-    confirmPassword: z.string({
-      required_error: "Confirm password is required",
-      invalid_type_error: "Invalid confirm password",
-      message: "Confirm password should be a string",
-    }),
-  })
-  .refine(
-    (data) => {
-      return data.password === data.confirmPassword;
-    },
-    {
-      message: "Passwords do not match",
-    }
-  );
-
-const signUser = z.object({
-  email: z.string({
-    invalid_type_error: "Invalid email",
-    required_error: "Email is required",
-  }),
-  password: z.string({
-    required_error: "Password is required",
-    invalid_type_error: "Invalid password",
-  }),
-});
 
 export async function createUser(prevState: any, formData: FormData) {
   const user = await User.safeParseAsync({
@@ -201,19 +123,19 @@ export async function signInUser(prevState: any, formData: FormData) {
 export async function createLeague(prevState: any, formData: FormData) {
   const league_object = {
     name: formData.get("leageName") as string,
-    types: formData.getAll("types"),
-    currency: formData.get("currency") as string,
-    competitions: formData.getAll("types").map((comp) => {
+    leagueStatus: "ACTIVE", //ACTIVE,CLOSED,PAUSED,SUSPENDED
+    newPlayerJoinsAll: (formData.get("newPlayerJoinsAll") as string) === "True",
+    currencyId: Number(formData.get("currency")),
+    competitionType: formData.getAll("types").map((comp) => {
       return {
-        type: comp,
+        competitionDuration: comp,
         amount: formData.get(`${comp}_amount`),
-        access: formData.get(`${comp}_access`),
-        penalty: (formData.get(`${comp}_penalty`) as string) === "True",
+        isPublic: (formData.get(`${comp}_access`) as string) === "public",
+        enableExcessTransferPenalty:
+          (formData.get(`${comp}_penalty`) as string) === "True",
       };
     }),
   };
-
-  console.log("League Object<------->", league_object);
 
   try {
     const raw = JSON.stringify(league_object);
@@ -227,11 +149,9 @@ export async function createLeague(prevState: any, formData: FormData) {
       },
       body: raw,
     });
-    console.log("Body<------->", raw);
 
     if (!newLeague.ok) {
       let err = await newLeague.json();
-      console.log("Create League<------->", err);
       throw new Error(
         "Failed to create league. Please try again or contact us."
       );
@@ -267,7 +187,6 @@ export async function fetchMyLeagues(page: number = 0, size: number = 10) {
 
     if (!response.ok) {
       let err = await response.json();
-      console.log("-------", err);
 
       if (err.httpStatus === "UNAUTHORIZED") {
         throw new Error(err.httpStatus);
@@ -280,6 +199,8 @@ export async function fetchMyLeagues(page: number = 0, size: number = 10) {
     }
 
     const res = await response.json();
+
+    console.log(res);
 
     return res;
   } catch (error: any) {
@@ -307,7 +228,6 @@ export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
 
     if (!response.ok) {
       let err = await response.json();
-      console.log("-------", err);
 
       if (err.httpStatus === "UNAUTHORIZED") {
         throw new Error(err.httpStatus);
@@ -344,7 +264,6 @@ export async function fetchLeagueById(leagueId: string) {
 
     if (!response.ok) {
       let err = await response.json();
-      console.log("-------", err);
 
       if (err.httpStatus === "UNAUTHORIZED") {
         throw new Error(err.httpStatus);
@@ -357,8 +276,6 @@ export async function fetchLeagueById(leagueId: string) {
     }
 
     const res = await response.json();
-
-    console.log("League<------->", res);
 
     return res;
   } catch (error: any) {
