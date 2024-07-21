@@ -172,6 +172,7 @@ export async function createLeague(prevState: any, formData: FormData) {
 
 // Fetch my leagues
 export async function fetchMyLeagues(page: number = 0, size: number = 10) {
+  console.log("page number", page);
   try {
     const response = await fetch(
       `${leagues_url}/api/v1/league/user-leagues?page=${page}&size=${size}`,
@@ -199,8 +200,6 @@ export async function fetchMyLeagues(page: number = 0, size: number = 10) {
     }
 
     const res = await response.json();
-
-    console.log(res);
 
     return res;
   } catch (error: any) {

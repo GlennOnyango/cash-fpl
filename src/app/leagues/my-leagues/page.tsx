@@ -1,13 +1,22 @@
 import ManagerPageNavbar from "@/components/navbars/manager-nav";
-import MYLeagueTable from "./components/App";
+import MyLeagueTable from "./components/App";
 import { Content, MyLeaguesTableProps } from "@/utils/types";
 import { fetchMyLeagues } from "@/app/actions";
 import { redirect } from "next/navigation";
+import CreateComponentModal from "@/components/createComponentModal";
 
-export default async function page() {
+export default async function page({
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   let leagues: MyLeaguesTableProps[] = [];
+  let totalPages = 1;
+  let pageNumber = Number(searchParams.page);
+  let rowsPerPage = 2;
 
-  const leaguesFetch = await fetchMyLeagues();
+  const leaguesFetch = await fetchMyLeagues(pageNumber - 1, rowsPerPage);
 
   if (leaguesFetch?.message === "UNAUTHORIZED") {
     redirect("/api/auth/logout");
@@ -38,6 +47,8 @@ export default async function page() {
     });
   }
 
+  totalPages = leaguesFetch.totalPages;
+
   return (
     <ManagerPageNavbar>
       <div
@@ -46,8 +57,17 @@ export default async function page() {
           height: "calc(100vh - 200px)",
         }}
       >
-        <h1 className="text-black text-4xl mb-4">My Leagues</h1>
-        <MYLeagueTable loadedData={leagues} />
+        <div className="w-full flex flex-row justify-between">
+          <h1 className="text-black text-4xl mb-4">My Leagues</h1>
+
+          <CreateComponentModal />
+        </div>
+        <MyLeagueTable
+          loadedData={leagues}
+          totalPages={totalPages}
+          pageNumber={pageNumber}
+          // rowsPerPage={rowsPerPage}
+        />
       </div>
     </ManagerPageNavbar>
   );
