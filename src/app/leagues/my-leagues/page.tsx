@@ -14,7 +14,7 @@ export default async function page({
   let leagues: MyLeaguesTableProps[] = [];
   let totalPages = 1;
   let pageNumber = Number(searchParams.page);
-  let rowsPerPage = 2;
+  let rowsPerPage = 10;
 
   const leaguesFetch = await fetchMyLeagues(pageNumber - 1, rowsPerPage);
 

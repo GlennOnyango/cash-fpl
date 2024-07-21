@@ -178,22 +178,36 @@ export default function UpdateLeagueComponent({ data }: Props) {
             });
           }}
         >
-          <Checkbox value="weekly">Weekly competitions</Checkbox>
-          <Checkbox value="monthly">Monthly competitions</Checkbox>
-          <Checkbox value="seasonal">Seasonal competitions</Checkbox>
+          <Checkbox value="WEEKLY">Weekly competitions</Checkbox>
+          <Checkbox value="MONTHLY">Monthly competitions</Checkbox>
+          <Checkbox value="SEASONAL">Seasonal competitions</Checkbox>
         </CheckboxGroup>
       </div>
 
       {updateLeagueData.types.map((competition) => {
+        const competitionDetails = updateLeagueData.competitionTypes.find(
+          (comp) => {
+            return comp.competitionDuration === competition;
+          }
+        );
+
         return (
           <Competition
             key={competition}
             competition={competition}
             limit={limit}
             competitionProp={{
-              amount: "",
-              access: ["public"],
-              penalty: ["True"],
+              amount: competitionDetails?.amount?.toString() || "",
+              access: [
+                `${competitionDetails?.isPublic ? "public" : "private"}`,
+              ],
+              penalty: [
+                `${
+                  competitionDetails?.enableExcessTransferPenalty
+                    ? "True"
+                    : "False"
+                }`,
+              ],
             }}
           />
         );

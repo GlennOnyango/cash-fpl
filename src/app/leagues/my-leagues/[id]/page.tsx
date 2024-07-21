@@ -2,23 +2,18 @@ import ManagerPageNavbar from "@/components/navbars/manager-nav";
 import UpdateLeagueComponent from "../components";
 import { fetchLeagueById } from "@/app/actions";
 import { redirect } from "next/navigation";
-import { UpdateLeague } from "@/utils/types";
+import { CompetitionTypes, UpdateLeague } from "@/utils/types";
 
 export default async function page({ params }: { params: { id: string } }) {
   const leaguesFetch = await fetchLeagueById(params.id);
+
   let leagueDetails: UpdateLeague = {
     id: "",
     ownerId: "",
     name: "",
     types: ["weekly"],
     currency: "USD",
-    weekly: {
-      amount: "0",
-      access: ["public"],
-      penalty: ["True"],
-    },
-    monthly: null,
-    seasonal: null,
+    competitionTypes: [],
   };
 
   if (leaguesFetch?.message === "UNAUTHORIZED") {
@@ -26,27 +21,25 @@ export default async function page({ params }: { params: { id: string } }) {
   }
 
   if (leaguesFetch) {
+    const leagueCompetitionTypes = leaguesFetch.competitionTypes.map(
+      (competition: CompetitionTypes) => {
+        if (competition.competitionDuration === "WEEKLY") {
+          return "WEEKLY";
+        } else if (competition.competitionDuration === "MONTHLY") {
+          return "MONTHLY";
+        } else if (competition.competitionDuration === "SEASONAL") {
+          return "SEASONAL";
+        }
+      }
+    );
+
     leagueDetails = {
       id: leaguesFetch.id,
       ownerId: leaguesFetch.owner,
       name: leaguesFetch.name,
-      types: ["weekly", "monthly", "seasonal"],
+      types: leagueCompetitionTypes,
       currency: leaguesFetch.currencyId === 1 ? "KES" : "USD",
-      weekly: {
-        amount: "100",
-        access: ["public"],
-        penalty: ["True"],
-      },
-      monthly: {
-        amount: "200",
-        access: ["private"],
-        penalty: ["True"],
-      },
-      seasonal: {
-        amount: "",
-        access: ["public"],
-        penalty: ["True"],
-      },
+      competitionTypes: leaguesFetch.competitionTypes,
     };
   }
 

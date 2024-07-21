@@ -78,7 +78,5 @@ export type UpdateLeague = {
   name: string;
   types: string[];
   currency: string;
-  weekly: Competiton | null;
-  monthly: Competiton | null;
-  seasonal: Competiton | null;
+  competitionTypes: CompetitionTypes[];
 };

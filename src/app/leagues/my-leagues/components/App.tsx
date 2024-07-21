@@ -98,7 +98,6 @@ export default function MYLeagueTable({
 
   const renderCell = React.useCallback(
     (league: MyLeaguesTableProps, columnKey: React.Key) => {
-      console.log("I am here in render cell");
       const cellValue = league[columnKey as keyof MyLeaguesTableProps];
 
       switch (columnKey) {
