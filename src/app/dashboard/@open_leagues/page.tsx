@@ -20,11 +20,11 @@ export default async function Leagues() {
 
   const openLeagueData: OpenLeaguesTableProps[] = leagues.map((league) => {
     let competitions = league.competitionTypes.map((competition) => {
-      if (competition.competitionTypeId === 1) {
+      if (competition.competitionDuration === "WEEKLY") {
         return "Weekly";
-      } else if (competition.competitionTypeId === 2) {
+      } else if (competition.competitionDuration === "MONTHLY") {
         return "Monthly";
-      } else if (competition.competitionTypeId === 3) {
+      } else if (competition.competitionDuration === "SEASONAL") {
         return "Yearly";
       }
     });
