@@ -121,7 +121,7 @@ export default function ManagerNav() {
                     <DropdownItem
                       key="my-leagues"
                       description="See all leagues that you have created"
-                      href="/leagues/my-leagues"
+                      href="/leagues/my-leagues?page=1"
                       className="text-default-900"
                     >
                       My Leagues

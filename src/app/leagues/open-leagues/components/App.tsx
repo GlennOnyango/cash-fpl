@@ -12,12 +12,12 @@ import {
   Selection,
   ChipProps,
   SortDescriptor,
-  useDisclosure,
   Chip,
+  Button,
+  Link,
 } from "@nextui-org/react";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns, availability } from "./data";
-import CreateLeagueModal from "@/components/modals/create-league";
 import { OpenLeaguesTableProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
@@ -39,9 +39,6 @@ type Props = {
 };
 
 export default function OpenLeagues({ loadedData }: Props) {
-  // Modal create league
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -60,10 +57,6 @@ export default function OpenLeagues({ loadedData }: Props) {
   const pages = Math.ceil(loadedData.length / rowsPerPage);
 
   const hasSearchFilter = Boolean(filterValue);
-
-  useEffect(() => {
-    console.log("loadedData", loadedData);
-  }, [loadedData]);
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
@@ -145,7 +138,7 @@ export default function OpenLeagues({ loadedData }: Props) {
               {user.monthly ? "active" : "not available"}
             </Chip>
           );
-          
+
         case "seasonal":
           return (
             <Chip
@@ -158,15 +151,23 @@ export default function OpenLeagues({ loadedData }: Props) {
             </Chip>
           );
         case "currency":
-          return <p className="text-default-700 justify-center">{user.currency}</p>;
+          return (
+            <p className="text-default-700 justify-center">{user.currency}</p>
+          );
 
         case "actions":
           return (
             <div className="relative flex justify-start items-center gap-2">
-              {/* <Button size="sm">Manage</Button> */}
-              <Chip color="warning" variant="shadow">
-                Join
-              </Chip>
+              <Button
+                size="sm"
+                variant="shadow"
+                radius="full"
+                color="warning"
+                as={Link}
+                href={`/leagues/open-leagues/${user.id}`}
+              >
+                Request join
+              </Button>
             </div>
           );
         default:
@@ -275,46 +276,39 @@ export default function OpenLeagues({ loadedData }: Props) {
   );
 
   return (
-    <>
-      <CreateLeagueModal
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onOpenChange={onOpenChange}
-      />
-      <Table
-        isCompact
-        removeWrapper
-        aria-label="Example table with custom cells, pagination and sorting"
-        bottomContent={bottomContent}
-        bottomContentPlacement="outside"
-        classNames={classNames}
-        sortDescriptor={sortDescriptor}
-        topContent={topContent}
-        topContentPlacement="outside"
-        onSelectionChange={setSelectedKeys}
-        onSortChange={setSortDescriptor}
-      >
-        <TableHeader columns={headerColumns}>
-          {(column) => (
-            <TableColumn
-              key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-              allowsSorting={column.sortable}
-            >
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody emptyContent={"Open leagues not found"} items={sortedItems}>
-          {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </>
+    <Table
+      isCompact
+      removeWrapper
+      aria-label="Example table with custom cells, pagination and sorting"
+      bottomContent={bottomContent}
+      bottomContentPlacement="outside"
+      classNames={classNames}
+      sortDescriptor={sortDescriptor}
+      topContent={topContent}
+      topContentPlacement="outside"
+      onSelectionChange={setSelectedKeys}
+      onSortChange={setSortDescriptor}
+    >
+      <TableHeader columns={headerColumns}>
+        {(column) => (
+          <TableColumn
+            key={column.uid}
+            align={column.uid === "actions" ? "center" : "start"}
+            allowsSorting={column.sortable}
+          >
+            {column.name}
+          </TableColumn>
+        )}
+      </TableHeader>
+      <TableBody emptyContent={"Open leagues not found"} items={sortedItems}>
+        {(item) => (
+          <TableRow key={item.id}>
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 }

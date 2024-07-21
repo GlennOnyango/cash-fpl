@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -7,34 +7,31 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Input, Pagination,
+  Input,
+  Pagination,
   Selection,
   ChipProps,
   SortDescriptor,
-  useDisclosure,
-  Chip
+  Chip,
+  Button,
+  Link,
 } from "@nextui-org/react";
 import { SearchIcon } from "@/components/icons/SearchIcon";
-import { columns, availability } from "./data";
-import { capitalize } from "@/utils/utils";
-import CreateLeagueModal from "@/components/modals/create-league";
-import { Content } from "@/utils/types";
+import { columns } from "@/utils/tableData/openLeagueData";
+import { OpenLeaguesTableProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  public: "success",
-  private: "warning",
+  active: "success",
+  disabled: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "active", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "currency", "actions"];
 
 type Props = {
-  loadedData: Content[];
+  loadedData: OpenLeaguesTableProps[];
 };
 
 export default function OpenLeagues({ loadedData }: Props) {
-  // Modal create league
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -70,16 +67,6 @@ export default function OpenLeagues({ loadedData }: Props) {
         user.name.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== availability.length
-    ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(
-          user.publiclyAvailable ? "public" : "private"
-        )
-      );
-    }
 
     return filteredUsers;
   }, [loadedData, filterValue, statusFilter]);
@@ -92,38 +79,53 @@ export default function OpenLeagues({ loadedData }: Props) {
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Content, b: Content) => {
-      const first = a[sortDescriptor.column as keyof Content] as number;
-      const second = b[sortDescriptor.column as keyof Content] as number;
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
+    return [...items].sort(
+      (a: OpenLeaguesTableProps, b: OpenLeaguesTableProps) => {
+        const first = a[
+          sortDescriptor.column as keyof OpenLeaguesTableProps
+        ] as boolean;
+        const second = b[
+          sortDescriptor.column as keyof OpenLeaguesTableProps
+        ] as boolean;
+        const cmp = first < second ? -1 : first > second ? 1 : 0;
 
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
-    });
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+      }
+    );
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback(
-    (user: Content, columnKey: React.Key) => {
-      const cellValue = user[columnKey as keyof Content];
+    (user: OpenLeaguesTableProps, columnKey: React.Key) => {
+      const cellValue = user[columnKey as keyof OpenLeaguesTableProps];
 
       switch (columnKey) {
         case "name":
-          return <p className="text-default-700">{user.name}</p>;
-        case "active":
           return (
-            <p
-              className={`${user.active ? "text-green-700" : "text-amber-700"}`}
+            <Link
+              className="text-default-700 hover:text-xl hover:text-blue-500"
+              href={`/leagues/open-leagues/${user.id}`}
             >
-              {capitalize(user.active ? "active" : "cancelled")}
-            </p>
+              {user.name}
+            </Link>
           );
+
+        case "currency":
+          return (
+            <p className="text-default-700 justify-center">{user.currency}</p>
+          );
+
         case "actions":
           return (
-            <div className="relative flex justify-start items-center gap-2">
-              {/* <Button size="sm">Manage</Button> */}
-              <Chip color="warning" variant="shadow">
-                Join
-              </Chip>
-            </div>
+            <Button
+              size="sm"
+              variant="shadow"
+              radius="full"
+              color="warning"
+              as={Link}
+              href={`/leagues/open-leagues/${user.id}`}
+            >
+              Request join
+            </Button>
           );
         default:
           return user.name;
@@ -156,7 +158,7 @@ export default function OpenLeagues({ loadedData }: Props) {
           <Input
             isClearable
             classNames={{
-              base: "w-6/12 ",
+              base: "w-8/12 ",
               inputWrapper: "border-1",
               input: [
                 "bg-transparent",
@@ -231,46 +233,39 @@ export default function OpenLeagues({ loadedData }: Props) {
   );
 
   return (
-    <>
-      <CreateLeagueModal
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onOpenChange={onOpenChange}
-      />
-      <Table
-        isCompact
-        removeWrapper
-        aria-label="Example table with custom cells, pagination and sorting"
-        bottomContent={bottomContent}
-        bottomContentPlacement="outside"
-        classNames={classNames}
-        sortDescriptor={sortDescriptor}
-        topContent={topContent}
-        topContentPlacement="outside"
-        onSelectionChange={setSelectedKeys}
-        onSortChange={setSortDescriptor}
-      >
-        <TableHeader columns={headerColumns}>
-          {(column) => (
-            <TableColumn
-              key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-              allowsSorting={column.sortable}
-            >
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody emptyContent={"Open leagues not found"} items={sortedItems}>
-          {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </>
+    <Table
+      isCompact
+      removeWrapper
+      aria-label="Example table with custom cells, pagination and sorting"
+      bottomContent={bottomContent}
+      bottomContentPlacement="outside"
+      classNames={classNames}
+      sortDescriptor={sortDescriptor}
+      topContent={topContent}
+      topContentPlacement="outside"
+      onSelectionChange={setSelectedKeys}
+      onSortChange={setSortDescriptor}
+    >
+      <TableHeader columns={headerColumns}>
+        {(column) => (
+          <TableColumn
+            key={column.uid}
+            align={column.uid === "actions" ? "center" : "start"}
+            allowsSorting={column.sortable}
+          >
+            {column.name}
+          </TableColumn>
+        )}
+      </TableHeader>
+      <TableBody emptyContent={"Open leagues not found"} items={sortedItems}>
+        {(item) => (
+          <TableRow key={item.id}>
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 }

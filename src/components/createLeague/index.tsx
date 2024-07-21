@@ -15,8 +15,8 @@ import Competition from "./competition";
 import { currency } from "@/utils/types";
 
 export const currency_select = [
-  { key: "USD", label: "USD" },
-  { key: "KES", label: "KES" },
+  { key: "1", label: "KES" },
+  { key: "2", label: "USD" },
 ];
 
 const initialState = {
@@ -29,14 +29,16 @@ type Props = {
 
 export default function CreateLeagueComponent({ onClose }: Props) {
   const [state, formAction] = useFormState(createLeague, initialState);
-  const [selected, setSelected] = React.useState(["weekly"]);
+  const [selected, setSelected] = React.useState(["WEEKLY"]);
   const [limits, setLimits] = React.useState<currency[]>([]);
-  const [currency, setCurrency] = React.useState("USD");
+  const [currency, setCurrency] = React.useState(["1"]);
 
   const local_url = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
 
   useEffect(() => {
-    fetch(`${local_url}/api/limits?currency=${currency}`)
+    fetch(
+      `${local_url}/api/limits?currency=${currency[0] === "1" ? "KES" : "USD"}`
+    )
       .then((res) => res.json())
       .then((data: currency[]) => {
         setLimits(data);
@@ -56,7 +58,7 @@ export default function CreateLeagueComponent({ onClose }: Props) {
   }, [limits]);
 
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrency(e.target.value);
+    setCurrency([e.target.value]);
   };
 
   useEffect(() => {
@@ -109,10 +111,10 @@ export default function CreateLeagueComponent({ onClose }: Props) {
             required
             name="currency"
             radius="lg"
-            defaultSelectedKeys={["USD"]}
+            defaultSelectedKeys={["1"]}
             className="w-full border-1 border-gray-800 rounded-xl"
             selectorIcon={<SelectorIcon />}
-            selectedKeys={[currency]}
+            selectedKeys={currency}
             onChange={handleSelectionChange}
           >
             {currency_select.map((acc) => (
@@ -147,9 +149,9 @@ export default function CreateLeagueComponent({ onClose }: Props) {
           value={selected}
           onValueChange={setSelected}
         >
-          <Checkbox value="weekly">Weekly competitions</Checkbox>
-          <Checkbox value="monthly">Monthly competitions</Checkbox>
-          <Checkbox value="seasonal">Seasonal competitions</Checkbox>
+          <Checkbox value="WEEKLY">Weekly competitions</Checkbox>
+          <Checkbox value="MONTHLY">Monthly competitions</Checkbox>
+          <Checkbox value="SEASONAL">Seasonal competitions</Checkbox>
         </CheckboxGroup>
       </div>
 
@@ -162,6 +164,12 @@ export default function CreateLeagueComponent({ onClose }: Props) {
           />
         );
       })}
+
+      <div className="col-span-3 flex flex-col justify-center items-center w-full mt-4">
+        <Checkbox name="newPlayerJoinsAll" value={"True"} defaultSelected>
+          New players should join all leagues on entry
+        </Checkbox>
+      </div>
 
       <div className="col-span-3 flex flex-col items-center justify-center">
         {state.message !== "" &&

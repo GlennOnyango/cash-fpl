@@ -79,7 +79,6 @@ export default function Competition({
             !/^\d+$/.test(competitionData.amount)
           }
           onChange={(e) => {
-            console.log(e.target.value);
             setCompetitionData({
               ...competitionData,
               amount: e.target.value,

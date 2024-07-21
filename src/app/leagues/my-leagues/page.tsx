@@ -1,46 +1,53 @@
 import ManagerPageNavbar from "@/components/navbars/manager-nav";
-import MYLeagueTable from "./components/App";
-import { MyLeaguesTableData, MyLeaguesTableProps } from "@/utils/types";
+import MyLeagueTable from "./components/App";
+import { Content, MyLeaguesTableProps } from "@/utils/types";
 import { fetchMyLeagues } from "@/app/actions";
 import { redirect } from "next/navigation";
+import CreateComponentModal from "@/components/createComponentModal";
 
-export default async function page() {
+export default async function page({
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   let leagues: MyLeaguesTableProps[] = [];
+  let totalPages = 1;
+  let pageNumber = Number(searchParams.page);
+  let rowsPerPage = 10;
 
-  const leaguesFetch = await fetchMyLeagues();
+  const leaguesFetch = await fetchMyLeagues(pageNumber - 1, rowsPerPage);
 
   if (leaguesFetch?.message === "UNAUTHORIZED") {
     redirect("/api/auth/logout");
   }
 
   if (leaguesFetch?.content) {
-    leagues = leaguesFetch.content.map(
-      (league: MyLeaguesTableData) => {
-        let competitions = league.competitionTypes.map((competition) => {
-          if (competition.competitionTypeId === 1) {
-            return "Weekly";
-          } else if (competition.competitionTypeId === 2) {
-            return "Monthly";
-          } else if (competition.competitionTypeId === 3) {
-            return "Yearly";
-          }
-        });
+    leagues = leaguesFetch.content.map((league: Content) => {
+      let competitions = league.competitionTypes.map((competition) => {
+        if (competition.competitionDuration === "WEEKLY") {
+          return "Weekly";
+        } else if (competition.competitionDuration === "MONTHLY") {
+          return "Monthly";
+        } else if (competition.competitionDuration === "SEASONAL") {
+          return "Seasonal";
+        }
+      });
 
-        return {
-          id: league.id,
-          name: league.name,
-          publiclyAvailable: league.publiclyAvailable,
-          deductExcessTransfers: league.deductExcessTransfers,
-          currency: league.currencyId === 1 ? "KES" : "USD",
-          active: league.active,
-          ownerId: league.ownerId,
-          weekly: competitions.includes("Weekly"),
-          monthly: competitions.includes("Monthly"),
-          seasonal: competitions.includes("Yearly"),
-        };
-      }
-    );
+      return {
+        id: league.id,
+        name: league.name,
+        currency: league.currencyId === 1 ? "KES" : "USD",
+        active: league.leagueStatus,
+        ownerId: league.ownerId,
+        weekly: competitions.includes("Weekly"),
+        monthly: competitions.includes("Monthly"),
+        seasonal: competitions.includes("Seasonal"),
+      };
+    });
   }
+
+  totalPages = leaguesFetch.totalPages;
 
   return (
     <ManagerPageNavbar>
@@ -50,8 +57,17 @@ export default async function page() {
           height: "calc(100vh - 200px)",
         }}
       >
-        <h1 className="text-black text-4xl mb-4">My Leagues</h1>
-        <MYLeagueTable loadedData={leagues} />
+        <div className="w-full flex flex-row justify-between">
+          <h1 className="text-black text-4xl mb-4">My Leagues</h1>
+
+          <CreateComponentModal />
+        </div>
+        <MyLeagueTable
+          loadedData={leagues}
+          totalPages={totalPages}
+          pageNumber={pageNumber}
+          // rowsPerPage={rowsPerPage}
+        />
       </div>
     </ManagerPageNavbar>
   );
