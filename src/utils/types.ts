@@ -25,6 +25,18 @@ export type CompetitionTypes = {
   leagueId: string;
 };
 
+export type CompetitionTypesProps = {
+  createdAt: string;
+  lastModifiedAt: string;
+  id: string;
+  competitionDuration: 'WEEKLY' | 'MONTHLY' | 'SEASONAL';
+  isPublic: boolean;
+  enableExcessTransferPenalty: boolean;
+  amount: number;
+  leagueId: string;
+  leagueName:string;
+};
+
 export type Content = {
   createdBy: string;
   createdAt: string;

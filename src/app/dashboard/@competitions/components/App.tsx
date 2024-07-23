@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Table,
   TableHeader,
@@ -18,17 +18,22 @@ import {
 } from "@nextui-org/react";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns } from "@/utils/tableData/openLeagueData";
-import { OpenLeaguesTableProps } from "@/utils/types";
+import { CompetitionTypesProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
   disabled: "danger",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "currency", "actions"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "leagueName",
+  "competitionDuration",
+  "currency",
+  "actions",
+];
 
 type Props = {
-  loadedData: OpenLeaguesTableProps[];
+  loadedData: CompetitionTypesProps[];
 };
 
 export default function OpenLeagues({ loadedData }: Props) {
@@ -63,8 +68,8 @@ export default function OpenLeagues({ loadedData }: Props) {
     let filteredUsers = [...loadedData];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase())
+      filteredUsers = filteredUsers.filter((competition) =>
+        competition.leagueName.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
@@ -80,12 +85,12 @@ export default function OpenLeagues({ loadedData }: Props) {
 
   const sortedItems = React.useMemo(() => {
     return [...items].sort(
-      (a: OpenLeaguesTableProps, b: OpenLeaguesTableProps) => {
+      (a: CompetitionTypesProps, b: CompetitionTypesProps) => {
         const first = a[
-          sortDescriptor.column as keyof OpenLeaguesTableProps
+          sortDescriptor.column as keyof CompetitionTypesProps
         ] as boolean;
         const second = b[
-          sortDescriptor.column as keyof OpenLeaguesTableProps
+          sortDescriptor.column as keyof CompetitionTypesProps
         ] as boolean;
         const cmp = first < second ? -1 : first > second ? 1 : 0;
 
@@ -95,23 +100,31 @@ export default function OpenLeagues({ loadedData }: Props) {
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback(
-    (user: OpenLeaguesTableProps, columnKey: React.Key) => {
-      const cellValue = user[columnKey as keyof OpenLeaguesTableProps];
+    (competition: CompetitionTypesProps, columnKey: React.Key) => {
+      const cellValue = competition[columnKey as keyof CompetitionTypesProps];
+      console.log(columnKey);
 
       switch (columnKey) {
-        case "name":
+        case "leagueName":
           return (
             <Link
               className="text-default-700 hover:text-xl hover:text-blue-500"
-              href={`/leagues/open-leagues/${user.id}`}
+              href={`/leagues/open-leagues/${competition.id}`}
             >
-              {user.name}
+              {competition.competitionDuration}
             </Link>
+          );
+
+        case "competitionDuration":
+          return (
+            <p className="text-default-700 justify-center">
+              {cellValue}
+            </p>
           );
 
         case "currency":
           return (
-            <p className="text-default-700 justify-center">{user.currency}</p>
+            <p className="text-default-700 justify-center">{"currency"}</p>
           );
 
         case "actions":
@@ -122,13 +135,13 @@ export default function OpenLeagues({ loadedData }: Props) {
               radius="full"
               color="warning"
               as={Link}
-              href={`/leagues/open-leagues/${user.id}`}
+              href={`/leagues/open-leagues/${competition.id}`}
             >
               Request join
             </Button>
           );
         default:
-          return user.name;
+          return cellValue;
       }
     },
     []
