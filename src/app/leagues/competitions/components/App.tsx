@@ -17,28 +17,35 @@ import {
   Link,
 } from "@nextui-org/react";
 import { SearchIcon } from "@/components/icons/SearchIcon";
-import { columns, availability } from "./data";
-import { OpenLeaguesTableProps } from "@/utils/types";
+import { columns } from "@/utils/tableData/openLeagueData";
+import { CompetitionTypesProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  active: "success",
-  disabled: "danger",
+  WEEKLY: "success",
+  MONTHLY: "danger",
+  SEASONAL: "warning",
 };
 
 const INITIAL_VISIBLE_COLUMNS = [
-  "name",
-  "weekly",
-  "monthly",
-  "seasonal",
+  "leagueName",
+  "competitionDuration",
+  "enableExcessTransferPenalty",
+  "amount",
   "currency",
   "actions",
 ];
 
 type Props = {
-  loadedData: OpenLeaguesTableProps[];
+  loadedData: CompetitionTypesProps[];
+  totalPages: number;
+  pageNumber: number;
 };
 
-export default function OpenLeagues({ loadedData }: Props) {
+export default function CompetitionsTable({
+  loadedData,
+  totalPages,
+  pageNumber,
+}: Props) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -52,9 +59,9 @@ export default function OpenLeagues({ loadedData }: Props) {
     column: "age",
     direction: "ascending",
   });
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(pageNumber);
 
-  const pages = Math.ceil(loadedData.length / rowsPerPage);
+  const pages = Math.ceil(totalPages);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -70,16 +77,8 @@ export default function OpenLeagues({ loadedData }: Props) {
     let filteredUsers = [...loadedData];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== availability.length
-    ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.weekly ? "public" : "private")
+      filteredUsers = filteredUsers.filter((competition) =>
+        competition.leagueName.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
@@ -95,12 +94,12 @@ export default function OpenLeagues({ loadedData }: Props) {
 
   const sortedItems = React.useMemo(() => {
     return [...items].sort(
-      (a: OpenLeaguesTableProps, b: OpenLeaguesTableProps) => {
+      (a: CompetitionTypesProps, b: CompetitionTypesProps) => {
         const first = a[
-          sortDescriptor.column as keyof OpenLeaguesTableProps
+          sortDescriptor.column as keyof CompetitionTypesProps
         ] as boolean;
         const second = b[
-          sortDescriptor.column as keyof OpenLeaguesTableProps
+          sortDescriptor.column as keyof CompetitionTypesProps
         ] as boolean;
         const cmp = first < second ? -1 : first > second ? 1 : 0;
 
@@ -110,68 +109,66 @@ export default function OpenLeagues({ loadedData }: Props) {
   }, [sortDescriptor, items]);
 
   const renderCell = React.useCallback(
-    (user: OpenLeaguesTableProps, columnKey: React.Key) => {
-      const cellValue = user[columnKey as keyof OpenLeaguesTableProps];
+    (competition: CompetitionTypesProps, columnKey: React.Key) => {
+      const cellValue = competition[columnKey as keyof CompetitionTypesProps];
 
       switch (columnKey) {
-        case "name":
-          return <p className="text-default-700">{user.name}</p>;
-        case "weekly":
+        case "leagueName":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[user.weekly ? "active" : "disabled"]}
-              size="sm"
-              variant="dot"
+            <Link
+              className="text-default-700 hover:text-xl hover:text-blue-500"
+              href={`/leagues/open-leagues/${competition.id}`}
             >
-              {user.weekly ? "active" : "not available"}
-            </Chip>
+              {competition.competitionDuration}
+            </Link>
           );
-        case "monthly":
+
+        case "competitionDuration":
           return (
             <Chip
               className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[user.monthly ? "active" : "disabled"]}
+              color={statusColorMap[competition.competitionDuration]}
               size="sm"
               variant="dot"
             >
-              {user.monthly ? "active" : "not available"}
+              {cellValue}
             </Chip>
           );
 
-        case "seasonal":
+        case "enableExcessTransferPenalty":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600 justify-start"
-              color={statusColorMap[user.seasonal ? "active" : "disabled"]}
-              size="sm"
-              variant="dot"
-            >
-              {user.seasonal ? "active" : "not available"}
-            </Chip>
+            <p className="text-default-700 justify-center">
+              {competition.enableExcessTransferPenalty ? "Yes" : "No"}
+            </p>
           );
+
+        case "amount":
+          return (
+            <p className="text-default-700 justify-center">
+              {competition.amount}
+            </p>
+          );
+
         case "currency":
           return (
-            <p className="text-default-700 justify-center">{user.currency}</p>
+            <p className="text-default-700 justify-center">{"currency"}</p>
           );
 
         case "actions":
           return (
-            <div className="relative flex justify-start items-center gap-2">
-              <Button
-                size="sm"
-                variant="shadow"
-                radius="full"
-                color="warning"
-                as={Link}
-                href={`/leagues/open-leagues/${user.id}`}
-              >
-                Request join
-              </Button>
-            </div>
+            <Button
+              size="sm"
+              variant="shadow"
+              radius="full"
+              color="warning"
+              as={Link}
+              href={`/leagues/open-leagues/${competition.id}`}
+            >
+              Request join
+            </Button>
           );
         default:
-          return user.name;
+          return cellValue;
       }
     },
     []

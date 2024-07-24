@@ -111,12 +111,12 @@ export default function ManagerNav() {
                     }}
                   >
                     <DropdownItem
-                      key="open-leagues"
-                      description="See all leagues that are currently open"
-                      href="/leagues/open-leagues"
+                      key="competitions"
+                      description="See all public competitions"
+                      href="/leagues/competitions?page=1"
                       className="text-default-900"
                     >
-                      Open Leagues
+                      Competitions
                     </DropdownItem>
                     <DropdownItem
                       key="my-leagues"
@@ -195,17 +195,17 @@ export default function ManagerNav() {
                     }}
                   >
                     <DropdownItem
-                      key="open-leagues"
-                      description="See all leagues that are currently open"
-                      href="/leagues/open-leagues"
+                      key="competitions"
+                      description="See all public competitions"
+                      href="/leagues/competitions?page=1"
                       className="text-default-900"
                     >
-                      Open Leagues
+                      Competitions
                     </DropdownItem>
                     <DropdownItem
                       key="my-leagues"
                       description="See all leagues that you have created"
-                      href="/leagues/my-leagues"
+                      href="/leagues/my-leagues?page=1"
                       className="text-default-900"
                     >
                       My Leagues
