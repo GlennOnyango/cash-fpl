@@ -7,22 +7,20 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Input,
-  Pagination,
   Selection,
   ChipProps,
   SortDescriptor,
-  Chip,
   Button,
   Link,
+  Chip,
 } from "@nextui-org/react";
-import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns } from "@/utils/tableData/openLeagueData";
 import { CompetitionTypesProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  active: "success",
-  disabled: "danger",
+  WEEKLY: "success",
+  MONTHLY: "danger",
+  SEASONAL: "warning",
 };
 
 const INITIAL_VISIBLE_COLUMNS = [
@@ -45,14 +43,12 @@ export default function OpenLeagues({ loadedData }: Props) {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(7);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
   });
   const [page, setPage] = React.useState(1);
-
-  const pages = Math.ceil(loadedData.length / rowsPerPage);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -102,7 +98,6 @@ export default function OpenLeagues({ loadedData }: Props) {
   const renderCell = React.useCallback(
     (competition: CompetitionTypesProps, columnKey: React.Key) => {
       const cellValue = competition[columnKey as keyof CompetitionTypesProps];
-      console.log(columnKey);
 
       switch (columnKey) {
         case "leagueName":
@@ -117,9 +112,14 @@ export default function OpenLeagues({ loadedData }: Props) {
 
         case "competitionDuration":
           return (
-            <p className="text-default-700 justify-center">
+            <Chip
+              className="capitalize border-none gap-1 text-default-600"
+              color={statusColorMap[competition.competitionDuration]}
+              size="sm"
+              variant="dot"
+            >
               {cellValue}
-            </p>
+            </Chip>
           );
 
         case "currency":
@@ -147,85 +147,6 @@ export default function OpenLeagues({ loadedData }: Props) {
     []
   );
 
-  const onRowsPerPageChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setRowsPerPage(Number(e.target.value));
-      setPage(1);
-    },
-    []
-  );
-
-  const onSearchChange = React.useCallback((value?: string) => {
-    if (value) {
-      setFilterValue(value);
-      setPage(1);
-    } else {
-      setFilterValue("");
-    }
-  }, []);
-
-  const topContent = React.useMemo(() => {
-    return (
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-3 items-end">
-          <Input
-            isClearable
-            classNames={{
-              base: "w-8/12 ",
-              inputWrapper: "border-1",
-              input: [
-                "bg-transparent",
-                "border-none",
-                "focus:ring-0",
-                "text-black/90 dark:text-white/90",
-                "placeholder:text-default-700/50 dark:placeholder:text-white/60",
-              ],
-            }}
-            placeholder="Search by name..."
-            size="sm"
-            startContent={<SearchIcon className="text-default-300 " />}
-            value={filterValue}
-            variant="bordered"
-            onClear={() => setFilterValue("")}
-            onValueChange={onSearchChange}
-          />
-        </div>
-      </div>
-    );
-  }, [
-    filterValue,
-    statusFilter,
-    visibleColumns,
-    onSearchChange,
-    onRowsPerPageChange,
-    loadedData.length,
-    hasSearchFilter,
-  ]);
-
-  const bottomContent = React.useMemo(() => {
-    return (
-      <div className="py-2 px-2 flex justify-center items-center">
-        <Pagination
-          showControls
-          classNames={{
-            cursor: "bg-foreground text-background",
-          }}
-          color="default"
-          isDisabled={hasSearchFilter}
-          page={page}
-          total={pages}
-          variant="light"
-          onChange={setPage}
-        />
-        {/* <span className="text-small text-default-400">
-          {selectedKeys === "all"
-            ? "All items selected"
-            : `${selectedKeys.size} of ${items.length} selected`}
-        </span> */}
-      </div>
-    );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
-
   const classNames = React.useMemo(
     () => ({
       wrapper: ["max-h-[382px]", "max-w-3xl"],
@@ -250,11 +171,9 @@ export default function OpenLeagues({ loadedData }: Props) {
       isCompact
       removeWrapper
       aria-label="Example table with custom cells, pagination and sorting"
-      bottomContent={bottomContent}
       bottomContentPlacement="outside"
       classNames={classNames}
       sortDescriptor={sortDescriptor}
-      topContent={topContent}
       topContentPlacement="outside"
       onSelectionChange={setSelectedKeys}
       onSortChange={setSortDescriptor}

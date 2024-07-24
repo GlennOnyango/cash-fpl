@@ -2,6 +2,7 @@ import { fetchPublicCompetitions } from "@/app/actions";
 import OpenLeagues from "./components/App";
 import { CompetitionTypes, CompetitionTypesProps } from "@/utils/types";
 import { redirect } from "next/navigation";
+import { Button, Link } from "@nextui-org/react";
 
 export default async function Leagues() {
   let competitions: CompetitionTypesProps[] = [];
@@ -18,9 +19,22 @@ export default async function Leagues() {
 
   return (
     <div className="col-span-12 sm:col-span-4 row-span-6 bg-white p-4 rounded-none">
-      <h4 className="text-3xl text-black/90 dark:text-white/90 mb-4">
-        Open Leagues
-      </h4>
+      <div className="w-full flex flex-row justify-between">
+        <Link
+          className="text-3xl text-black/90 dark:text-white/90 mb-4 hover:underline"
+          href="/leagues/my-leagues?page=1"
+        >
+          Competitions
+        </Link>
+
+        <Button
+          size="md"
+          radius="full"
+          className="bg-foreground text-background"
+        >
+          See all competitions
+        </Button>
+      </div>
       <div className="overflow-x-auto overflow-y-hidden">
         <OpenLeagues loadedData={competitions} />
       </div>
