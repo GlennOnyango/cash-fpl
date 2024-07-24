@@ -22,7 +22,7 @@ import { CompetitionTypesProps } from "@/utils/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  WEEKLY: "success",
+  WEEKLY: "primary",
   MONTHLY: "danger",
   SEASONAL: "warning",
 };
@@ -130,57 +130,65 @@ export default function CompetitionsTable({
       switch (columnKey) {
         case "leagueName":
           return (
-            <Link
-              className="text-default-700 hover:text-xl hover:text-blue-500"
-              href={`/leagues/open-leagues/${competition.id}`}
-            >
-              {competition.competitionDuration}
-            </Link>
+            <div className="flex items-center justify-center">
+              <Link
+                className="text-default-700 text-center hover:text-xl hover:text-blue-500"
+                href={`/leagues/open-leagues/${competition.id}`}
+              >
+                {competition.competitionDuration}
+              </Link>
+            </div>
           );
 
         case "competitionDuration":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[competition.competitionDuration]}
-              size="sm"
-              variant="dot"
-            >
-              {cellValue}
-            </Chip>
+            <div className="flex items-center justify-center">
+              <Chip
+                className="capitalize border-none gap-1 text-default-600"
+                color={statusColorMap[competition.competitionDuration]}
+                size="sm"
+                variant="dot"
+              >
+                {cellValue}
+              </Chip>
+            </div>
           );
 
         case "enableExcessTransferPenalty":
           return (
-            <p className="text-default-700 justify-center">
+            <p
+              className={`text-default-700 text-center  ${
+                competition.enableExcessTransferPenalty
+                  ? "text-green-700"
+                  : "text-red-800"
+              }`}
+            >
               {competition.enableExcessTransferPenalty ? "Yes" : "No"}
             </p>
           );
 
         case "amount":
           return (
-            <p className="text-default-700 justify-center">
-              {competition.amount}
-            </p>
+            <p className="text-default-700 text-center">{competition.amount}</p>
           );
 
         case "currency":
-          return (
-            <p className="text-default-700 justify-center">{"currency"}</p>
-          );
+          return <p className="text-default-700 text-center">{"currency"}</p>;
 
         case "actions":
           return (
-            <Button
-              size="sm"
-              variant="shadow"
-              radius="full"
-              color="warning"
-              as={Link}
-              href={`/leagues/open-leagues/${competition.id}`}
-            >
-              Request join
-            </Button>
+            <div className="flex items-center justify-center">
+              <Button
+                size="md"
+                variant="shadow"
+                radius="full"
+                color="warning"
+                as={Link}
+                href={`/leagues/open-leagues/${competition.id}`}
+              >
+                Request join
+              </Button>
+            </div>
           );
         default:
           return cellValue;
@@ -261,7 +269,13 @@ export default function CompetitionsTable({
     () => ({
       wrapper: ["max-h-[382px]", "max-w-3xl"],
       table: ["border-divider", "overflow-y-auto"],
-      th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
+      th: [
+        "bg-transparent",
+        "text-default-500",
+        "border-b",
+        "border-divider",
+        "text-center",
+      ],
       td: [
         // changing the rows border radius
         // first
@@ -277,9 +291,16 @@ export default function CompetitionsTable({
     []
   );
 
+  const isEven = (id: string) => {
+    let index = loadedData.findIndex((item) => item.id === id);
+
+    return index % 2 === 0;
+  };
+
   return (
     <Table
       isCompact
+      isStriped
       removeWrapper
       aria-label="Competitions table"
       bottomContent={bottomContent}
@@ -304,7 +325,10 @@ export default function CompetitionsTable({
       </TableHeader>
       <TableBody emptyContent={"Competitions not found"} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow
+            key={item.id}
+            className={`${isEven(item.id) ? "bg-slate-100" : "bg-white"} `}
+          >
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
