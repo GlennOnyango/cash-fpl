@@ -33,10 +33,8 @@ export default async function Page({
   return (
     <ManagerPageNavbar>
       <div
-        className="col-span-12 sm:col-span-4 row-span-6 bg-white p-4 rounded-none mt-4 mx-20 overflow-hidden"
-        style={{
-          height: "calc(100vh - 200px)",
-        }}
+        className="col-span-12 sm:col-span-4 row-span-6 bg-white p-4 rounded-none mt-4 mx-20 overflow-hidden min-h-96"
+        
       >
         <h4 className="text-3xl text-black/90 dark:text-white/90 mb-4">
           Competitions
@@ -45,6 +43,7 @@ export default async function Page({
           loadedData={competitions}
           totalPages={totalPages}
           pageNumber={pageNumber}
+          rowsPerPage={rowsPerPage}
         />
       </div>
     </ManagerPageNavbar>

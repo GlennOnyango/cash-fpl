@@ -16,7 +16,6 @@ import {
   Chip,
   Link,
 } from "@nextui-org/react";
-import { PlusIcon } from "@/components/icons/PlusIcon";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns } from "@/utils/tableData/myLeagueData";
 import { MyLeaguesTableProps } from "@/utils/types";

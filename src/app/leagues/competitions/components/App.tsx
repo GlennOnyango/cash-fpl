@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -19,6 +19,7 @@ import {
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns } from "@/utils/tableData/openLeagueData";
 import { CompetitionTypesProps } from "@/utils/types";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   WEEKLY: "success",
@@ -39,13 +40,19 @@ type Props = {
   loadedData: CompetitionTypesProps[];
   totalPages: number;
   pageNumber: number;
+  rowsPerPage: number;
 };
 
 export default function CompetitionsTable({
   loadedData,
   totalPages,
   pageNumber,
+  rowsPerPage,
 }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
@@ -54,14 +61,10 @@ export default function CompetitionsTable({
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
   });
-  const [page, setPage] = React.useState(pageNumber);
-
-  const pages = Math.ceil(totalPages);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -72,6 +75,18 @@ export default function CompetitionsTable({
       Array.from(visibleColumns).includes(column.uid)
     );
   }, [visibleColumns]);
+
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
 
   const filteredItems = React.useMemo(() => {
     let filteredUsers = [...loadedData];
@@ -86,11 +101,11 @@ export default function CompetitionsTable({
   }, [loadedData, filterValue, statusFilter]);
 
   const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
+    const start = (pageNumber - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
     return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
+  }, [pageNumber, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
     return [...items].sort(
@@ -174,18 +189,9 @@ export default function CompetitionsTable({
     []
   );
 
-  const onRowsPerPageChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setRowsPerPage(Number(e.target.value));
-      setPage(1);
-    },
-    []
-  );
-
   const onSearchChange = React.useCallback((value?: string) => {
     if (value) {
       setFilterValue(value);
-      setPage(1);
     } else {
       setFilterValue("");
     }
@@ -209,7 +215,7 @@ export default function CompetitionsTable({
               ],
             }}
             placeholder="Search by name..."
-            size="sm"
+            size="md"
             startContent={<SearchIcon className="text-default-300 " />}
             value={filterValue}
             variant="bordered"
@@ -224,7 +230,6 @@ export default function CompetitionsTable({
     statusFilter,
     visibleColumns,
     onSearchChange,
-    onRowsPerPageChange,
     loadedData.length,
     hasSearchFilter,
   ]);
@@ -239,23 +244,23 @@ export default function CompetitionsTable({
           }}
           color="default"
           isDisabled={hasSearchFilter}
-          page={page}
-          total={pages}
+          page={pageNumber}
+          total={totalPages}
           variant="light"
-          onChange={setPage}
+          onChange={(page) => {
+            router.push(
+              pathname + "?" + createQueryString("page", String(Number(page)))
+            );
+          }}
         />
-        {/* <span className="text-small text-default-400">
-          {selectedKeys === "all"
-            ? "All items selected"
-            : `${selectedKeys.size} of ${items.length} selected`}
-        </span> */}
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [selectedKeys, items.length, pageNumber, totalPages, hasSearchFilter]);
 
   const classNames = React.useMemo(
     () => ({
       wrapper: ["max-h-[382px]", "max-w-3xl"],
+      table: ["border-divider", "overflow-y-auto"],
       th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
       td: [
         // changing the rows border radius
@@ -276,7 +281,7 @@ export default function CompetitionsTable({
     <Table
       isCompact
       removeWrapper
-      aria-label="Example table with custom cells, pagination and sorting"
+      aria-label="Competitions table"
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       classNames={classNames}
@@ -297,7 +302,7 @@ export default function CompetitionsTable({
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"Open leagues not found"} items={sortedItems}>
+      <TableBody emptyContent={"Competitions not found"} items={sortedItems}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
