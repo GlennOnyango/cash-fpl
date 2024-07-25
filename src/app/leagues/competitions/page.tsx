@@ -4,7 +4,7 @@ import {
 } from "@/utils/types";
 import {  fetchPublicCompetitions } from "@/app/actions";
 import { redirect } from "next/navigation";
-import CompetitionsTable from "./components/App";
+import CompetitionsTable from "../../../components/tables/competitions/App";
 
 export default async function Page({
   searchParams,
@@ -16,6 +16,15 @@ export default async function Page({
   let totalPages = 1;
   let pageNumber = Number(searchParams.page);
   let rowsPerPage = 10;
+
+  const INITIAL_VISIBLE_COLUMNS = [
+    "leagueName",
+    "competitionDuration",
+    "enableExcessTransferPenalty",
+    "amount",
+    "currency",
+    "actions",
+  ];
 
   const publicCompetitions = await fetchPublicCompetitions(
     pageNumber - 1,
@@ -44,6 +53,7 @@ export default async function Page({
           totalPages={totalPages}
           pageNumber={pageNumber}
           rowsPerPage={rowsPerPage}
+          visibleColumns={INITIAL_VISIBLE_COLUMNS}
         />
       </div>
     </ManagerPageNavbar>

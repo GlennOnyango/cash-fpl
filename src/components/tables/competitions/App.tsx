@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import {
   Table,
   TableHeader,
@@ -27,20 +27,12 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   SEASONAL: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = [
-  "leagueName",
-  "competitionDuration",
-  "enableExcessTransferPenalty",
-  "amount",
-  "currency",
-  "actions",
-];
-
 type Props = {
   loadedData: CompetitionTypesProps[];
   totalPages: number;
   pageNumber: number;
   rowsPerPage: number;
+  visibleColumns: string[];
 };
 
 export default function CompetitionsTable({
@@ -48,6 +40,7 @@ export default function CompetitionsTable({
   totalPages,
   pageNumber,
   rowsPerPage,
+  visibleColumns,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -57,9 +50,7 @@ export default function CompetitionsTable({
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
     new Set([])
   );
-  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
+
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
@@ -69,8 +60,6 @@ export default function CompetitionsTable({
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
-
     return columns.filter((column) =>
       Array.from(visibleColumns).includes(column.uid)
     );

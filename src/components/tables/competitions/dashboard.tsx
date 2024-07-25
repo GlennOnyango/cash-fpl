@@ -7,80 +7,43 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Selection,
   ChipProps,
   SortDescriptor,
+  Chip,
   Button,
   Link,
-  Chip,
 } from "@nextui-org/react";
 import { columns } from "@/utils/tableData/openLeagueData";
 import { CompetitionTypesProps } from "@/utils/types";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  WEEKLY: "success",
+  WEEKLY: "primary",
   MONTHLY: "danger",
   SEASONAL: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = [
-  "leagueName",
-  "competitionDuration",
-  "currency",
-  "actions",
-];
-
 type Props = {
   loadedData: CompetitionTypesProps[];
+  visibleColumns: string[];
 };
 
-export default function OpenLeagues({ loadedData }: Props) {
-  const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
-    new Set([])
-  );
-  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-  const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(7);
+export default function CompetitionsTable({
+  loadedData,
+  visibleColumns,
+}: Props) {
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
   });
-  const [page, setPage] = React.useState(1);
-
-  const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
-
     return columns.filter((column) =>
       Array.from(visibleColumns).includes(column.uid)
     );
   }, [visibleColumns]);
 
-  const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...loadedData];
-
-    if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((competition) =>
-        competition.leagueName.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
-
-    return filteredUsers;
-  }, [loadedData, filterValue, statusFilter]);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
-
   const sortedItems = React.useMemo(() => {
-    return [...items].sort(
+    return [...loadedData].sort(
       (a: CompetitionTypesProps, b: CompetitionTypesProps) => {
         const first = a[
           sortDescriptor.column as keyof CompetitionTypesProps
@@ -93,7 +56,7 @@ export default function OpenLeagues({ loadedData }: Props) {
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
       }
     );
-  }, [sortDescriptor, items]);
+  }, [sortDescriptor, loadedData]);
 
   const renderCell = React.useCallback(
     (competition: CompetitionTypesProps, columnKey: React.Key) => {
@@ -102,43 +65,65 @@ export default function OpenLeagues({ loadedData }: Props) {
       switch (columnKey) {
         case "leagueName":
           return (
-            <Link
-              className="text-default-700 hover:text-xl hover:text-blue-500"
-              href={`/leagues/open-leagues/${competition.id}`}
-            >
-              {competition.competitionDuration}
-            </Link>
+            <div className="flex items-center justify-center">
+              <Link
+                className="text-default-700 text-center hover:text-xl hover:text-blue-500"
+                href={`/leagues/open-leagues/${competition.id}`}
+              >
+                {competition.competitionDuration}
+              </Link>
+            </div>
           );
 
         case "competitionDuration":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[competition.competitionDuration]}
-              size="sm"
-              variant="dot"
+            <div className="flex items-center justify-center">
+              <Chip
+                className="capitalize border-none gap-1 text-default-600"
+                color={statusColorMap[competition.competitionDuration]}
+                size="sm"
+                variant="dot"
+              >
+                {cellValue}
+              </Chip>
+            </div>
+          );
+
+        case "enableExcessTransferPenalty":
+          return (
+            <p
+              className={`text-default-700 text-center  ${
+                competition.enableExcessTransferPenalty
+                  ? "text-green-700"
+                  : "text-red-800"
+              }`}
             >
-              {cellValue}
-            </Chip>
+              {competition.enableExcessTransferPenalty ? "Yes" : "No"}
+            </p>
+          );
+
+        case "amount":
+          return (
+            <p className="text-default-700 text-center">{competition.amount}</p>
           );
 
         case "currency":
-          return (
-            <p className="text-default-700 justify-center">{"currency"}</p>
-          );
+          return <p className="text-default-700 text-center">{"currency"}</p>;
 
         case "actions":
           return (
-            <Button
-              size="sm"
-              variant="shadow"
-              radius="full"
-              color="warning"
-              as={Link}
-              href={`/leagues/open-leagues/${competition.id}`}
-            >
-              Request join
-            </Button>
+            <div className="flex items-center justify-center">
+              <Button
+                size="md"
+                variant="shadow"
+                radius="full"
+                color="warning"
+                as={Link}
+                href={`/leagues/open-leagues/${competition.id}`}
+              >
+                Request join
+              </Button>
+            </div>
           );
         default:
           return cellValue;
@@ -150,7 +135,14 @@ export default function OpenLeagues({ loadedData }: Props) {
   const classNames = React.useMemo(
     () => ({
       wrapper: ["max-h-[382px]", "max-w-3xl"],
-      th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
+      table: ["border-divider", "overflow-y-auto"],
+      th: [
+        "bg-transparent",
+        "text-default-500",
+        "border-b",
+        "border-divider",
+        "text-center",
+      ],
       td: [
         // changing the rows border radius
         // first
@@ -166,16 +158,22 @@ export default function OpenLeagues({ loadedData }: Props) {
     []
   );
 
+  const isEven = (id: string) => {
+    let index = loadedData.findIndex((item) => item.id === id);
+
+    return index % 2 === 0;
+  };
+
   return (
     <Table
       isCompact
+      isStriped
       removeWrapper
-      aria-label="Example table with custom cells, pagination and sorting"
+      aria-label="Competitions table"
       bottomContentPlacement="outside"
       classNames={classNames}
       sortDescriptor={sortDescriptor}
       topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
       onSortChange={setSortDescriptor}
     >
       <TableHeader columns={headerColumns}>
@@ -189,9 +187,12 @@ export default function OpenLeagues({ loadedData }: Props) {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"Open leagues not found"} items={sortedItems}>
+      <TableBody emptyContent={"Competitions not found"} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow
+            key={item.id}
+            className={`${isEven(item.id) ? "bg-slate-100" : "bg-white"} `}
+          >
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
