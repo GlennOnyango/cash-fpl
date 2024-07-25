@@ -24,7 +24,7 @@ export default function Layout({
 }>) {
   return (
     <ManagerPageNavbar>
-      <div className="grow grid grid-cols-1 sm:grid-cols-3 grid-rows-5 sm:grid-rows-2 gap-2 p-2 pb-6">
+      <div className="grow grid grid-cols-12 grid-rows-12 gap-2 p-2 pb-6">
         {competitions}
         {my_leagues}
         {invited_leagues}
