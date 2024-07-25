@@ -5,7 +5,7 @@ const columns = [
     { name: "Monthly", uid: "monthly", sortable: true },
     { name: "Seasonal", uid: "seasonal", sortable: true },
     { name: "Currency", uid: "currency", sortable: true },
-    { name: "Active", uid: "active", sortable: true },
+    { name: "League Status", uid: "active", sortable: true },
     { name: "ACTIONS", uid: "actions" },
   ];
   

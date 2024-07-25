@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import {
   Table,
   TableHeader,
@@ -101,72 +101,80 @@ export default function MYLeagueTable({
 
       switch (columnKey) {
         case "name":
-          return <p className="text-default-700">{league.name}</p>;
+          return <p className="text-default-700 text-center">{league.name}</p>;
 
         case "weekly":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={
-                statusColorMapCompetitions[
-                  league.weekly ? "active" : "disabled"
-                ]
-              }
-              size="sm"
-              variant="dot"
-            >
-              {league.weekly ? "active" : "not available"}
-            </Chip>
+            <div className="flex justify-center items-center">
+              <Chip
+                className="capitalize border-none gap-1 text-default-600"
+                color={
+                  statusColorMapCompetitions[
+                    league.weekly ? "active" : "disabled"
+                  ]
+                }
+                size="sm"
+                variant="dot"
+              >
+                {league.weekly ? "active" : "not available"}
+              </Chip>
+            </div>
           );
         case "monthly":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={
-                statusColorMapCompetitions[
-                  league.monthly ? "active" : "disabled"
-                ]
-              }
-              size="sm"
-              variant="dot"
-            >
-              {league.monthly ? "active" : "not available"}
-            </Chip>
+            <div className="flex justify-center items-center">
+              <Chip
+                className="capitalize border-none gap-1 text-default-600"
+                color={
+                  statusColorMapCompetitions[
+                    league.monthly ? "active" : "disabled"
+                  ]
+                }
+                size="sm"
+                variant="dot"
+              >
+                {league.monthly ? "active" : "not available"}
+              </Chip>
+            </div>
           );
         case "seasonal":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600 justify-start"
-              color={
-                statusColorMapCompetitions[
-                  league.seasonal ? "active" : "disabled"
-                ]
-              }
-              size="sm"
-              variant="dot"
-            >
-              {league.seasonal ? "active" : "not available"}
-            </Chip>
+            <div className="flex justify-center items-center">
+              <Chip
+                className="capitalize border-none gap-1 text-default-600 justify-start"
+                color={
+                  statusColorMapCompetitions[
+                    league.seasonal ? "active" : "disabled"
+                  ]
+                }
+                size="sm"
+                variant="dot"
+              >
+                {league.seasonal ? "active" : "not available"}
+              </Chip>
+            </div>
           );
 
         case "active":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[league.active]}
-              size="sm"
-              variant="dot"
-            >
-              {league.active}
-            </Chip>
+            <div className="flex justify-center items-center">
+              <Chip
+                className="capitalize border-none gap-1 text-default-600"
+                color={statusColorMap[league.active]}
+                size="sm"
+                variant="dot"
+              >
+                {league.active}
+              </Chip>
+            </div>
           );
 
         case "actions":
           return (
-            <div className="relative flex justify-start items-center gap-2">
+            <div className="relative flex justify-center items-center">
               <Button
-                size="sm"
-                variant="shadow"
+                size="md"
+                variant="solid"
                 radius="full"
                 color="warning"
                 as={Link}
@@ -255,7 +263,13 @@ export default function MYLeagueTable({
   const classNames = React.useMemo(
     () => ({
       wrapper: ["max-h-[382px]", "max-w-3xl"],
-      th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
+      th: [
+        "bg-transparent",
+        "text-default-500",
+        "border-b",
+        "border-divider",
+        "text-center",
+      ],
       td: [
         // changing the rows border radius
         // first
@@ -270,6 +284,12 @@ export default function MYLeagueTable({
     }),
     []
   );
+
+  const isEven = (id: string) => {
+    let index = loadedData.findIndex((item) => item.id === id);
+
+    return index % 2 === 0;
+  };
 
   return (
     <Table
@@ -299,7 +319,10 @@ export default function MYLeagueTable({
       </TableHeader>
       <TableBody emptyContent={"Create your league"} items={loadedData}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow
+            key={item.id}
+            className={`${isEven(item.id) ? "bg-slate-100" : "bg-white"} `}
+          >
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
