@@ -1,5 +1,5 @@
 import ManagerPageNavbar from "@/components/navbars/manager-nav";
-import MyLeagueTable from "./components/App";
+import MyLeagueTable from "../../../components/tables/my-leagues/App";
 import { Content, MyLeaguesTableProps } from "@/utils/types";
 import { fetchMyLeagues } from "@/app/actions";
 import { redirect } from "next/navigation";

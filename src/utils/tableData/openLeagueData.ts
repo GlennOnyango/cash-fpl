@@ -1,9 +1,9 @@
 const columns = [
   { name: "ID", uid: "id", sortable: true },
-  { name: "NAME", uid: "name", sortable: true },
-  { name: "Weekly", uid: "weekly", sortable: true },
-  { name: "Monthly", uid: "monthly", sortable: true },
-  { name: "Seasonal", uid: "seasonal", sortable: true },
+  { name: "NAME", uid: "leagueName", sortable: true },
+  { name: "Competition", uid: "competitionDuration", sortable: true },
+  { name: "Transfer Penalty", uid: "enableExcessTransferPenalty", sortable: true },
+  { name: "Amount", uid: "amount", sortable: true },
   { name: "Currency", uid: "currency", sortable: true },
   { name: "ACTIONS", uid: "actions" },
 ];

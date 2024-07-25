@@ -1,5 +1,5 @@
 import ManagerPageNavbar from "@/components/navbars/manager-nav";
-import UpdateLeagueComponent from "../components";
+import UpdateLeagueComponent from "@/components/updateLeague";
 import { fetchLeagueById } from "@/app/actions";
 import { redirect } from "next/navigation";
 import { CompetitionTypes, UpdateLeague } from "@/utils/types";

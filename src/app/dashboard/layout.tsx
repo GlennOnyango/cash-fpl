@@ -9,14 +9,14 @@ export const metadata: Metadata = {
 export default function Layout({
   children,
   notifications,
-  open_leagues,
+  competitions,
   my_leagues,
   invited_leagues,
   statistics,
 }: Readonly<{
   children: React.ReactNode;
   notifications: React.ReactNode;
-  open_leagues: React.ReactNode;
+  competitions: React.ReactNode;
   my_leagues: React.ReactNode;
   invited_leagues: React.ReactNode;
   play: React.ReactNode;
@@ -24,8 +24,8 @@ export default function Layout({
 }>) {
   return (
     <ManagerPageNavbar>
-      <div className="grow grid grid-cols-12 grid-rows-12 gap-2 p-6 pb-6">
-        {open_leagues}
+      <div className="grow grid grid-cols-1 sm:grid-cols-3 grid-rows-5 sm:grid-rows-2 gap-2 p-2 pb-6">
+        {competitions}
         {my_leagues}
         {invited_leagues}
         {notifications}

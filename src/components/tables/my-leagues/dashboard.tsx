@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Table,
   TableHeader,
@@ -8,13 +8,12 @@ import {
   TableRow,
   TableCell,
   Button,
-  Selection,
   ChipProps,
   SortDescriptor,
   Chip,
   Link,
 } from "@nextui-org/react";
-import { columns, availability } from "@/utils/tableData/myLeagueData";
+import { columns } from "@/utils/tableData/myLeagueData";
 import { capitalize } from "@/utils/utils";
 import { MyLeaguesTableProps } from "@/utils/types";
 
@@ -25,27 +24,16 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   SUSPENDED: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "active", "currency", "actions"];
-
 type Props = {
   loadedData: MyLeaguesTableProps[];
+  visibleColumns: string[];
 };
 
-export default function AppComplexLeague({ loadedData }: Props) {
-  const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
-    new Set([])
-  );
-  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-  const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+export default function MyLeagueTable({ loadedData, visibleColumns }: Props) {
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
   });
-  const [page, setPage] = React.useState(1);
 
   const headerColumns = React.useMemo(() => {
     return columns.filter((column) =>
@@ -53,71 +41,53 @@ export default function AppComplexLeague({ loadedData }: Props) {
     );
   }, [visibleColumns]);
 
-  const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...loadedData];
-
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== availability.length
-    ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.active ? "public" : "private")
-      );
-    }
-
-    return filteredUsers;
-  }, [loadedData, filterValue, statusFilter]);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
-
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: MyLeaguesTableProps, b: MyLeaguesTableProps) => {
-      const first = a[
-        sortDescriptor.column as keyof MyLeaguesTableProps
-      ] as string;
-      const second = b[
-        sortDescriptor.column as keyof MyLeaguesTableProps
-      ] as string;
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
+    return [...loadedData].sort(
+      (a: MyLeaguesTableProps, b: MyLeaguesTableProps) => {
+        const first = a[
+          sortDescriptor.column as keyof MyLeaguesTableProps
+        ] as string;
+        const second = b[
+          sortDescriptor.column as keyof MyLeaguesTableProps
+        ] as string;
+        const cmp = first < second ? -1 : first > second ? 1 : 0;
 
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
-    });
-  }, [sortDescriptor, items]);
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+      }
+    );
+  }, [sortDescriptor, loadedData]);
 
   const renderCell = React.useCallback(
     (league: MyLeaguesTableProps, columnKey: React.Key) => {
       const cellValue = league[columnKey as keyof MyLeaguesTableProps];
       switch (columnKey) {
         case "name":
-          return <p className="text-default-700">{league.name}</p>;
+          return <p className="text-default-700 text-center">{league.name}</p>;
 
         case "active":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[league.active]}
-              size="sm"
-              variant="dot"
-            >
-              {league.active}
-            </Chip>
+            <div className="flex justify-center items-center">
+              <Chip
+                className="capitalize border-none gap-1 text-default-600"
+                color={statusColorMap[league.active]}
+                size="sm"
+                variant="dot"
+              >
+                {league.active}
+              </Chip>
+            </div>
           );
 
         case "currency":
           return (
-            <p className="text-default-700">{capitalize(league.currency)}</p>
+            <p className="text-default-700 text-center">{capitalize(league.currency)}</p>
           );
 
         case "actions":
           return (
             <div className="relative flex justify-end items-center gap-2">
               <Button
-                size="sm"
+                size="md"
                 variant="shadow"
                 radius="full"
                 color="warning"
@@ -138,7 +108,13 @@ export default function AppComplexLeague({ loadedData }: Props) {
   const classNames = React.useMemo(
     () => ({
       wrapper: ["max-h-[382px]", "max-w-3xl"],
-      th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
+      th: [
+        "bg-transparent",
+        "text-default-500",
+        "border-b",
+        "border-divider",
+        "text-center",
+      ],
       td: [
         // changing the rows border radius
         // first
@@ -154,6 +130,12 @@ export default function AppComplexLeague({ loadedData }: Props) {
     []
   );
 
+  const isEven = (id: string) => {
+    let index = loadedData.findIndex((item) => item.id === id);
+
+    return index % 2 === 0;
+  };
+
   return (
     <Table
       isCompact
@@ -161,7 +143,6 @@ export default function AppComplexLeague({ loadedData }: Props) {
       aria-label="Example table with custom cells, pagination and sorting"
       classNames={classNames}
       sortDescriptor={sortDescriptor}
-      onSelectionChange={setSelectedKeys}
       onSortChange={setSortDescriptor}
     >
       <TableHeader columns={headerColumns}>
@@ -177,7 +158,10 @@ export default function AppComplexLeague({ loadedData }: Props) {
       </TableHeader>
       <TableBody emptyContent={"Create your league"} items={sortedItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow
+            key={item.id}
+            className={`${isEven(item.id) ? "bg-slate-100" : "bg-white"} `}
+          >
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}

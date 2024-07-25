@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useMemo } from "react";
 import {
-  Button,
   CheckboxGroup,
   Input,
   Select,
@@ -14,7 +13,6 @@ import { SelectorIcon } from "@/components/icons/SelectorIcon";
 import { SubmitButton } from "@/components/submit";
 import Competition from "@/components/createLeague/competition";
 import { UpdateLeague } from "@/utils/types";
-import { set } from "zod";
 
 export const access = [
   { key: "public", label: "Public" },

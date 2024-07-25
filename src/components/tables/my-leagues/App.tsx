@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import {
   Table,
   TableHeader,
@@ -16,7 +16,6 @@ import {
   Chip,
   Link,
 } from "@nextui-org/react";
-import { PlusIcon } from "@/components/icons/PlusIcon";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns } from "@/utils/tableData/myLeagueData";
 import { MyLeaguesTableProps } from "@/utils/types";
@@ -96,78 +95,94 @@ export default function MYLeagueTable({
     );
   }, [visibleColumns]);
 
+  const filteredItems = React.useMemo(() => {
+    console.log(hasSearchFilter);
+
+    return loadedData.filter((item) =>
+      item.name.toLowerCase().includes(filterValue.toLowerCase())
+    );
+  }, [loadedData, filterValue]);
+
   const renderCell = React.useCallback(
     (league: MyLeaguesTableProps, columnKey: React.Key) => {
       const cellValue = league[columnKey as keyof MyLeaguesTableProps];
 
       switch (columnKey) {
         case "name":
-          return <p className="text-default-700">{league.name}</p>;
+          return <p className="text-default-700 text-center">{league.name}</p>;
 
         case "weekly":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={
-                statusColorMapCompetitions[
-                  league.weekly ? "active" : "disabled"
-                ]
-              }
-              size="sm"
-              variant="dot"
-            >
-              {league.weekly ? "active" : "not available"}
-            </Chip>
+            <div className="flex justify-center items-center">
+              <Chip
+                className="capitalize border-none gap-1 text-default-600"
+                color={
+                  statusColorMapCompetitions[
+                    league.weekly ? "active" : "disabled"
+                  ]
+                }
+                size="sm"
+                variant="dot"
+              >
+                {league.weekly ? "active" : "not available"}
+              </Chip>
+            </div>
           );
         case "monthly":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={
-                statusColorMapCompetitions[
-                  league.monthly ? "active" : "disabled"
-                ]
-              }
-              size="sm"
-              variant="dot"
-            >
-              {league.monthly ? "active" : "not available"}
-            </Chip>
+            <div className="flex justify-center items-center">
+              <Chip
+                className="capitalize border-none gap-1 text-default-600"
+                color={
+                  statusColorMapCompetitions[
+                    league.monthly ? "active" : "disabled"
+                  ]
+                }
+                size="sm"
+                variant="dot"
+              >
+                {league.monthly ? "active" : "not available"}
+              </Chip>
+            </div>
           );
         case "seasonal":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600 justify-start"
-              color={
-                statusColorMapCompetitions[
-                  league.seasonal ? "active" : "disabled"
-                ]
-              }
-              size="sm"
-              variant="dot"
-            >
-              {league.seasonal ? "active" : "not available"}
-            </Chip>
+            <div className="flex justify-center items-center">
+              <Chip
+                className="capitalize border-none gap-1 text-default-600 justify-start"
+                color={
+                  statusColorMapCompetitions[
+                    league.seasonal ? "active" : "disabled"
+                  ]
+                }
+                size="sm"
+                variant="dot"
+              >
+                {league.seasonal ? "active" : "not available"}
+              </Chip>
+            </div>
           );
 
         case "active":
           return (
-            <Chip
-              className="capitalize border-none gap-1 text-default-600"
-              color={statusColorMap[league.active]}
-              size="sm"
-              variant="dot"
-            >
-              {league.active}
-            </Chip>
+            <div className="flex justify-center items-center">
+              <Chip
+                className="capitalize border-none gap-1 text-default-600"
+                color={statusColorMap[league.active]}
+                size="sm"
+                variant="dot"
+              >
+                {league.active}
+              </Chip>
+            </div>
           );
 
         case "actions":
           return (
-            <div className="relative flex justify-start items-center gap-2">
+            <div className="relative flex justify-center items-center">
               <Button
-                size="sm"
-                variant="shadow"
+                size="md"
+                variant="solid"
                 radius="full"
                 color="warning"
                 as={Link}
@@ -186,6 +201,7 @@ export default function MYLeagueTable({
 
   const onSearchChange = React.useCallback((value?: string) => {
     if (value) {
+      console.log(value);
       setFilterValue(value);
       setPage(1);
     } else {
@@ -209,10 +225,11 @@ export default function MYLeagueTable({
                 "text-black/90 dark:text-white/90",
                 "placeholder:text-default-700/50 dark:placeholder:text-white/60",
               ],
+              clearButton: "text-black",
             }}
             placeholder="Search by name..."
-            size="sm"
-            startContent={<SearchIcon className="text-default-300 " />}
+            size="md"
+            startContent={<SearchIcon className="text-black " />}
             value={filterValue}
             variant="bordered"
             onClear={() => setFilterValue("")}
@@ -226,7 +243,7 @@ export default function MYLeagueTable({
     statusFilter,
     visibleColumns,
     onSearchChange,
-    loadedData.length,
+    filteredItems.length,
     hasSearchFilter,
   ]);
 
@@ -256,7 +273,13 @@ export default function MYLeagueTable({
   const classNames = React.useMemo(
     () => ({
       wrapper: ["max-h-[382px]", "max-w-3xl"],
-      th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
+      th: [
+        "bg-transparent",
+        "text-default-500",
+        "border-b",
+        "border-divider",
+        "text-center",
+      ],
       td: [
         // changing the rows border radius
         // first
@@ -271,6 +294,12 @@ export default function MYLeagueTable({
     }),
     []
   );
+
+  const isEven = (id: string) => {
+    let index = filteredItems.findIndex((item) => item.id === id);
+
+    return index % 2 === 0;
+  };
 
   return (
     <Table
@@ -298,9 +327,12 @@ export default function MYLeagueTable({
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"Create your league"} items={loadedData}>
+      <TableBody emptyContent={"Create your league"} items={filteredItems}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow
+            key={item.id}
+            className={`${isEven(item.id) ? "bg-slate-100" : "bg-white"} `}
+          >
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
