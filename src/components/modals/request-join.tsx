@@ -38,7 +38,10 @@ export default function RequestJoinModal({
 
   useEffect(() => {
     console.log(state.message);
-    if (state.message === "Request join sent successfully") {
+    if (
+      state.message ===
+      "Failed to join the competition. Please try again or contact us."
+    ) {
       setRequestSent(true);
     }
   }, [state.message]);
