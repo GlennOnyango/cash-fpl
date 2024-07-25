@@ -95,6 +95,14 @@ export default function MYLeagueTable({
     );
   }, [visibleColumns]);
 
+  const filteredItems = React.useMemo(() => {
+    console.log(hasSearchFilter);
+
+    return loadedData.filter((item) =>
+      item.name.toLowerCase().includes(filterValue.toLowerCase())
+    );
+  }, [loadedData, filterValue]);
+
   const renderCell = React.useCallback(
     (league: MyLeaguesTableProps, columnKey: React.Key) => {
       const cellValue = league[columnKey as keyof MyLeaguesTableProps];
@@ -193,6 +201,7 @@ export default function MYLeagueTable({
 
   const onSearchChange = React.useCallback((value?: string) => {
     if (value) {
+      console.log(value);
       setFilterValue(value);
       setPage(1);
     } else {
@@ -216,10 +225,11 @@ export default function MYLeagueTable({
                 "text-black/90 dark:text-white/90",
                 "placeholder:text-default-700/50 dark:placeholder:text-white/60",
               ],
+              clearButton: "text-black",
             }}
             placeholder="Search by name..."
-            size="sm"
-            startContent={<SearchIcon className="text-default-300 " />}
+            size="md"
+            startContent={<SearchIcon className="text-black " />}
             value={filterValue}
             variant="bordered"
             onClear={() => setFilterValue("")}
@@ -233,7 +243,7 @@ export default function MYLeagueTable({
     statusFilter,
     visibleColumns,
     onSearchChange,
-    loadedData.length,
+    filteredItems.length,
     hasSearchFilter,
   ]);
 
@@ -286,7 +296,7 @@ export default function MYLeagueTable({
   );
 
   const isEven = (id: string) => {
-    let index = loadedData.findIndex((item) => item.id === id);
+    let index = filteredItems.findIndex((item) => item.id === id);
 
     return index % 2 === 0;
   };
@@ -317,7 +327,7 @@ export default function MYLeagueTable({
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"Create your league"} items={loadedData}>
+      <TableBody emptyContent={"Create your league"} items={filteredItems}>
         {(item) => (
           <TableRow
             key={item.id}
