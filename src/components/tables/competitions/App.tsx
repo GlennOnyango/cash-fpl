@@ -20,6 +20,7 @@ import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns } from "@/utils/tableData/openLeagueData";
 import { CompetitionTypesProps } from "@/utils/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import RequestJoinComponentModal from "@/components/requestJoinComponentModal ";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   WEEKLY: "primary",
@@ -165,20 +166,8 @@ export default function CompetitionsTable({
           return <p className="text-default-700 text-center">{"currency"}</p>;
 
         case "actions":
-          return (
-            <div className="flex items-center justify-center">
-              <Button
-                size="md"
-                variant="shadow"
-                radius="full"
-                color="warning"
-                as={Link}
-                href={`/leagues/open-leagues/${competition.id}`}
-              >
-                Request join
-              </Button>
-            </div>
-          );
+          return <RequestJoinComponentModal competition={competition} />;
+
         default:
           return cellValue;
       }

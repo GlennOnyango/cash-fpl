@@ -248,7 +248,10 @@ export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
   }
 }
 
-export async function fetchPublicCompetitions(page: number = 0, size: number = 10) {
+export async function fetchPublicCompetitions(
+  page: number = 0,
+  size: number = 10
+) {
   try {
     const response = await fetch(
       `${leagues_url}/api/v1/league/competitions/public?page=${page}&size=${size}`,
@@ -319,4 +322,49 @@ export async function fetchLeagueById(leagueId: string) {
       message: error.message,
     };
   }
+}
+
+//Post league join request
+
+export async function joinCompetitionAction(
+  prevState: any,
+  formData: FormData
+) {
+  const competition_object = {
+    leagueId: formData.get("leagueId") as string,
+    competition: formData.get("competition") as string,
+  };
+
+  console.log(competition_object);
+
+  try {
+    const raw = JSON.stringify(competition_object);
+
+    //join competition
+    const newLeague = await fetch(`${leagues_url}/api/v1/league/join`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+      },
+      body: raw,
+    });
+
+    if (!newLeague.ok) {
+      let err = await newLeague.json();
+      throw new Error(
+        "Failed to join the competition. Please try again or contact us."
+      );
+    }
+
+    revalidateTag("fetchOpenLeagues");
+  } catch (error: any) {
+    return {
+      message: error.message,
+    };
+  }
+
+  return {
+    message: "Request join sent successfully",
+  };
 }
