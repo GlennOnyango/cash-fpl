@@ -8,11 +8,18 @@ export default async function page({ params }: { params: { id: string } }) {
   const leaguesFetch = await fetchLeagueById(params.id);
 
   let leagueDetails: UpdateLeague = {
+    createdBy: "",
+    createdAt: "",
+    lastModifiedBy: "",
+    lastModifiedAt: "",
+    types: [],
     id: "",
     ownerId: "",
     name: "",
-    types: ["weekly"],
-    currency: "USD",
+    leagueStatus: "",
+    currencyId: 1,
+    newPlayerJoinsAll: true,
+
     competitionTypes: [],
   };
 
@@ -21,25 +28,12 @@ export default async function page({ params }: { params: { id: string } }) {
   }
 
   if (leaguesFetch) {
-    const leagueCompetitionTypes = leaguesFetch.competitionTypes.map(
-      (competition: CompetitionTypes) => {
-        if (competition.competitionDuration === "WEEKLY") {
-          return "WEEKLY";
-        } else if (competition.competitionDuration === "MONTHLY") {
-          return "MONTHLY";
-        } else if (competition.competitionDuration === "SEASONAL") {
-          return "SEASONAL";
-        }
-      }
-    );
-
     leagueDetails = {
-      id: leaguesFetch.id,
-      ownerId: leaguesFetch.owner,
-      name: leaguesFetch.name,
-      types: leagueCompetitionTypes,
-      currency: leaguesFetch.currencyId === 1 ? "KES" : "USD",
-      competitionTypes: leaguesFetch.competitionTypes,
+      ...leaguesFetch,
+
+      types: leaguesFetch.competitionTypes.map(
+        (competition: CompetitionTypes) => competition.competitionDuration
+      ),
     };
   }
 

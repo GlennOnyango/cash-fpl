@@ -8,11 +8,11 @@ import {
   Checkbox,
 } from "@nextui-org/react";
 import { useFormState } from "react-dom";
-import { createLeague } from "@/app/actions";
+import { updateLeague } from "@/app/actions";
 import { SelectorIcon } from "@/components/icons/SelectorIcon";
 import { SubmitButton } from "@/components/submit";
 import Competition from "@/components/createLeague/competition";
-import { UpdateLeague } from "@/utils/types";
+import { CompetitionTypes, UpdateLeague } from "@/utils/types";
 
 export const access = [
   { key: "public", label: "Public" },
@@ -45,20 +45,22 @@ type Props = {
 };
 
 export default function UpdateLeagueComponent({ data }: Props) {
-  const [state, formAction] = useFormState(createLeague, initialState);
-  const [limits, setLimits] = React.useState<currency[]>([]);
 
   const [updateLeagueData, setUpdateLeagueData] = React.useState(data);
+  
+  const [state, formAction] = useFormState(updateLeague, initialState);
+  const [limits, setLimits] = React.useState<currency[]>([]);
+
 
   const local_url = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
 
   useEffect(() => {
-    fetch(`${local_url}/api/limits?currency=${updateLeagueData.currency}`)
+    fetch(`${local_url}/api/limits?currencyId=${updateLeagueData.currencyId}`)
       .then((res) => res.json())
       .then((data: currency[]) => {
         setLimits(data);
       });
-  }, [updateLeagueData.currency]);
+  }, [updateLeagueData.currencyId]);
 
   const limit = useMemo(() => {
     if (limits?.length) {
@@ -73,9 +75,10 @@ export default function UpdateLeagueComponent({ data }: Props) {
   }, [limits]);
 
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(e.target.value);
     setUpdateLeagueData({
       ...updateLeagueData,
-      currency: e.target.value,
+      currencyId: e.target.value === "USD" ? 2 : 1,
     } as UpdateLeague);
   };
 
@@ -90,6 +93,19 @@ export default function UpdateLeagueComponent({ data }: Props) {
       <h3 className="text-4xl text-center font-semibold text-gray-900 dark:text-white col-span-3">
         Update League
       </h3>
+
+      <input
+        type="hidden"
+        name="leagueId"
+        value={updateLeagueData.id}
+      />
+
+      <input
+        type="hidden"
+        name="ownerId"
+        value={updateLeagueData.ownerId}
+      />
+
       <div className="col-span-3 flex flex-col sm:flex-row gap-2">
         <div className="flex flex-col gap-2 w-full">
           <label className="text-black/90 dark:text-white/90">
@@ -131,12 +147,12 @@ export default function UpdateLeagueComponent({ data }: Props) {
           <Select
             placeholder="Select access type"
             required
-            name="currency"
+            name="currencyId"
             radius="lg"
-            defaultSelectedKeys={[updateLeagueData.currency]}
+            defaultSelectedKeys={updateLeagueData.currencyId === 1 ? "KES" : "USD"}
             className="w-full border-1 border-gray-800 rounded-xl"
             selectorIcon={<SelectorIcon />}
-            selectedKeys={[updateLeagueData.currency]}
+            selectedKeys={updateLeagueData.currencyId === 1 ? ["KES"] : ["USD"]}
             onChange={handleSelectionChange}
           >
             {currency_select.map((acc) => (
@@ -206,6 +222,7 @@ export default function UpdateLeagueComponent({ data }: Props) {
                     : "False"
                 }`,
               ],
+              id:competitionDetails?.id || "",
             }}
           />
         );

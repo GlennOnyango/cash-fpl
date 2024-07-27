@@ -170,6 +170,60 @@ export async function createLeague(prevState: any, formData: FormData) {
   };
 }
 
+export async function updateLeague(prevState: any, formData: FormData) {
+  const league_object = {
+    id: formData.get("leagueId") as string,
+    name: formData.get("leageName") as string,
+    ownerId: formData.get("ownerId") as string,
+    leagueStatus: "ACTIVE", //ACTIVE,CLOSED,PAUSED,SUSPENDED
+    newPlayerJoinsAll: (formData.get("newPlayerJoinsAll") as string) === "True",
+    currencyId: (formData.get("currencyId") as string) === "KES" ? 1 : 2,
+    competitionType: formData.getAll("types").map((comp) => {
+      return {
+        competitionDuration: comp,
+        amount: formData.get(`${comp}_amount`),
+        isPublic: (formData.get(`${comp}_access`) as string) === "public",
+        enableExcessTransferPenalty:
+          (formData.get(`${comp}_penalty`) as string) === "True",
+        id: formData.get(`${comp}_id`),
+        leagueId: formData.get("leagueId") as string,
+      };
+    }),
+  };
+
+  try {
+    const raw = JSON.stringify(league_object);
+
+    //create league
+    const newLeague = await fetch(`${leagues_url}/api/v1/league/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+      },
+      body: raw,
+    });
+
+    if (!newLeague.ok) {
+      let err = await newLeague.json();
+      throw new Error(
+        "Failed to update league. Please try again or contact us."
+      );
+    }
+
+    revalidateTag("fetchMyLeagues");
+    revalidateTag("fetchOpenLeagues");
+  } catch (error: any) {
+    return {
+      message: error.message,
+    };
+  }
+
+  return {
+    message: "League updated successfully",
+  };
+}
+
 // Fetch my leagues
 export async function fetchMyLeagues(page: number = 0, size: number = 10) {
   try {
