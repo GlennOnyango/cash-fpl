@@ -8,7 +8,7 @@ import {
 export default function Home() {
   return (
     <PageTemplate>
-      <div className="flex flex-col items-center justify-center gap-8">
+      <div className="flex flex-col items-center justify-center gap-8 h-full">
         <div
           className="bg-gray-800 animate-bounce rounded-full w-2/3 sm:w-1/4 h-32 mt-10"
           style={{
