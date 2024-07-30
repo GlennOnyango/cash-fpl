@@ -35,6 +35,7 @@ export type CompetitionTypesProps = {
   amount: number;
   leagueId: string;
   leagueName: string;
+  currencyId: number;
 };
 
 export type Content = {

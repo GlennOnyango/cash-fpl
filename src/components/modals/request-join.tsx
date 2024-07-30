@@ -124,7 +124,7 @@ export default function RequestJoinModal({
               <p className="text-gray-500 text-lg text-center mt-4">
                 Competition Name:{" "}
                 <span className="text-default-900">
-                  {"competition.leagueName"}
+                  {competition.leagueName}
                 </span>
               </p>
               <p className="text-gray-500 text-lg text-center">
@@ -136,7 +136,7 @@ export default function RequestJoinModal({
               <p className="text-gray-500 text-lg text-center">
                 Currency:{" "}
                 <span className="text-default-900">
-                  {"competition.currency"}
+                {competition.currencyId === 1 ? 'KES' : 'USD'}
                 </span>
               </p>
               <p className="text-gray-500 text-lg text-center">

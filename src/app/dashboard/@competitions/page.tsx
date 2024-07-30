@@ -7,7 +7,7 @@ import CompetitionsTable from "@/components/tables/competitions/dashboard";
 export default async function Leagues() {
   let competitions: CompetitionTypesProps[] = [];
   let pageNumber = 1;
-  let rowsPerPage = 5;
+  let rowsPerPage = 7;
 
   const INITIAL_VISIBLE_COLUMNS = [
     "leagueName",

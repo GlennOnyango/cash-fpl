@@ -23,7 +23,7 @@ export default function RequestJoinComponentModal({ competition }: Props) {
 
       <Button
         onPress={onOpen}
-        size="md"
+        size="sm"
         variant="shadow"
         radius="full"
         color="warning"
