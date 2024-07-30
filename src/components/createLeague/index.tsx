@@ -162,12 +162,12 @@ export default function CreateLeagueComponent({ onClose }: Props) {
           />
         );
       })}
-
+{/* 
       <div className="col-span-3 flex flex-col justify-center items-center w-full mt-4">
         <Checkbox name="newPlayerJoinsAll" value={"True"} defaultSelected>
           New players should join all leagues on entry
         </Checkbox>
-      </div>
+      </div> */}
 
       <div className="col-span-3 flex flex-col items-center justify-center">
         {state.message !== "" &&

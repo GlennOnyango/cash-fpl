@@ -1,9 +1,6 @@
 import { Button, Link } from "@nextui-org/react";
 import PageTemplate from "../components/navbars/landing-nav";
-import {
-  PlayCircleIcon,
-  CubeTransparentIcon,
-} from "@heroicons/react/24/outline";
+import { CubeTransparentIcon } from "@heroicons/react/24/outline";
 
 export default function Home() {
   return (
@@ -30,7 +27,7 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <Button size="lg" radius="full">
+            <Button size="lg" radius="full" as={Link} href="/sign-in">
               Get Started
             </Button>
 
