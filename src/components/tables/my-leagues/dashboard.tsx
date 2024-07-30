@@ -90,7 +90,7 @@ export default function MyLeagueTable({ loadedData, visibleColumns }: Props) {
 
         case "actions":
           return (
-            <div className="relative flex justify-end items-center gap-2">
+            <div className="relative flex justify-center items-center gap-2">
               <Tooltip
                 content="Edit League"
                 placement="top"
