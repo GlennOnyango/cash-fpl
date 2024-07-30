@@ -25,6 +25,7 @@ type CompetitionData = {
   amount: string;
   access: string[];
   penalty: string[];
+  id: string;
 };
 
 type Props = {
@@ -43,11 +44,18 @@ export default function Competition({
       amount: "",
       access: ["public"],
       penalty: ["True"],
+      id: "",
     }
   );
 
   return (
     <div className="w-full col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-1 p-1">
+      <input
+        type="hidden"
+        name={`${competition}_id`}
+        value={competitionData.id}
+      />
+
       <h4 className="text-xl  col-span-1 sm:col-span-3 text-center mb-4 text-black/90 dark:text-white/90">
         {`${capitalize(competition)}`}
       </h4>

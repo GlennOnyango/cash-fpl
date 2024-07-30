@@ -36,9 +36,7 @@ export default function CreateLeagueComponent({ onClose }: Props) {
   const local_url = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
 
   useEffect(() => {
-    fetch(
-      `${local_url}/api/limits?currency=${currency[0] === "1" ? "KES" : "USD"}`
-    )
+    fetch(`${local_url}/api/limits?currencyId=${currency[0]}`)
       .then((res) => res.json())
       .then((data: currency[]) => {
         setLimits(data);

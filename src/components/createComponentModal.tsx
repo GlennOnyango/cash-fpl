@@ -17,7 +17,7 @@ export default function CreateComponentModal() {
       />
       <Button
         onPress={onOpen}
-        size="md"
+        size="sm"
         radius="full"
         endContent={<PlusIcon />}
         className="bg-foreground text-background"

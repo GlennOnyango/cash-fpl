@@ -7,7 +7,7 @@ import CompetitionsTable from "@/components/tables/competitions/dashboard";
 export default async function Leagues() {
   let competitions: CompetitionTypesProps[] = [];
   let pageNumber = 1;
-  let rowsPerPage = 5;
+  let rowsPerPage = 7;
 
   const INITIAL_VISIBLE_COLUMNS = [
     "leagueName",
@@ -30,21 +30,21 @@ export default async function Leagues() {
   }
 
   return (
-    <div className="col-span-1 bg-white p-4 py-6 min-h-fit rounded-none">
+    <div className="col-span-12 sm:col-span-4 row-span-6 bg-white p-4 py-6 rounded-none">
       <div className="w-full flex flex-row mb-4 justify-between">
         <Link
-          className="text-lg sm:text-3xl text-black/90 dark:text-white/90 mb-4 hover:underline"
+          className="text-xl sm:text-3xl text-black/90 dark:text-white/90 mb-4 hover:underline"
           href="/leagues/competitions?page=1"
         >
           Competitions
         </Link>
 
         <Button
-          size="md"
+          size="sm"
           radius="full"
           className="bg-foreground text-background"
         >
-          See all competitions
+          All competitions
         </Button>
       </div>
       <div className="overflow-x-auto overflow-y-hidden">

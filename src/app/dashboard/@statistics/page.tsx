@@ -5,7 +5,7 @@ export default function Statistics() {
    * History of games played, etc.
    */
   return (
-    <div className="col-span-1 sm:col-span-2 p-4 py-6 min-h-fit bg-white">
+    <div className="col-span-12 sm:col-span-8 row-span-6  p-4 py-6 bg-white">
       <h4 className="text-3xl text-black/90 dark:text-white/90 mb-4">
         Analytics
       </h4>

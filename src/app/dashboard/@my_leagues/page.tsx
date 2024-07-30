@@ -28,12 +28,11 @@ export default async function Leagues() {
       };
     });
   }
-
   return (
-    <div className="col-span-1 bg-white p-4 py-6 min-h-fit rounded-none overflow-x-auto">
+    <div className="col-span-12 sm:col-span-4 row-span-6 bg-white p-4 py-6 rounded-none overflow-x-auto">
       <div className="w-full flex flex-row mb-4 justify-between">
         <Link
-          className="text-lg sm:text-3xl text-black/90 dark:text-white/90 mb-4 hover:underline"
+          className="text-xl sm:text-3xl text-black/90 dark:text-white/90 mb-4 hover:underline"
           href="/leagues/my-leagues?page=1"
         >
           My Leagues

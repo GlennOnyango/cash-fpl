@@ -170,6 +170,60 @@ export async function createLeague(prevState: any, formData: FormData) {
   };
 }
 
+export async function updateLeague(prevState: any, formData: FormData) {
+  const league_object = {
+    id: formData.get("leagueId") as string,
+    name: formData.get("leageName") as string,
+    ownerId: formData.get("ownerId") as string,
+    leagueStatus: "ACTIVE", //ACTIVE,CLOSED,PAUSED,SUSPENDED
+    newPlayerJoinsAll: (formData.get("newPlayerJoinsAll") as string) === "True",
+    currencyId: (formData.get("currencyId") as string) === "KES" ? 1 : 2,
+    competitionType: formData.getAll("types").map((comp) => {
+      return {
+        competitionDuration: comp,
+        amount: formData.get(`${comp}_amount`),
+        isPublic: (formData.get(`${comp}_access`) as string) === "public",
+        enableExcessTransferPenalty:
+          (formData.get(`${comp}_penalty`) as string) === "True",
+        id: formData.get(`${comp}_id`),
+        leagueId: formData.get("leagueId") as string,
+      };
+    }),
+  };
+
+  try {
+    const raw = JSON.stringify(league_object);
+
+    //create league
+    const newLeague = await fetch(`${leagues_url}/api/v1/league/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+      },
+      body: raw,
+    });
+
+    if (!newLeague.ok) {
+      let err = await newLeague.json();
+      throw new Error(
+        "Failed to update league. Please try again or contact us."
+      );
+    }
+
+    revalidateTag("fetchMyLeagues");
+    revalidateTag("fetchOpenLeagues");
+  } catch (error: any) {
+    return {
+      message: error.message,
+    };
+  }
+
+  return {
+    message: "League updated successfully",
+  };
+}
+
 // Fetch my leagues
 export async function fetchMyLeagues(page: number = 0, size: number = 10) {
   try {
@@ -248,7 +302,10 @@ export async function fetchOpenLeagues(page: number = 0, size: number = 10) {
   }
 }
 
-export async function fetchPublicCompetitions(page: number = 0, size: number = 10) {
+export async function fetchPublicCompetitions(
+  page: number = 0,
+  size: number = 10
+) {
   try {
     const response = await fetch(
       `${leagues_url}/api/v1/league/competitions/public?page=${page}&size=${size}`,
@@ -319,4 +376,49 @@ export async function fetchLeagueById(leagueId: string) {
       message: error.message,
     };
   }
+}
+
+//Post league join request
+
+export async function joinCompetitionAction(
+  prevState: any,
+  formData: FormData
+) {
+  const competition_object = {
+    leagueId: formData.get("leagueId") as string,
+    competition: formData.get("competition") as string,
+  };
+
+  console.log(competition_object);
+
+  try {
+    const raw = JSON.stringify(competition_object);
+
+    //join competition
+    const newLeague = await fetch(`${leagues_url}/api/v1/league/join`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+      },
+      body: raw,
+    });
+
+    if (!newLeague.ok) {
+      let err = await newLeague.json();
+      throw new Error(
+        "Failed to join the competition. Please try again or contact us."
+      );
+    }
+
+    revalidateTag("fetchOpenLeagues");
+  } catch (error: any) {
+    return {
+      message: error.message,
+    };
+  }
+
+  return {
+    message: "Request join sent successfully",
+  };
 }
