@@ -17,11 +17,8 @@ import {
 import { columns } from "@/utils/tableData/myLeagueData";
 import { capitalize } from "@/utils/utils";
 import { MyLeaguesTableProps } from "@/utils/types";
-import {
-  PaperAirplaneIcon,
-  PencilIcon,
-  PencilSquareIcon,
-} from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/20/solid";
+import { PaperAirplaneIcon } from "@heroicons/react/16/solid";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   ACTIVE: "success",

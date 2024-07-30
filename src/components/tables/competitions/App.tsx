@@ -23,9 +23,9 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import RequestJoinComponentModal from "@/components/requestJoinComponentModal ";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  WEEKLY: "primary",
-  MONTHLY: "danger",
-  SEASONAL: "warning",
+  WEEKLY: "success",
+  MONTHLY: "primary",
+  SEASONAL: "secondary",
 };
 
 type Props = {
@@ -122,8 +122,8 @@ export default function CompetitionsTable({
           return (
             <div className="flex items-center justify-center">
               <Link
-                className="text-default-700 text-center hover:text-xl hover:text-blue-500"
-                href={`/leagues/open-leagues/${competition.id}`}
+                className="text-default-700 text-center hover:text-blue-500"
+                href={`/leagues/competitions/${competition.id}`}
               >
                 {competition.leagueName}
               </Link>
