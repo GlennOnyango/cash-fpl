@@ -12,10 +12,13 @@ import {
   SortDescriptor,
   Chip,
   Link,
+  Tooltip,
 } from "@nextui-org/react";
 import { columns } from "@/utils/tableData/myLeagueData";
 import { capitalize } from "@/utils/utils";
 import { MyLeaguesTableProps } from "@/utils/types";
+import { PencilSquareIcon } from "@heroicons/react/20/solid";
+import { PaperAirplaneIcon } from "@heroicons/react/16/solid";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   ACTIVE: "success",
@@ -80,22 +83,49 @@ export default function MyLeagueTable({ loadedData, visibleColumns }: Props) {
 
         case "currency":
           return (
-            <p className="text-default-700 text-center">{capitalize(league.currency)}</p>
+            <p className="text-default-700 text-center">
+              {capitalize(league.currency)}
+            </p>
           );
 
         case "actions":
           return (
-            <div className="relative flex justify-end items-center gap-2">
-              <Button
-                size="md"
-                variant="shadow"
-                radius="full"
-                color="warning"
-                as={Link}
-                href={`/leagues/my-leagues/${league.id}`}
+            <div className="relative flex justify-center items-center gap-2">
+              <Tooltip
+                content="Edit League"
+                placement="top"
+                className="bg-warning text-black"
               >
-                Manage
-              </Button>
+                <Button
+                  size="md"
+                  variant="light"
+                  isIconOnly
+                  color="warning"
+                  as={Link}
+                  className="p-2"
+                  href={`/leagues/my-leagues/${league.id}`}
+                >
+                  <PencilSquareIcon className="text-black" />
+                </Button>
+              </Tooltip>
+
+              <Tooltip
+                content="Send Invites"
+                placement="top"
+                className="bg-warning text-black"
+              >
+                <Button
+                  size="md"
+                  variant="light"
+                  color="warning"
+                  isIconOnly
+                  as={Link}
+                  className="p-2 "
+                  href={`/leagues/my-leagues/${league.id}`}
+                >
+                  <PaperAirplaneIcon className="text-black" />
+                </Button>
+              </Tooltip>
             </div>
           );
         default:

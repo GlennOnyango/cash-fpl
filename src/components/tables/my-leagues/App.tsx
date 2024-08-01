@@ -15,11 +15,13 @@ import {
   SortDescriptor,
   Chip,
   Link,
+  Tooltip,
 } from "@nextui-org/react";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns } from "@/utils/tableData/myLeagueData";
 import { MyLeaguesTableProps } from "@/utils/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { PaperAirplaneIcon, PencilSquareIcon } from "@heroicons/react/16/solid";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   ACTIVE: "success",
@@ -179,17 +181,42 @@ export default function MYLeagueTable({
 
         case "actions":
           return (
-            <div className="relative flex justify-center items-center">
-              <Button
-                size="md"
-                variant="solid"
-                radius="full"
-                color="warning"
-                as={Link}
-                href={`/leagues/my-leagues/${league.id}`}
+            <div className="relative flex justify-center items-center gap-2">
+              <Tooltip
+                content="Edit League"
+                placement="top"
+                className="bg-warning text-black"
               >
-                Manage
-              </Button>
+                <Button
+                  size="md"
+                  variant="light"
+                  isIconOnly
+                  color="warning"
+                  as={Link}
+                  className="p-2"
+                  href={`/leagues/my-leagues/${league.id}`}
+                >
+                  <PencilSquareIcon className="text-black" />
+                </Button>
+              </Tooltip>
+
+              <Tooltip
+                content="Send Invites"
+                placement="top"
+                className="bg-warning text-black"
+              >
+                <Button
+                  size="md"
+                  variant="light"
+                  color="warning"
+                  isIconOnly
+                  as={Link}
+                  className="p-2 "
+                  href={`/leagues/my-leagues/${league.id}`}
+                >
+                  <PaperAirplaneIcon className="text-black" />
+                </Button>
+              </Tooltip>
             </div>
           );
         default:

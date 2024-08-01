@@ -75,7 +75,6 @@ export default function UpdateLeagueComponent({ data }: Props) {
   }, [limits]);
 
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
     setUpdateLeagueData({
       ...updateLeagueData,
       currencyId: e.target.value === "USD" ? 2 : 1,

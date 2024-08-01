@@ -124,7 +124,7 @@ export async function createLeague(prevState: any, formData: FormData) {
   const league_object = {
     name: formData.get("leageName") as string,
     leagueStatus: "ACTIVE", //ACTIVE,CLOSED,PAUSED,SUSPENDED
-    newPlayerJoinsAll: (formData.get("newPlayerJoinsAll") as string) === "True",
+    newPlayerJoinsAll: false,
     currencyId: Number(formData.get("currency")),
     competitionType: formData.getAll("types").map((comp) => {
       return {
@@ -389,7 +389,6 @@ export async function joinCompetitionAction(
     competition: formData.get("competition") as string,
   };
 
-  console.log(competition_object);
 
   try {
     const raw = JSON.stringify(competition_object);

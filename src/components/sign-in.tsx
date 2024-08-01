@@ -20,6 +20,7 @@ const initialState = {
 export default function SignInCashFPL() {
   const [state, formAction] = useFormState(signInUser, initialState);
   const [isVisible, setIsVisible] = useState(false);
+  
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   return (
@@ -45,14 +46,26 @@ export default function SignInCashFPL() {
           {"Email"}
         </label>
 
-        <input
-          placeholder="Email"
+        <Input
           type="email"
           id="email"
           name="email"
-          required={true}
-          style={{ height: "3rem" }}
-          className="block w-full px-4 py-2 mb-4 text-base text-gray-900 placeholder-gray-900 bg-white border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900"
+          isRequired
+          size="lg"
+          variant="bordered"
+          placeholder="Enter your email"
+          classNames={{
+            base: "w-full mb-4 text-base text-gray-900",
+            inputWrapper:
+              "h-12 border bg-primary-50 border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900",
+            input: [
+              "bg-transparent",
+              "border-none",
+              "focus:ring-0",
+              "text-black/90 dark:text-white/90",
+              "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+            ],
+          }}
         />
       </div>
       <div className="w-full max-w-sm mx-auto ">
@@ -63,7 +76,7 @@ export default function SignInCashFPL() {
         <Input
           id="password"
           name="password"
-          required={true}
+          isRequired
           variant="bordered"
           placeholder="Enter your password"
           endContent={
@@ -81,9 +94,9 @@ export default function SignInCashFPL() {
           }
           type={isVisible ? "text" : "password"}
           classNames={{
-            base: "w-full  py-2 mb-4 text-base text-gray-900",
+            base: "w-full mb-4 text-base text-gray-900",
             inputWrapper:
-              "h-12 border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900",
+              "h-12 border bg-primary-50 border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900",
             input: [
               "bg-transparent",
               "border-none",
