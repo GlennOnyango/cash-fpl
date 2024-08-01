@@ -61,7 +61,7 @@ export default function Password({
       classNames={{
         base: "w-full mb-4 text-base text-gray-900",
         inputWrapper:
-          "h-12 border border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900",
+          "h-12 border bg-primary-50 border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900",
         input: [
           "bg-transparent",
           "border-none",
