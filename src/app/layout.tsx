@@ -20,7 +20,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <div
-            className={`${poppins.className} flex flex-col bg-gray-800 overflow-y-hidden h-screen`}
+            className={`${poppins.className} light flex flex-col bg-gray-800 overflow-y-hidden h-screen`}
           >
             {children}
           </div>

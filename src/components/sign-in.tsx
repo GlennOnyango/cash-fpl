@@ -20,13 +20,12 @@ const initialState = {
 export default function SignInCashFPL() {
   const [state, formAction] = useFormState(signInUser, initialState);
   const [isVisible, setIsVisible] = useState(false);
-  
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   return (
     <form
       action={formAction}
-      className="w-full max-w-sm mx-auto"
+      className="light w-full max-w-sm mx-auto"
       autoComplete="off"
     >
       {state?.errors && (
@@ -38,76 +37,68 @@ export default function SignInCashFPL() {
         </p>
       )}
 
-      <h1 className="text-center text-black text-2xl sm:text-4xl py-3 font-medium">
+      <h1 className="text-black/90 dark:text-white/90 text-center text-2xl sm:text-4xl py-3 font-medium">
         Welcome back, login to access your account.
       </h1>
-      <div className="w-full max-w-sm mx-auto ">
-        <label htmlFor={"email"} className="block mb-2 text-base text-black">
-          {"Email"}
-        </label>
+      <Input
+        type="email"
+        id="email"
+        name="email"
+        label="Email"
+        labelPlacement="outside"
+        isRequired
+        size="lg"
+        variant="bordered"
+        placeholder="Enter your email"
+        classNames={{
+          base: "w-full mb-10 text-base text-gray-900",
+          inputWrapper:
+            "h-12 border bg-primary-50 border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900",
+          input: [
+            "bg-transparent",
+            "border-none",
+            "focus:ring-0",
+            "text-black/90 dark:text-white/90",
+            "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+          ],
+        }}
+      />
 
-        <Input
-          type="email"
-          id="email"
-          name="email"
-          isRequired
-          size="lg"
-          variant="bordered"
-          placeholder="Enter your email"
-          classNames={{
-            base: "w-full mb-4 text-base text-gray-900",
-            inputWrapper:
-              "h-12 border bg-primary-50 border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900",
-            input: [
-              "bg-transparent",
-              "border-none",
-              "focus:ring-0",
-              "text-black/90 dark:text-white/90",
-              "placeholder:text-default-700/50 dark:placeholder:text-white/60",
-            ],
-          }}
-        />
-      </div>
-      <div className="w-full max-w-sm mx-auto ">
-        <label htmlFor={"password"} className="block mb-2 text-base text-black">
-          {"Password"}
-        </label>
-
-        <Input
-          id="password"
-          name="password"
-          isRequired
-          variant="bordered"
-          placeholder="Enter your password"
-          endContent={
-            <button
-              className="focus:outline-none"
-              type="button"
-              onClick={toggleVisibility}
-            >
-              {isVisible ? (
-                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              ) : (
-                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              )}
-            </button>
-          }
-          type={isVisible ? "text" : "password"}
-          classNames={{
-            base: "w-full mb-4 text-base text-gray-900",
-            inputWrapper:
-              "h-12 border bg-primary-50 border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900",
-            input: [
-              "bg-transparent",
-              "border-none",
-              "focus:ring-0",
-              "text-black/90 dark:text-white/90",
-              "placeholder:text-default-700/50 dark:placeholder:text-white/60",
-            ],
-          }}
-        />
-      </div>
-
+      <Input
+        id="password"
+        name="password"
+        isRequired
+        variant="bordered"
+        labelPlacement="outside"
+        label="Password"
+        placeholder="Enter your password"
+        endContent={
+          <button
+            className="focus:outline-none"
+            type="button"
+            onClick={toggleVisibility}
+          >
+            {isVisible ? (
+              <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+            ) : (
+              <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+            )}
+          </button>
+        }
+        type={isVisible ? "text" : "password"}
+        classNames={{
+          base: "w-full mb-8 text-base text-gray-900",
+          inputWrapper:
+            "h-12 border bg-primary-50 border-gray-900 rounded-lg focus:outline-none focus:ring focus:ring-gray-900 focus:border-gray-900",
+          input: [
+            "bg-transparent",
+            "border-none",
+            "focus:ring-0",
+            "text-black/90 dark:text-white/90",
+            "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+          ],
+        }}
+      />
       <SubmitButton btnText="Sign In" />
 
       <div className="flex justify-center w-full max-w-sm mx-auto py-2">

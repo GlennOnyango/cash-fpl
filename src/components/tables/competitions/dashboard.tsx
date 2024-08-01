@@ -66,7 +66,7 @@ export default function CompetitionsTable({
       switch (columnKey) {
         case "leagueName":
           return (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-start">
               <Link
                 className="text-default-700 text-center hover:text-blue-500"
                 href={`/leagues/competitions/${competition.id}`}
@@ -78,7 +78,7 @@ export default function CompetitionsTable({
 
         case "competitionDuration":
           return (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-start">
               <Chip
                 className="capitalize border-none gap-1 text-default-600"
                 color={statusColorMap[competition.competitionDuration]}
@@ -93,7 +93,7 @@ export default function CompetitionsTable({
         case "enableExcessTransferPenalty":
           return (
             <p
-              className={`text-default-700 text-center  ${
+              className={`text-default-700 bg-red-400 text-center  ${
                 competition.enableExcessTransferPenalty
                   ? "text-green-700"
                   : "text-red-800"
@@ -129,7 +129,6 @@ export default function CompetitionsTable({
         "text-default-500",
         "border-b",
         "border-divider",
-        "text-center",
       ],
       td: [
         // changing the rows border radius
