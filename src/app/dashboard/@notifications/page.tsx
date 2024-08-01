@@ -38,7 +38,7 @@ export default function Notifications() {
   }, []);
 
   return (
-    <div className="col-span-12 sm:col-span-4 row-span-6 p-0 py-6 bg-white">
+    <div className="col-span-12 sm:col-span-4 row-span-6 p-0 bg-white">
       <div className="flex flex-row justify-between px-4">
         <h4 className="text-xl text-black/90 dark:text-white/90 mb-4">
           Notifications
@@ -76,7 +76,7 @@ export default function Notifications() {
               </CardBody>
             </Card>
           </Tab>
-          <Tab key="competitions" title="Competitions">
+          <Tab key="competitions" title="Competitions" className="p-0">
             <CompetitionsNotifications />
           </Tab>
           <Tab key="general" title="General">
