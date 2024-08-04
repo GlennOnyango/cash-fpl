@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { socket } from "../../socket";
-import { Card, CardBody, Tab, Tabs } from "@nextui-org/react";
+import { Avatar, Card, CardBody, Tab, Tabs } from "@nextui-org/react";
 import CompetitionsNotifications from "@/components/notfications/competitionsNotifications";
+import InboxNotifications from "@/components/notfications/inbox";
+import { BellAlertIcon } from "@heroicons/react/20/solid";
+import "@/app/css/dashboard/notifications.css";
 
 export default function Notifications() {
   const [isConnected, setIsConnected] = useState(false);
@@ -38,8 +41,8 @@ export default function Notifications() {
   }, []);
 
   return (
-    <div className="col-span-12 sm:col-span-4 row-span-6 p-0 bg-white">
-      <div className="flex flex-row justify-between px-4">
+    <div className="col-span-12 sm:col-span-3 row-span-6 p-0 bg-white">
+      <div className="flex flex-row justify-between px-4 pt-2">
         <h4 className="text-xl text-black/90 dark:text-white/90 mb-4">
           Notifications
         </h4>
@@ -66,26 +69,28 @@ export default function Notifications() {
             tabContent: "group-data-[selected=true]:text-warning",
           }}
         >
-          <Tab key="inbox" title="Inbox" >
-            <Card>
-              <CardBody>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </CardBody>
-            </Card>
+          <Tab
+            key="inbox"
+            title={
+              <div className="flex items-center space-x-2 ">
+                <span>Notice board </span>
+                <Avatar name="2" size="sm" color="warning"/>
+              </div>
+            }
+          >
+            <InboxNotifications />
           </Tab>
-          <Tab key="competitions" title="Competitions" className="p-0">
+          <Tab
+            key="competitions"
+            title={
+              <div className="flex items-center space-x-2">
+                <span>Groups</span>
+                <Avatar name="5" size="sm" color="warning"/>
+              </div>
+            }
+            className="p-0"
+          >
             <CompetitionsNotifications />
-          </Tab>
-          <Tab key="general" title="General">
-            <Card>
-              <CardBody>
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim id est laborum.
-              </CardBody>
-            </Card>
           </Tab>
         </Tabs>
       </div>
