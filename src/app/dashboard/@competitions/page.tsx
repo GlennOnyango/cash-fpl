@@ -36,7 +36,7 @@ export default async function Leagues() {
           className="text-xl sm:text-3xl text-black/90 dark:text-white/90 mb-4 hover:underline"
           href="/leagues/competitions?page=1"
         >
-          Competitions
+          Public Competitions
         </Link>
 
         <Button

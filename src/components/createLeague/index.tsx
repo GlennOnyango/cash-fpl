@@ -12,7 +12,6 @@ import { createLeague } from "@/app/actions";
 import { SelectorIcon } from "../icons/SelectorIcon";
 import { SubmitButton } from "../submit";
 import Competition from "./competition";
-import { currency } from "@/utils/types";
 import { getLimits } from "@/queries";
 import { useQuery } from "@tanstack/react-query";
 
