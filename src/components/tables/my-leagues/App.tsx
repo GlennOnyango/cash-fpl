@@ -111,11 +111,11 @@ export default function MYLeagueTable({
 
       switch (columnKey) {
         case "name":
-          return <p className="text-default-700 text-center">{league.name}</p>;
+          return <p className="text-default-700">{league.name}</p>;
 
         case "weekly":
           return (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center">
               <Chip
                 className="capitalize border-none gap-1 text-default-600"
                 color={
@@ -132,7 +132,7 @@ export default function MYLeagueTable({
           );
         case "monthly":
           return (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center">
               <Chip
                 className="capitalize border-none gap-1 text-default-600"
                 color={
@@ -149,7 +149,7 @@ export default function MYLeagueTable({
           );
         case "seasonal":
           return (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center">
               <Chip
                 className="capitalize border-none gap-1 text-default-600 justify-start"
                 color={
@@ -167,7 +167,7 @@ export default function MYLeagueTable({
 
         case "active":
           return (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center">
               <Chip
                 className="capitalize border-none gap-1 text-default-600"
                 color={statusColorMap[league.active]}
@@ -181,7 +181,7 @@ export default function MYLeagueTable({
 
         case "actions":
           return (
-            <div className="relative flex justify-center items-center gap-2">
+            <div className="relative flex justify-start items-center gap-2">
               <Tooltip
                 content="Edit League"
                 placement="top"
@@ -305,7 +305,6 @@ export default function MYLeagueTable({
         "text-default-500",
         "border-b",
         "border-divider",
-        "text-center",
       ],
       td: [
         // changing the rows border radius
