@@ -1,4 +1,3 @@
-import { currency } from './../utils/types';
 "use server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -110,15 +109,6 @@ export async function signInUser(prevState: any, formData: FormData) {
       //expires in 50 minutes
       expires: new Date(Date.now() + 1000 * 60 * 50),
     });
-
-    //set cookie time
-    cookies().set({
-      name: "authTime",
-      value: new Date(Date.now() + 1000 * 60 * 50).getTime().toString(),
-      secure: true,
-      sameSite: "strict",
-      httpOnly: true,
-    });
   } catch (error: any) {
     return {
       errors: error.message,
@@ -218,7 +208,11 @@ export async function updateLeague(prevState: any, formData: FormData) {
 
     if (!newLeague.ok) {
       let err = await newLeague.json();
-      console.log(err);
+
+      if (err.httpStatus === "UNAUTHORIZED") {
+        throw new Error(err.httpStatus);
+      }
+
       throw new Error(
         "Failed to update league. Please try again or contact us."
       );
@@ -253,7 +247,11 @@ async function updateCompetitions(competitions: any) {
 
     if (!newLeague.ok) {
       let err = await newLeague.json();
-      console.log(err);
+
+      if (err.httpStatus === "UNAUTHORIZED") {
+        throw new Error(err.httpStatus);
+      }
+
       throw new Error(
         "Failed to update competitions. Please try again or contact us."
       );
@@ -468,4 +466,3 @@ export async function joinCompetitionAction(
     message: "Request join sent successfully",
   };
 }
-
