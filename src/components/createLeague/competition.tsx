@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+import React from "react";
 import { Input, Select, SelectItem, Tooltip } from "@nextui-org/react";
 import { SelectorIcon } from "@/components/icons/SelectorIcon";
 import { capitalize } from "@/utils/utils";
@@ -9,11 +9,6 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 export const access = [
   { key: "public", label: "Public" },
   { key: "private", label: "Private" },
-];
-
-export const currency_select = [
-  { key: "USD", label: "USD" },
-  { key: "KES", label: "KES" },
 ];
 
 export const penalties = [

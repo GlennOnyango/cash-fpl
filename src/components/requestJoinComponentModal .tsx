@@ -13,7 +13,7 @@ export default function RequestJoinComponentModal({ competition }: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-start">
       <RequestJoinModal
         isOpen={isOpen}
         onOpen={onOpen}

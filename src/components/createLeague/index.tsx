@@ -12,7 +12,8 @@ import { createLeague } from "@/app/actions";
 import { SelectorIcon } from "../icons/SelectorIcon";
 import { SubmitButton } from "../submit";
 import Competition from "./competition";
-import { currency } from "@/utils/types";
+import { getLimits } from "@/queries";
+import { useQuery } from "@tanstack/react-query";
 
 export const currency_select = [
   { key: "1", label: "KES" },
@@ -30,18 +31,24 @@ type Props = {
 export default function CreateLeagueComponent({ onClose }: Props) {
   const [state, formAction] = useFormState(createLeague, initialState);
   const [selected, setSelected] = React.useState(["WEEKLY"]);
-  const [limits, setLimits] = React.useState<currency[]>([]);
   const [currency, setCurrency] = React.useState(["1"]);
 
-  const local_url = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
-
-  useEffect(() => {
-    fetch(`${local_url}/api/limits?currencyId=${currency[0]}`)
-      .then((res) => res.json())
-      .then((data: currency[]) => {
-        setLimits(data);
-      });
-  }, [currency]);
+  const {
+    data: limits,
+    error,
+    isError,
+    isFetched,
+    isFetching,
+    isLoading,
+    isSuccess,
+    refetch,
+  } = useQuery({
+    queryKey: ["getLimits", `${currency[0]}`],
+    queryFn: async () => {
+      const data = getLimits(currency[0]);
+      return data;
+    },
+  });
 
   const limit = useMemo(() => {
     if (limits?.length) {
@@ -162,7 +169,7 @@ export default function CreateLeagueComponent({ onClose }: Props) {
           />
         );
       })}
-{/* 
+      {/* 
       <div className="col-span-3 flex flex-col justify-center items-center w-full mt-4">
         <Checkbox name="newPlayerJoinsAll" value={"True"} defaultSelected>
           New players should join all leagues on entry

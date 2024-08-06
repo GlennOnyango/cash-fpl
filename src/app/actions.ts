@@ -158,6 +158,7 @@ export async function createLeague(prevState: any, formData: FormData) {
     }
 
     revalidateTag("fetchMyLeagues");
+    revalidateTag("fetchMyLeaguesById");
     revalidateTag("fetchOpenLeagues");
   } catch (error: any) {
     return {
@@ -171,28 +172,29 @@ export async function createLeague(prevState: any, formData: FormData) {
 }
 
 export async function updateLeague(prevState: any, formData: FormData) {
-  const league_object = {
+  const competitionObject = formData.getAll("types").map((comp) => {
+    return {
+      competitionDuration: comp,
+      amount: formData.get(`${comp}_amount`),
+      isPublic: (formData.get(`${comp}_access`) as string) === "public",
+      enableExcessTransferPenalty:
+        (formData.get(`${comp}_penalty`) as string) === "True",
+      id: formData.get(`${comp}_id`),
+      leagueId: formData.get("leagueId") as string,
+    };
+  });
+
+  const leagueObject = {
     id: formData.get("leagueId") as string,
-    name: formData.get("leageName") as string,
+    name: (formData.get("leageName") as string).trim(),
     ownerId: formData.get("ownerId") as string,
     leagueStatus: "ACTIVE", //ACTIVE,CLOSED,PAUSED,SUSPENDED
-    newPlayerJoinsAll: (formData.get("newPlayerJoinsAll") as string) === "True",
-    currencyId: (formData.get("currencyId") as string) === "KES" ? 1 : 2,
-    competitionType: formData.getAll("types").map((comp) => {
-      return {
-        competitionDuration: comp,
-        amount: formData.get(`${comp}_amount`),
-        isPublic: (formData.get(`${comp}_access`) as string) === "public",
-        enableExcessTransferPenalty:
-          (formData.get(`${comp}_penalty`) as string) === "True",
-        id: formData.get(`${comp}_id`),
-        leagueId: formData.get("leagueId") as string,
-      };
-    }),
+    newPlayerJoinsAll: false,
+    currencyId: Number(formData.get("currency")),
   };
 
   try {
-    const raw = JSON.stringify(league_object);
+    const raw = JSON.stringify(leagueObject);
 
     //create league
     const newLeague = await fetch(`${leagues_url}/api/v1/league/update`, {
@@ -206,8 +208,52 @@ export async function updateLeague(prevState: any, formData: FormData) {
 
     if (!newLeague.ok) {
       let err = await newLeague.json();
+
+      if (err.httpStatus === "UNAUTHORIZED") {
+        throw new Error(err.httpStatus);
+      }
+
       throw new Error(
         "Failed to update league. Please try again or contact us."
+      );
+    }
+  } catch (error: any) {
+    return {
+      message: error.message,
+    };
+  }
+
+  return updateCompetitions(competitionObject);
+}
+
+async function updateCompetitions(competitions: any) {
+  console.log(competitions);
+
+  try {
+    const raw = JSON.stringify(competitions);
+
+    //create league
+    const newLeague = await fetch(
+      `${leagues_url}/api/v1/league/competitions/update`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+        },
+        body: raw,
+      }
+    );
+
+    if (!newLeague.ok) {
+      let err = await newLeague.json();
+
+      if (err.httpStatus === "UNAUTHORIZED") {
+        throw new Error(err.httpStatus);
+      }
+
+      throw new Error(
+        "Failed to update competitions. Please try again or contact us."
       );
     }
 
@@ -220,7 +266,7 @@ export async function updateLeague(prevState: any, formData: FormData) {
   }
 
   return {
-    message: "League updated successfully",
+    message: "League and competitions updated successfully",
   };
 }
 
@@ -388,7 +434,6 @@ export async function joinCompetitionAction(
     leagueId: formData.get("leagueId") as string,
     competition: formData.get("competition") as string,
   };
-
 
   try {
     const raw = JSON.stringify(competition_object);

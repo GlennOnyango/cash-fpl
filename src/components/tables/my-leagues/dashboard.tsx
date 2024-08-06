@@ -65,11 +65,11 @@ export default function MyLeagueTable({ loadedData, visibleColumns }: Props) {
       const cellValue = league[columnKey as keyof MyLeaguesTableProps];
       switch (columnKey) {
         case "name":
-          return <p className="text-default-700 text-center">{league.name}</p>;
+          return <p className="text-default-700">{league.name}</p>;
 
         case "active":
           return (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center">
               <Chip
                 className="capitalize border-none gap-1 text-default-600"
                 color={statusColorMap[league.active]}
@@ -83,7 +83,7 @@ export default function MyLeagueTable({ loadedData, visibleColumns }: Props) {
 
         case "currency":
           return (
-            <p className="text-default-700 text-center">
+            <p className="text-default-700">
               {capitalize(league.currency)}
             </p>
           );
@@ -143,7 +143,6 @@ export default function MyLeagueTable({ loadedData, visibleColumns }: Props) {
         "text-default-500",
         "border-b",
         "border-divider",
-        "text-center",
       ],
       td: [
         // changing the rows border radius

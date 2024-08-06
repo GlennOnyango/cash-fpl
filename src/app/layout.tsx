@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import { Providers } from "./providers";
+import { Providers, ReactQueryProvider } from "./providers";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
@@ -18,13 +18,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>
-          <div
-            className={`${poppins.className} flex flex-col bg-gray-800 overflow-y-hidden h-screen`}
-          >
-            {children}
-          </div>
-        </Providers>
+        <ReactQueryProvider>
+          <Providers>
+            <div
+              className={`${poppins.className} flex flex-col bg-gray-800 overflow-y-hidden h-screen`}
+            >
+              {children}
+            </div>
+          </Providers>
+        </ReactQueryProvider>
       </body>
     </html>
   );
