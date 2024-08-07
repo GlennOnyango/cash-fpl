@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
-import EventSource from "eventsource";
+import React from "react";
 import {
   Table,
   TableHeader,
@@ -11,8 +10,6 @@ import {
   ChipProps,
   SortDescriptor,
   Chip,
-  Button,
-  Link,
 } from "@nextui-org/react";
 import { columns } from "@/utils/tableData/openLeagueData";
 import { CompetitionTypesProps } from "@/utils/types";
@@ -35,33 +32,6 @@ export default function CompetitionsTable({
   visibleColumns,
 }: Props) {
   const [cookies] = useCookies(["token"]);
-  useEffect(() => {
-    const eventSource = new EventSource(
-      "https://ms-leagues.onrender.com/api/v1/league/notifications/stream",
-      {
-        headers: {
-          Authorization: "Bearer " + cookies.token,
-        },
-      }
-    );
-
-    eventSource.onmessage = function (event) {
-      const data = JSON.parse(event.data);
-      console.log(data);
-    };
-
-    // const evtSource = new EventSource(
-    //   "https://ms-leagues.onrender.com/api/v1/league/notifications/stream",
-    //   {
-    //     withCredentials: true,
-    //   }
-    // );
-
-    // evtSource.onmessage = function (event) {
-    //   const data = JSON.parse(event.data);
-    //   console.log(data);
-    // };
-  }, []);
 
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
