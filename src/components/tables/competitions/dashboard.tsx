@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
+import EventSource from "eventsource";
 import {
   Table,
   TableHeader,
@@ -16,6 +17,7 @@ import {
 import { columns } from "@/utils/tableData/openLeagueData";
 import { CompetitionTypesProps } from "@/utils/types";
 import RequestJoinComponentModal from "@/components/requestJoinComponentModal ";
+import { useCookies } from "react-cookie";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   WEEKLY: "success",
@@ -32,6 +34,35 @@ export default function CompetitionsTable({
   loadedData,
   visibleColumns,
 }: Props) {
+  const [cookies] = useCookies(["token"]);
+  useEffect(() => {
+    const eventSource = new EventSource(
+      "https://ms-leagues.onrender.com/api/v1/league/notifications/stream",
+      {
+        headers: {
+          Authorization: "Bearer " + cookies.token,
+        },
+      }
+    );
+
+    eventSource.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      console.log(data);
+    };
+
+    // const evtSource = new EventSource(
+    //   "https://ms-leagues.onrender.com/api/v1/league/notifications/stream",
+    //   {
+    //     withCredentials: true,
+    //   }
+    // );
+
+    // evtSource.onmessage = function (event) {
+    //   const data = JSON.parse(event.data);
+    //   console.log(data);
+    // };
+  }, []);
+
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",
