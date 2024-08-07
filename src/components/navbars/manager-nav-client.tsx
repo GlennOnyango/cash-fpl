@@ -73,9 +73,7 @@ export default function ManagerNav() {
             className="sm:hidden"
           />
           <NavbarBrand>
-            <p className="font-bold text-xl text-inherit text-white">
-              Bench Boasters
-            </p>
+            <p className="text-3xl text-inherit text-white">Bench Boasters</p>
           </NavbarBrand>
         </NavbarContent>
 
@@ -146,6 +144,7 @@ export default function ManagerNav() {
                 <Link
                   aria-current={pathname === item.url ? "page" : "false"}
                   href={item.url}
+                  className="text-md"
                   color={pathname === item.url ? "primary" : "foreground"}
                 >
                   {item.name}
