@@ -29,7 +29,7 @@ export default function ManagerNav() {
     },
     {
       name: "Leagues",
-      url: "/leagues",
+      url: "/leagues?page=1",
     },
     {
       name: "Competitions",
