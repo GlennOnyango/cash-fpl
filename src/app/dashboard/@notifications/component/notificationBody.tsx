@@ -68,9 +68,9 @@ export default function NotificationBody({ token }: Props) {
 
   const pageData = useMemo(() => {
     return {
-      totalElements: data?.totalElements,
-      totalPages: data?.totalPages,
-      currentPage: data?.pageable.pageNumber + 1,
+      totalElements: data?.totalElements || 0,
+      totalPages: data?.totalPages || 1,
+      currentPage: data?.pageable.pageNumber + 1 || 1,
     };
   }, [data]);
 
@@ -112,7 +112,9 @@ export default function NotificationBody({ token }: Props) {
             className="text-black/90 dark:text-white/90 text-sm"
             style={{ lineHeight: "2rem" }}
           >
-            {`${page + 1} - ${(page + 1) * 10} of 15`}
+            {`${pageData.currentPage * 10 - 10 + 1} - ${
+              pageData.currentPage * 10
+            } of 15`}
           </span>
           <Button
             size="sm"
