@@ -1,6 +1,6 @@
 import { Button, Link, Spinner } from "@nextui-org/react";
 
-export default function loading() {
+export default function Loading() {
   return (
     <div className="col-span-12 sm:col-span-4 row-span-6 bg-white p-4 py-6 rounded-none">
       <div className="w-full flex flex-row mb-4 justify-between">
