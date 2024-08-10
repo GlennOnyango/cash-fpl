@@ -13,6 +13,8 @@ import { SelectorIcon } from "@/components/icons/SelectorIcon";
 import { SubmitButton } from "@/components/submit";
 import Competition from "@/components/createLeague/competition";
 import { CompetitionTypes, UpdateLeague } from "@/utils/types";
+import { useQuery } from "@tanstack/react-query";
+import { getLimits } from "@/queries";
 
 export const access = [
   { key: "public", label: "Public" },
@@ -20,8 +22,8 @@ export const access = [
 ];
 
 export const currency_select = [
-  { key: "USD", label: "USD" },
-  { key: "KES", label: "KES" },
+  { key: "1", label: "KES" },
+  { key: "2", label: "USD" },
 ];
 
 export const rules_select = [
@@ -45,22 +47,25 @@ type Props = {
 };
 
 export default function UpdateLeagueComponent({ data }: Props) {
-
   const [updateLeagueData, setUpdateLeagueData] = React.useState(data);
-  
+  const {
+    data: limits,
+    error,
+    isError,
+    isFetched,
+    isFetching,
+    isLoading,
+    isSuccess,
+    refetch,
+  } = useQuery({
+    queryKey: ["getLimits", `${updateLeagueData.currencyId}`],
+    queryFn: async () => {
+      const data = getLimits(updateLeagueData.currencyId.toString());
+      return data;
+    },
+  });
+
   const [state, formAction] = useFormState(updateLeague, initialState);
-  const [limits, setLimits] = React.useState<currency[]>([]);
-
-
-  const local_url = process.env.NEXT_PUBLIC_NEXT_BACKEND_URL;
-
-  useEffect(() => {
-    fetch(`${local_url}/api/limits?currencyId=${updateLeagueData.currencyId}`)
-      .then((res) => res.json())
-      .then((data: currency[]) => {
-        setLimits(data);
-      });
-  }, [updateLeagueData.currencyId]);
 
   const limit = useMemo(() => {
     if (limits?.length) {
@@ -75,10 +80,9 @@ export default function UpdateLeagueComponent({ data }: Props) {
   }, [limits]);
 
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
     setUpdateLeagueData({
       ...updateLeagueData,
-      currencyId: e.target.value === "USD" ? 2 : 1,
+      currencyId: Number(e.target.value),
     } as UpdateLeague);
   };
 
@@ -94,17 +98,9 @@ export default function UpdateLeagueComponent({ data }: Props) {
         Update League
       </h3>
 
-      <input
-        type="hidden"
-        name="leagueId"
-        value={updateLeagueData.id}
-      />
+      <input type="hidden" name="leagueId" value={updateLeagueData.id} />
 
-      <input
-        type="hidden"
-        name="ownerId"
-        value={updateLeagueData.ownerId}
-      />
+      <input type="hidden" name="ownerId" value={updateLeagueData.ownerId} />
 
       <div className="col-span-3 flex flex-col sm:flex-row gap-2">
         <div className="flex flex-col gap-2 w-full">
@@ -147,12 +143,11 @@ export default function UpdateLeagueComponent({ data }: Props) {
           <Select
             placeholder="Select access type"
             required
-            name="currencyId"
+            name="currency"
             radius="lg"
-            defaultSelectedKeys={updateLeagueData.currencyId === 1 ? "KES" : "USD"}
+            defaultSelectedKeys={[updateLeagueData.currencyId.toString()]}
             className="w-full border-1 border-gray-800 rounded-xl"
             selectorIcon={<SelectorIcon />}
-            selectedKeys={updateLeagueData.currencyId === 1 ? ["KES"] : ["USD"]}
             onChange={handleSelectionChange}
           >
             {currency_select.map((acc) => (
@@ -222,7 +217,7 @@ export default function UpdateLeagueComponent({ data }: Props) {
                     : "False"
                 }`,
               ],
-              id:competitionDetails?.id || "",
+              id: competitionDetails?.id || "",
             }}
           />
         );

@@ -18,9 +18,9 @@ import { CompetitionTypesProps } from "@/utils/types";
 import RequestJoinComponentModal from "@/components/requestJoinComponentModal ";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  WEEKLY: "primary",
-  MONTHLY: "danger",
-  SEASONAL: "warning",
+  WEEKLY: "success",
+  MONTHLY: "primary",
+  SEASONAL: "secondary",
 };
 
 type Props = {
@@ -65,20 +65,11 @@ export default function CompetitionsTable({
 
       switch (columnKey) {
         case "leagueName":
-          return (
-            <div className="flex items-center justify-center">
-              <Link
-                className="text-default-700 text-center hover:text-xl hover:text-blue-500"
-                href={`/leagues/open-leagues/${competition.id}`}
-              >
-                {competition.leagueName}
-              </Link>
-            </div>
-          );
+          return <p className="text-default-700">{competition.leagueName}</p>;
 
         case "competitionDuration":
           return (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-start">
               <Chip
                 className="capitalize border-none gap-1 text-default-600"
                 color={statusColorMap[competition.competitionDuration]}
@@ -93,7 +84,7 @@ export default function CompetitionsTable({
         case "enableExcessTransferPenalty":
           return (
             <p
-              className={`text-default-700 text-center  ${
+              className={`text-default-700  ${
                 competition.enableExcessTransferPenalty
                   ? "text-green-700"
                   : "text-red-800"
@@ -104,12 +95,14 @@ export default function CompetitionsTable({
           );
 
         case "amount":
-          return (
-            <p className="text-default-700 text-center">{competition.amount}</p>
-          );
+          return <p className="text-default-700">{competition.amount}</p>;
 
         case "currency":
-          return <p className="text-default-700 text-center">{competition.currencyId === 1 ? 'KES' : 'USD'}</p>;
+          return (
+            <p className="text-default-700">
+              {competition.currencyId === 1 ? "KES" : "USD"}
+            </p>
+          );
 
         case "actions":
           return <RequestJoinComponentModal competition={competition} />;
@@ -124,13 +117,7 @@ export default function CompetitionsTable({
     () => ({
       wrapper: ["max-h-[382px]", "max-w-3xl"],
       table: ["border-divider", "overflow-y-auto"],
-      th: [
-        "bg-transparent",
-        "text-default-500",
-        "border-b",
-        "border-divider",
-        "text-center",
-      ],
+      th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
       td: [
         // changing the rows border radius
         // first

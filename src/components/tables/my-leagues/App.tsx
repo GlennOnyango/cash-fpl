@@ -15,11 +15,13 @@ import {
   SortDescriptor,
   Chip,
   Link,
+  Tooltip,
 } from "@nextui-org/react";
 import { SearchIcon } from "@/components/icons/SearchIcon";
 import { columns } from "@/utils/tableData/myLeagueData";
 import { MyLeaguesTableProps } from "@/utils/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { PaperAirplaneIcon, PencilSquareIcon } from "@heroicons/react/16/solid";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   ACTIVE: "success",
@@ -109,11 +111,11 @@ export default function MYLeagueTable({
 
       switch (columnKey) {
         case "name":
-          return <p className="text-default-700 text-center">{league.name}</p>;
+          return <p className="text-default-700">{league.name}</p>;
 
         case "weekly":
           return (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center">
               <Chip
                 className="capitalize border-none gap-1 text-default-600"
                 color={
@@ -130,7 +132,7 @@ export default function MYLeagueTable({
           );
         case "monthly":
           return (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center">
               <Chip
                 className="capitalize border-none gap-1 text-default-600"
                 color={
@@ -147,7 +149,7 @@ export default function MYLeagueTable({
           );
         case "seasonal":
           return (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center">
               <Chip
                 className="capitalize border-none gap-1 text-default-600 justify-start"
                 color={
@@ -165,7 +167,7 @@ export default function MYLeagueTable({
 
         case "active":
           return (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center">
               <Chip
                 className="capitalize border-none gap-1 text-default-600"
                 color={statusColorMap[league.active]}
@@ -179,17 +181,42 @@ export default function MYLeagueTable({
 
         case "actions":
           return (
-            <div className="relative flex justify-center items-center">
-              <Button
-                size="md"
-                variant="solid"
-                radius="full"
-                color="warning"
-                as={Link}
-                href={`/leagues/my-leagues/${league.id}`}
+            <div className="relative flex justify-start items-center gap-2">
+              <Tooltip
+                content="Edit League"
+                placement="top"
+                className="bg-warning text-black"
               >
-                Manage
-              </Button>
+                <Button
+                  size="md"
+                  variant="light"
+                  isIconOnly
+                  color="warning"
+                  as={Link}
+                  className="p-2"
+                  href={`/leagues/my-leagues/${league.id}`}
+                >
+                  <PencilSquareIcon className="text-black" />
+                </Button>
+              </Tooltip>
+
+              <Tooltip
+                content="Send Invites"
+                placement="top"
+                className="bg-warning text-black"
+              >
+                <Button
+                  size="md"
+                  variant="light"
+                  color="warning"
+                  isIconOnly
+                  as={Link}
+                  className="p-2 "
+                  href={`/leagues/my-leagues/${league.id}`}
+                >
+                  <PaperAirplaneIcon className="text-black" />
+                </Button>
+              </Tooltip>
             </div>
           );
         default:
@@ -278,7 +305,6 @@ export default function MYLeagueTable({
         "text-default-500",
         "border-b",
         "border-divider",
-        "text-center",
       ],
       td: [
         // changing the rows border radius
