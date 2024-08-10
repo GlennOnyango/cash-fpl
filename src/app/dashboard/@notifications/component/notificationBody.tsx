@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { Avatar, Button, Card, CardBody, Tab, Tabs } from "@nextui-org/react";
 import CompetitionsNotifications from "@/components/notfications/competitionsNotifications";
 import InboxNotifications from "@/components/notfications/inbox";
@@ -34,6 +34,12 @@ export default function NotificationBody({ token }: Props) {
       return data;
     },
   });
+
+  useLayoutEffect(() => {
+    if (data?.message === "UNAUTHORIZED") {
+      redirect("/api/auth/logout");
+    }
+  }, [data]);
 
   const notificationsContent: NotificationsType[] = useMemo(() => {
     let notificationsContent: NotificationsType[] = [];
