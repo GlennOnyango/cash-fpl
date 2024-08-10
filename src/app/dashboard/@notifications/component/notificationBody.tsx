@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { Avatar, Button, Card, CardBody, Tab, Tabs } from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardBody,
+  Spinner,
+  Tab,
+  Tabs,
+} from "@nextui-org/react";
 import CompetitionsNotifications from "@/components/notfications/competitionsNotifications";
 import InboxNotifications from "@/components/notfications/inbox";
 import "@/app/css/dashboard/notifications.css";
@@ -154,35 +162,43 @@ export default function NotificationBody({ token }: Props) {
       </p>
       <p className="text-black/90">Transport: {transport}</p> */}
 
-      <div className="flex w-full flex-col">
-        <Tabs
-          aria-label="Options"
-          radius="none"
-          variant="underlined"
-          classNames={{
-            tabList:
-              "gap-6 w-full relative rounded-none p-0 border-b border-divider",
-            cursor: "w-full bg-warning",
-            tab: "max-w-fit px-4 h-12 font-semibold",
-            tabContent: "group-data-[selected=true]:text-warning",
-          }}
-        >
-          <Tab
-            key="inbox"
-            title={
-              <div className="flex items-center space-x-2 ">
-                <span>Notice board </span>
-                <Avatar
-                  name={notificationsContent.length.toString()}
-                  size="sm"
-                  color="warning"
-                />
-              </div>
-            }
+      <div
+        className={`flex w-full flex-col ${
+          isLoading ? "h-3/4 justify-center" : ""
+        }`}
+      >
+        {isLoading ? (
+          <Spinner label="Loading..." color="warning" size="lg" />
+        ) : (
+          <Tabs
+            aria-label="Options"
+            radius="none"
+            variant="underlined"
+            classNames={{
+              tabList:
+                "gap-6 w-full relative rounded-none p-0 border-b border-divider",
+              cursor: "w-full bg-warning",
+              tab: "max-w-fit px-4 h-12 font-semibold",
+              tabContent: "group-data-[selected=true]:text-warning",
+            }}
           >
-            <InboxNotifications notifications={notificationsContent} />
-          </Tab>
-        </Tabs>
+            <Tab
+              key="inbox"
+              title={
+                <div className="flex items-center space-x-2 ">
+                  <span>Notice board </span>
+                  <Avatar
+                    name={notificationsContent.length.toString()}
+                    size="sm"
+                    color="warning"
+                  />
+                </div>
+              }
+            >
+              <InboxNotifications notifications={notificationsContent} />
+            </Tab>
+          </Tabs>
+        )}
       </div>
     </div>
   );
