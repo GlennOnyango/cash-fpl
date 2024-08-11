@@ -9,18 +9,18 @@ type Props = {
 
 export default function InboxNotifications({ notifications }: Props) {
   const month = [
-    "January",
-    "February",
-    "March",
-    "April",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
     "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
 
   return (
@@ -30,35 +30,35 @@ export default function InboxNotifications({ notifications }: Props) {
         height: "38vh",
       }}
     >
-      {notifications.map((notification) => {
+      {notifications.map((notification, idx) => {
         const date = new Date(notification.createdAt);
 
         return (
           <div
             key={notification.id}
-            className="border-b border-divider pb-2 px-1"
+            className={`${
+              notifications.length === idx + 1 ? "" : "border-b border-divider"
+            }
+            ${notification.read ? "bg-gray-100 dark:bg-gray-800" : ""}
+            py-2 grid grid-cols-3`}
           >
-            <h2 className="text-black/90 dark:text-white/90 text-lg">
+            <h2 className="text-black/90 dark:text-white/90 text-xl font-semibold text-wrap col-span-2">
               {capitalize(notification.title)}
             </h2>
 
-            <p className="text-gray-500 leading-7">{notification.message}</p>
+            <p className="text-black col-span-1 ">
+              {`${date.getDate()}-${
+                month[date.getMonth()]
+              }-${date.getFullYear()}`}
+            </p>
 
-            <div className="flex flex-row gap-2  justify-between my-2">
-              <p className="text-black">
-                {`${date.getDay()}-${
-                  month[date.getMonth()]
-                }-${date.getFullYear()}`}
-              </p>
+            <p className="text-black/90 dark:text-white/90 leading-7 col-span-3 truncate">
+              {capitalize(notification.message)}
+            </p>
 
-              <Button size="sm" color="warning">
-                Pay
-              </Button>
-
-              <Button size="sm" color="warning" variant="ghost">
-                Cancel
-              </Button>
-            </div>
+            {/* <p className="text-gray-500 leading-7 col-span-3">
+              {notification.message}
+            </p> */}
           </div>
         );
       })}

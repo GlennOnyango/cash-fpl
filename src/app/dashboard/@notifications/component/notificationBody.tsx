@@ -18,13 +18,22 @@ import { NotificationsType } from "@/utils/types";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import { useQuery } from "@tanstack/react-query";
 import { getNotifications } from "@/app/actions";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Props = {
   token: string;
 };
 
 export default function NotificationBody({ token }: Props) {
+  const router = useRouter();
+  const { sendMessage, lastMessage, readyState } = useWebSocket(
+    "wss://ms-leagues.onrender.com/ws/notifications",
+    {
+      queryParams: {
+        token: token,
+      },
+    }
+  );
   const [page, setPage] = useState(0);
   const {
     data,
@@ -38,6 +47,7 @@ export default function NotificationBody({ token }: Props) {
   } = useQuery({
     queryKey: ["getNotifications", { page: page }],
     queryFn: async () => {
+      console.log("Fetching notifications" + page);
       const data = getNotifications(page);
       return data;
     },
@@ -45,7 +55,7 @@ export default function NotificationBody({ token }: Props) {
 
   useLayoutEffect(() => {
     if (data?.message === "UNAUTHORIZED") {
-      redirect("/api/auth/logout");
+      router.push("/api/auth/logout");
     }
   }, [data]);
 
@@ -65,7 +75,6 @@ export default function NotificationBody({ token }: Props) {
           category: content.category,
           read: content.read,
           dateRead: content.dateRead,
-          new: content.new,
         };
       });
 
@@ -75,6 +84,7 @@ export default function NotificationBody({ token }: Props) {
   }, [data]);
 
   const pageData = useMemo(() => {
+    console.log("Data: ", data);
     return {
       totalElements: data?.totalElements || 0,
       totalPages: data?.totalPages || 1,
@@ -82,14 +92,6 @@ export default function NotificationBody({ token }: Props) {
     };
   }, [data]);
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(
-    "wss://ms-leagues.onrender.com/ws/notifications",
-    {
-      queryParams: {
-        token: token,
-      },
-    }
-  );
   const connectionStatus = {
     [ReadyState.CONNECTING]: "Connecting",
     [ReadyState.OPEN]: "Open",
@@ -105,6 +107,8 @@ export default function NotificationBody({ token }: Props) {
   useEffect(() => {
     if (lastMessage !== null) {
       console.log("Last message: ", lastMessage);
+      setPage(0);
+      refetch();
     }
   }, [lastMessage]);
 
@@ -157,10 +161,6 @@ export default function NotificationBody({ token }: Props) {
           </Button>
         </div>
       </div>
-      {/* <p className="text-black/90">
-        Status: {isConnected ? "connected" : "disconnected"}
-      </p>
-      <p className="text-black/90">Transport: {transport}</p> */}
 
       <div
         className={`flex w-full flex-col ${
@@ -176,7 +176,7 @@ export default function NotificationBody({ token }: Props) {
             variant="underlined"
             classNames={{
               tabList:
-                "gap-6 w-full relative rounded-none p-0 border-b border-divider",
+                "gap-1 w-full relative rounded-none p-0 border-b border-divider",
               cursor: "w-full bg-warning",
               tab: "max-w-fit px-4 h-12 font-semibold",
               tabContent: "group-data-[selected=true]:text-warning",
