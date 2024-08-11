@@ -1,13 +1,15 @@
 import { NotificationsType } from "@/utils/types";
 import { capitalize } from "@/utils/utils";
-import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 type Props = {
   notifications: NotificationsType[];
+  page: number;
 };
 
-export default function InboxNotifications({ notifications }: Props) {
+export default function InboxNotifications({ notifications, page }: Props) {
+  const router = useRouter();
   const month = [
     "Jan",
     "Feb",
@@ -40,7 +42,12 @@ export default function InboxNotifications({ notifications }: Props) {
               notifications.length === idx + 1 ? "" : "border-b border-divider"
             }
             ${notification.read ? "bg-gray-100 dark:bg-gray-800" : ""}
-            py-2 grid grid-cols-3`}
+            py-2 grid grid-cols-3 cursor-pointer`}
+            onClick={() => {
+              router.push(
+                `/dashboard?notification_id=${notification.id}&page=${page}`
+              );
+            }}
           >
             <h2 className="text-black/90 dark:text-white/90 text-xl font-semibold text-wrap col-span-2">
               {capitalize(notification.title)}

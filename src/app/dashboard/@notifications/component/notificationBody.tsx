@@ -195,7 +195,7 @@ export default function NotificationBody({ token }: Props) {
                 </div>
               }
             >
-              <InboxNotifications notifications={notificationsContent} />
+              <InboxNotifications notifications={notificationsContent} page={page} />
             </Tab>
           </Tabs>
         )}
