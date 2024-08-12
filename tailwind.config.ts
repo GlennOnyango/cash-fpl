@@ -9,6 +9,9 @@ const config: Config = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    maxHeight: {
+      "96": "36rem",
+    },
     extend: {},
   },
   darkMode: "class",
