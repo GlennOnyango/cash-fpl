@@ -14,7 +14,6 @@ import {
 import { columns } from "@/utils/tableData/openLeagueData";
 import { CompetitionTypesProps } from "@/utils/types";
 import RequestJoinComponentModal from "@/components/requestJoinComponentModal ";
-import { useCookies } from "react-cookie";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   WEEKLY: "success",
@@ -31,7 +30,6 @@ export default function CompetitionsTable({
   loadedData,
   visibleColumns,
 }: Props) {
-  const [cookies] = useCookies(["token"]);
 
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",

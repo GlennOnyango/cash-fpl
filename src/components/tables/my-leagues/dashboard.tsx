@@ -65,7 +65,7 @@ export default function MyLeagueTable({ loadedData, visibleColumns }: Props) {
       const cellValue = league[columnKey as keyof MyLeaguesTableProps];
       switch (columnKey) {
         case "name":
-          return <p className="text-default-700">{league.name}</p>;
+          return <p className="text-default-700 text-wrap">{league.name}</p>;
 
         case "active":
           return (
@@ -90,14 +90,14 @@ export default function MyLeagueTable({ loadedData, visibleColumns }: Props) {
 
         case "actions":
           return (
-            <div className="relative flex justify-center items-center gap-2">
+            <div className="flex justify-start items-center">
               <Tooltip
                 content="Edit League"
                 placement="top"
                 className="bg-warning text-black"
               >
                 <Button
-                  size="md"
+                  size="sm"
                   variant="light"
                   isIconOnly
                   color="warning"
@@ -115,7 +115,7 @@ export default function MyLeagueTable({ loadedData, visibleColumns }: Props) {
                 className="bg-warning text-black"
               >
                 <Button
-                  size="md"
+                  size="sm"
                   variant="light"
                   color="warning"
                   isIconOnly
