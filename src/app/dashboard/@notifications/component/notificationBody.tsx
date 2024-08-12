@@ -6,10 +6,11 @@ import InboxNotifications from "@/components/notfications/inbox";
 import "@/app/css/dashboard/notifications.css";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { NotificationsType } from "@/utils/types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getNotifications } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import { NotificationIcon } from "@/components/icons/Notifications";
+import NotificationWindow from "@/components/notfications/NotificationWindow";
 
 type Props = {
   token: string;
@@ -17,7 +18,6 @@ type Props = {
 
 export default function NotificationBody({ token }: Props) {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     "wss://ms-leagues.onrender.com/ws/notifications",
     {
@@ -26,6 +26,7 @@ export default function NotificationBody({ token }: Props) {
       },
     }
   );
+  const [notiId, setNotiId] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const {
     data,
@@ -150,11 +151,11 @@ export default function NotificationBody({ token }: Props) {
             radius="none"
             variant="underlined"
             classNames={{
-              tabList:
-                "gap-0 w-full relative rounded-none p-0 border-b",
+              tabList: "gap-0 w-full relative rounded-none p-0 border-b",
               cursor: "w-full bg-warning",
               tab: "max-w-fit px-4 h-12 font-semibold",
               tabContent: "group-data-[selected=true]:text-warning",
+              panel: "p-0",
             }}
           >
             <Tab
@@ -170,14 +171,19 @@ export default function NotificationBody({ token }: Props) {
                 </div>
               }
             >
-              <InboxNotifications
-                notifications={notificationsContent}
-                page={page}
-                pageData={pageData}
-                refetch={refetch}
-                setPage={setPage}
-                sendMessage={sendMessage}
-              />
+              {notiId ? (
+                <NotificationWindow setNotiId={setNotiId} id={notiId} page={page} />
+              ) : (
+                <InboxNotifications
+                  notifications={notificationsContent}
+                  page={page}
+                  pageData={pageData}
+                  refetch={refetch}
+                  setPage={setPage}
+                  sendMessage={sendMessage}
+                  setNotiId={setNotiId}
+                />
+              )}
             </Tab>
           </Tabs>
         )}
