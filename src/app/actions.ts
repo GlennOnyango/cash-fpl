@@ -468,10 +468,7 @@ export async function joinCompetitionAction(
 }
 
 //get notifications
-export async function getNotifications(
-  page: number = 0,
-  size: number = 10
-) {
+export async function getNotifications(page: number = 0, size: number = 10) {
   try {
     const response = await fetch(
       `${leagues_url}/api/v1/league/notifications/user?page=${page}&size=${size}`,
@@ -481,7 +478,8 @@ export async function getNotifications(
           Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
         },
         redirect: "follow",
-        next: { tags: ["fetchOpenLeagues"], revalidate: 600 },
+        cache: "no-store",
+        next: { tags: ["getNotifications"], revalidate: 3600 },
       }
     );
 
@@ -500,6 +498,8 @@ export async function getNotifications(
 
     const res = await response.json();
 
+    console.log(res);
+
     return res;
   } catch (error: any) {
     let err = error.message || "Error fetching notifications.";
@@ -507,4 +507,9 @@ export async function getNotifications(
       message: err,
     };
   }
+}
+
+//revalidate tag
+export async function revalidateTagExt(tag:string) {
+  revalidateTag(tag);
 }

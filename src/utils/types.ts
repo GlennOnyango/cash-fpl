@@ -112,5 +112,4 @@ export type NotificationsType = {
   category: string;
   read: boolean;
   dateRead: any;
-  new: boolean;
 };
