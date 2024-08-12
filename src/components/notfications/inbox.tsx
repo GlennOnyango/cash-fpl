@@ -79,7 +79,7 @@ export default function InboxNotifications({
                     : "text-black/90 dark:text-white/90 font-semibold"
                 } text-xl text-wrap col-span-2`}
               >
-                {`${capitalize(notification.title)} ${idx}`}
+                {`${capitalize(notification.title)} ${page}${idx}`}
               </h2>
 
               <p
