@@ -46,7 +46,7 @@ export default function InboxNotifications({
   return (
     <>
       <div
-        className="overflow-y-auto "
+        className="overflow-y-auto"
         style={{
           height: "38vh",
         }}
@@ -79,7 +79,7 @@ export default function InboxNotifications({
                     : "text-black/90 dark:text-white/90 font-semibold"
                 } text-xl text-wrap col-span-2`}
               >
-                {`${capitalize(notification.title)} ${idx}`}
+                {`${capitalize(notification.title)} ${page}${idx}`}
               </h2>
 
               <p
@@ -111,14 +111,6 @@ export default function InboxNotifications({
       </div>
 
       <div className="flex flex-row justify-center">
-        <span
-          className="text-black/90 dark:text-white/90 text-sm"
-          style={{ lineHeight: "2rem" }}
-        >
-          {`${pageData.currentPage * 10 - 10 + 1} - ${
-            pageData.currentPage * 10
-          } of ${pageData.totalElements}`}
-        </span>
         <Button
           size="sm"
           isIconOnly
@@ -134,9 +126,19 @@ export default function InboxNotifications({
         >
           <ChevronLeftIcon className="text-sm" />
         </Button>
+        <span
+          className="text-black/90 dark:text-white/90 text-sm px-2"
+          style={{ lineHeight: "2rem" }}
+        >
+          {`${pageData.currentPage * 10 - 10 + 1} - ${
+            pageData.currentPage * 10
+          } of ${pageData.totalElements}`}
+        </span>
+
         <Button
           size="sm"
           variant="light"
+          isIconOnly
           className={
             pageData.currentPage === pageData.totalPages
               ? "text-gray-300"

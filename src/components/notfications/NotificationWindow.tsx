@@ -49,10 +49,6 @@ export default function NotificationWindow({ id, page }: Props) {
     return null;
   }, [data]);
 
-  useEffect(() => {
-    console.log("Notification---->", notification);
-  }, [notification]);
-
   return (
     <div className="col-span-12 sm:col-span-3 row-span-6 grid grid-rows-9 px-4 pt-2 bg-red-50">
       <Button
