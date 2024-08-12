@@ -479,7 +479,7 @@ export async function getNotifications(page: number = 0, size: number = 10) {
         },
         redirect: "follow",
         cache: "no-store",
-        next: { tags: ["getNotifications"], revalidate: 600 },
+        next: { tags: ["getNotifications"], revalidate: 3600 },
       }
     );
 
@@ -507,4 +507,9 @@ export async function getNotifications(page: number = 0, size: number = 10) {
       message: err,
     };
   }
+}
+
+//revalidate tag
+export async function revalidateTagExt(tag:string) {
+  revalidateTag(tag);
 }

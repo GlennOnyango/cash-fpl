@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import NotificationWindow from "@/components/notfications/NotificationWindow";
 import NotificationBody from "./component/notificationBody";
 import { cookies } from "next/headers";

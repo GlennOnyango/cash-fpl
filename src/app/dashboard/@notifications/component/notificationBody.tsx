@@ -1,24 +1,15 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
-import {
-  Avatar,
-  Button,
-  Card,
-  CardBody,
-  Spinner,
-  Tab,
-  Tabs,
-} from "@nextui-org/react";
-import CompetitionsNotifications from "@/components/notfications/competitionsNotifications";
+import { Avatar, Badge, Button, Spinner, Tab, Tabs } from "@nextui-org/react";
 import InboxNotifications from "@/components/notfications/inbox";
 import "@/app/css/dashboard/notifications.css";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { NotificationsType } from "@/utils/types";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getNotifications } from "@/app/actions";
 import { useRouter } from "next/navigation";
+import { NotificationIcon } from "@/components/icons/Notifications";
 
 type Props = {
   token: string;
@@ -26,6 +17,7 @@ type Props = {
 
 export default function NotificationBody({ token }: Props) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     "wss://ms-leagues.onrender.com/ws/notifications",
     {
@@ -47,7 +39,6 @@ export default function NotificationBody({ token }: Props) {
   } = useQuery({
     queryKey: ["getNotifications", { page: page }],
     queryFn: async () => {
-      console.log("Fetching notifications" + page);
       const data = getNotifications(page);
       return data;
     },
@@ -84,7 +75,6 @@ export default function NotificationBody({ token }: Props) {
   }, [data]);
 
   const pageData = useMemo(() => {
-    console.log("Data: ", data);
     return {
       totalElements: data?.totalElements || 0,
       totalPages: data?.totalPages || 1,
@@ -107,14 +97,12 @@ export default function NotificationBody({ token }: Props) {
   useEffect(() => {
     if (lastMessage !== null) {
       console.log("Last message: ", lastMessage);
-      setPage(0);
-      refetch();
     }
   }, [lastMessage]);
 
   return (
     <div className="col-span-12 sm:col-span-3 row-span-6 p-0 bg-white">
-      <div className="flex flex-row justify-between px-1 pt-2">
+      <div className="flex flex-row justify-between px-4 pt-2">
         <h4 className="text-xl text-black/90 dark:text-white/90 mb-4">
           Notifications
         </h4>
@@ -124,41 +112,28 @@ export default function NotificationBody({ token }: Props) {
             className="text-black/90 dark:text-white/90 text-sm"
             style={{ lineHeight: "2rem" }}
           >
-            {`${pageData.currentPage * 10 - 10 + 1} - ${
-              pageData.currentPage * 10
-            } of 15`}
+            {lastMessage !== null ? (
+              <Badge content="new" shape="circle" color="danger">
+                <Button
+                  radius="full"
+                  isIconOnly
+                  aria-label="more than 99 notifications"
+                  variant="light"
+                >
+                  <NotificationIcon size={24} />
+                </Button>
+              </Badge>
+            ) : (
+              <Button
+                radius="full"
+                isIconOnly
+                aria-label="more than 99 notifications"
+                variant="light"
+              >
+                <NotificationIcon size={24} />
+              </Button>
+            )}
           </span>
-          <Button
-            size="sm"
-            isIconOnly
-            variant="light"
-            className={
-              pageData.currentPage === 1 ? "text-gray-300" : "text-black"
-            }
-            onClick={() => {
-              if (pageData.currentPage === 1) return;
-              setPage(page - 1);
-              refetch();
-            }}
-          >
-            <ChevronLeftIcon className="text-sm" />
-          </Button>
-          <Button
-            size="sm"
-            variant="light"
-            className={
-              pageData.currentPage === pageData.totalPages
-                ? "text-gray-300"
-                : "text-black"
-            }
-            onClick={() => {
-              if (pageData.currentPage === pageData.totalPages) return;
-              setPage(page + 1);
-              refetch();
-            }}
-          >
-            <ChevronRightIcon className="text-sm" />
-          </Button>
         </div>
       </div>
 
@@ -176,7 +151,7 @@ export default function NotificationBody({ token }: Props) {
             variant="underlined"
             classNames={{
               tabList:
-                "gap-1 w-full relative rounded-none p-0 border-b border-divider",
+                "gap-0 w-full relative rounded-none p-0 border-b",
               cursor: "w-full bg-warning",
               tab: "max-w-fit px-4 h-12 font-semibold",
               tabContent: "group-data-[selected=true]:text-warning",
@@ -195,7 +170,14 @@ export default function NotificationBody({ token }: Props) {
                 </div>
               }
             >
-              <InboxNotifications notifications={notificationsContent} page={page} />
+              <InboxNotifications
+                notifications={notificationsContent}
+                page={page}
+                pageData={pageData}
+                refetch={refetch}
+                setPage={setPage}
+                sendMessage={sendMessage}
+              />
             </Tab>
           </Tabs>
         )}

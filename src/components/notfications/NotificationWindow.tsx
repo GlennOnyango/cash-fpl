@@ -1,14 +1,12 @@
 "use client";
 
-import { getNotifications } from "@/app/actions";
+import { getNotifications, revalidateTagExt } from "@/app/actions";
 import { NotificationsType } from "@/utils/types";
-import { capitalize } from "@/utils/utils";
-import { HandThumbDownIcon, HandThumbUpIcon } from "@heroicons/react/16/solid";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import { Button, Link } from "@nextui-org/react";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { revalidateTag } from "next/cache";
+import { useEffect, useLayoutEffect, useMemo } from "react";
 
 type Props = {
   id: string;
@@ -16,7 +14,14 @@ type Props = {
 };
 
 export default function NotificationWindow({ id, page }: Props) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  useLayoutEffect(() => {
+    // queryClient.invalidateQueries({
+    //   queryKey: ["getNotifications", { page: page }],
+    // });
+    revalidateTagExt("getNotifications");
+  }, []);
 
   const {
     data,
@@ -30,7 +35,6 @@ export default function NotificationWindow({ id, page }: Props) {
   } = useQuery({
     queryKey: ["getNotifications", { page: page }],
     queryFn: async () => {
-      console.log("Fetching notifications" + page);
       const data = getNotifications(page);
       return data;
     },
@@ -46,7 +50,7 @@ export default function NotificationWindow({ id, page }: Props) {
   }, [data]);
 
   useEffect(() => {
-    console.log("Notification", notification);
+    console.log("Notification---->", notification);
   }, [notification]);
 
   return (
