@@ -10,8 +10,6 @@ import {
   ChipProps,
   SortDescriptor,
   Chip,
-  Button,
-  Link,
 } from "@nextui-org/react";
 import { columns } from "@/utils/tableData/openLeagueData";
 import { CompetitionTypesProps } from "@/utils/types";
@@ -32,6 +30,7 @@ export default function CompetitionsTable({
   loadedData,
   visibleColumns,
 }: Props) {
+
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",

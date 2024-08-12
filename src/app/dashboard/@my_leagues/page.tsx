@@ -33,7 +33,7 @@ export default async function Leagues() {
       <div className="w-full flex flex-row mb-4 justify-between">
         <Link
           className="text-xl sm:text-3xl text-black/90 dark:text-white/90 mb-4 hover:underline"
-          href="/leagues/my-leagues?page=1"
+          href="/leagues?page=1"
         >
           My Leagues
         </Link>

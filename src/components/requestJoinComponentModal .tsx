@@ -1,6 +1,6 @@
 "use client";
 import { Button, useDisclosure } from "@nextui-org/react";
-import React, { useEffect } from "react";
+import React from "react";
 import { CompetitionTypesProps } from "@/utils/types";
 import RequestJoinModal from "./modals/request-join";
 
@@ -28,7 +28,7 @@ export default function RequestJoinComponentModal({ competition }: Props) {
         radius="full"
         color="warning"
       >
-        Request join
+        Join
       </Button>
     </div>
   );
