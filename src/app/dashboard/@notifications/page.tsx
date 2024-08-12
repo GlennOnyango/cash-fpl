@@ -1,9 +1,10 @@
-export default function Notifications() {
-  return (
-    <div className="col-span-12 sm:col-span-4 row-span-6 bg-white">
-      <h4 className="text-3xl text-black/90 dark:text-white/90 mb-4">
-      Notifications
-      </h4>
-    </div>
-  );
+export const dynamic = "force-dynamic";
+
+import NotificationBody from "./component/notificationBody";
+import { cookies } from "next/headers";
+
+export default async function Notifications() {
+  const token = cookies().get("accessToken")?.value || "";
+
+  return <NotificationBody token={token} />;
 }

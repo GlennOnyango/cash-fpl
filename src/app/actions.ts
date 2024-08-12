@@ -466,3 +466,50 @@ export async function joinCompetitionAction(
     message: "Request join sent successfully",
   };
 }
+
+//get notifications
+export async function getNotifications(page: number = 0, size: number = 10) {
+  try {
+    const response = await fetch(
+      `${leagues_url}/api/v1/league/notifications/user?page=${page}&size=${size}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${cookies().get("accessToken")?.value}`,
+        },
+        redirect: "follow",
+        cache: "no-store",
+        next: { tags: ["getNotifications"], revalidate: 3600 },
+      }
+    );
+
+    if (!response.ok) {
+      let err = await response.json();
+
+      if (err.httpStatus === "UNAUTHORIZED") {
+        throw new Error(err.httpStatus);
+      }
+
+      throw new Error(
+        err.message ||
+          "Error fetching notifications. Please try again or contact us."
+      );
+    }
+
+    const res = await response.json();
+
+    console.log(res);
+
+    return res;
+  } catch (error: any) {
+    let err = error.message || "Error fetching notifications.";
+    return {
+      message: err,
+    };
+  }
+}
+
+//revalidate tag
+export async function revalidateTagExt(tag:string) {
+  revalidateTag(tag);
+}

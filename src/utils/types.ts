@@ -99,3 +99,17 @@ export type UpdateLeague = {
   newPlayerJoinsAll: boolean;
   competitionTypes: CompetitionTypes[];
 };
+
+export type NotificationsType = {
+  createdBy: string;
+  createdAt: string;
+  lastModifiedBy: string;
+  lastModifiedAt: string;
+  id: string;
+  title: string;
+  message: string;
+  receiverId: string;
+  category: string;
+  read: boolean;
+  dateRead: any;
+};
