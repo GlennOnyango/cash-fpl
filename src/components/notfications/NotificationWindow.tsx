@@ -3,19 +3,17 @@
 import { getNotifications, revalidateTagExt } from "@/app/actions";
 import { NotificationsType } from "@/utils/types";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
-import { Button, Link } from "@nextui-org/react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { revalidateTag } from "next/cache";
-import { useEffect, useLayoutEffect, useMemo } from "react";
+import { Button} from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
+import { useLayoutEffect, useMemo } from "react";
 
 type Props = {
   id: string;
   page: number;
+  setNotiId: (id: null) => void;
 };
 
-export default function NotificationWindow({ id, page }: Props) {
-  const queryClient = useQueryClient();
-
+export default function NotificationWindow({ id, page, setNotiId }: Props) {
   useLayoutEffect(() => {
     // queryClient.invalidateQueries({
     //   queryKey: ["getNotifications", { page: page }],
@@ -23,16 +21,7 @@ export default function NotificationWindow({ id, page }: Props) {
     revalidateTagExt("getNotifications");
   }, []);
 
-  const {
-    data,
-    error,
-    isError,
-    isFetched,
-    isFetching,
-    isLoading,
-    isSuccess,
-    refetch,
-  } = useQuery({
+  const { data } = useQuery({
     queryKey: ["getNotifications", { page: page }],
     queryFn: async () => {
       const data = getNotifications(page);
@@ -56,8 +45,7 @@ export default function NotificationWindow({ id, page }: Props) {
         size="sm"
         isIconOnly
         className="row-span-1"
-        as={Link}
-        href="/dashboard"
+        onClick={() => setNotiId(null)}
       >
         <ChevronLeftIcon />
       </Button>

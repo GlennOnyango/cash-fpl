@@ -17,6 +17,7 @@ type Props = {
   refetch: () => void;
   setPage: (page: number) => void;
   sendMessage: (message: string) => void;
+  setNotiId: (id: string) => void;
 };
 
 export default function InboxNotifications({
@@ -26,6 +27,7 @@ export default function InboxNotifications({
   refetch,
   setPage,
   sendMessage,
+  setNotiId,
 }: Props) {
   const router = useRouter();
   const month = [
@@ -66,10 +68,10 @@ export default function InboxNotifications({
              grid grid-cols-3 cursor-pointer p-2 py-4`}
               onClick={() => {
                 sendMessage(`${notification.id}`);
-
-                router.push(
-                  `/dashboard?notification_id=${notification.id}&page=${page}`
-                );
+                setNotiId(notification.id);
+                // router.push(
+                //   `/dashboard?notification_id=${notification.id}&page=${page}`
+                // );
               }}
             >
               <h2
