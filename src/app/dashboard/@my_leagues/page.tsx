@@ -29,8 +29,19 @@ export default async function Leagues() {
     });
   }
   return (
-    <div className="col-span-12 sm:col-span-4 row-span-1 sm:row-span-2 bg-white p-4 py-6 rounded-none overflow-x-auto">
-      <div className="w-full flex flex-row mb-4 justify-between">
+    <div
+      className="
+    col-span-12 
+    sm:col-span-4
+    bg-white
+    px-2
+    py-6
+    rounded-none
+    max-h-mobileTile
+    sm:max-h-upperTile
+    overflow-x-auto"
+    >
+      <div className="w-full flex flex-row mb-2 h-1/10 justify-between">
         <Link
           className="text-xl sm:text-3xl text-black/90 dark:text-white/90 mb-4 hover:underline"
           href="/leagues?page=1"
@@ -40,7 +51,7 @@ export default async function Leagues() {
 
         <CreateComponentModal />
       </div>
-      <div className="overflow-x-auto overflow-y-hidden">
+      <div className="overflow-x-auto overflow-y-auto h-9/10">
         <MyLeagueTable
           loadedData={leagues}
           visibleColumns={INITIAL_VISIBLE_COLUMNS}
