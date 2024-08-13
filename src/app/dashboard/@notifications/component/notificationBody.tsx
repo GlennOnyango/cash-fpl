@@ -102,9 +102,9 @@ export default function NotificationBody({ token }: Props) {
   }, [lastMessage]);
 
   return (
-    <div className="col-span-12 sm:col-span-3 row-span-6 p-0 bg-white">
-      <div className="flex flex-row justify-between px-4 pt-2">
-        <h4 className="text-xl text-black/90 dark:text-white/90 mb-4">
+    <>
+      <div className="row-span-1 flex flex-row justify-between px-4 pt-2">
+        <h4 className="text-3xl text-black/90 dark:text-white/90 mb-4">
           Notifications
         </h4>
 
@@ -138,11 +138,7 @@ export default function NotificationBody({ token }: Props) {
         </div>
       </div>
 
-      <div
-        className={`flex w-full flex-col ${
-          isLoading ? "h-3/4 justify-center" : ""
-        }`}
-      >
+      <div className={`row-span-9 flex flex-col `}>
         {isLoading ? (
           <Spinner label="Loading..." color="warning" size="lg" />
         ) : (
@@ -151,11 +147,12 @@ export default function NotificationBody({ token }: Props) {
             radius="none"
             variant="underlined"
             classNames={{
+              base: "w-full h-1/10",
               tabList: "gap-0 w-full relative rounded-none p-0 border-b",
               cursor: "w-full bg-warning",
               tab: "max-w-fit px-4 h-12 font-semibold",
               tabContent: "group-data-[selected=true]:text-warning",
-              panel: "p-0",
+              panel: "p-0 h-9/10 flex flex-col",
             }}
           >
             <Tab
@@ -172,7 +169,11 @@ export default function NotificationBody({ token }: Props) {
               }
             >
               {notiId ? (
-                <NotificationWindow setNotiId={setNotiId} id={notiId} page={page} />
+                <NotificationWindow
+                  setNotiId={setNotiId}
+                  id={notiId}
+                  page={page}
+                />
               ) : (
                 <InboxNotifications
                   notifications={notificationsContent}
@@ -188,6 +189,6 @@ export default function NotificationBody({ token }: Props) {
           </Tabs>
         )}
       </div>
-    </div>
+    </>
   );
 }

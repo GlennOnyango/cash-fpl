@@ -48,10 +48,7 @@ export default function InboxNotifications({
   return (
     <>
       <div
-        className="overflow-y-auto"
-        style={{
-          height: "38vh",
-        }}
+        className="overflow-y-auto h-9/10"
       >
         {notifications.map((notification, idx) => {
           const date = new Date(notification.createdAt);
@@ -112,7 +109,7 @@ export default function InboxNotifications({
         })}
       </div>
 
-      <div className="flex flex-row justify-center">
+      <div className="flex flex-row justify-center items-center bg-gray-100 h-1/10">
         <Button
           size="sm"
           isIconOnly
