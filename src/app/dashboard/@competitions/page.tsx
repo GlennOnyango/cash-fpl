@@ -44,7 +44,7 @@ export default async function Leagues() {
     >
       <div className="w-full flex flex-row mb-2 h-1/10 justify-between">
         <Link
-          className="text-xl sm:text-3xl text-black/90 dark:text-white/90 mb-4 hover:underline"
+          className="text-xl sm:text-2xl text-black/90 dark:text-white/90 mb-4 hover:underline"
           href="/leagues/competitions?page=1"
         >
           Public Competitions
