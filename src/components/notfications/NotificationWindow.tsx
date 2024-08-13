@@ -39,7 +39,7 @@ export default function NotificationWindow({ id, page, setNotiId }: Props) {
   }, [data]);
 
   return (
-    <div className="col-span-12 sm:col-span-3 row-span-6 grid grid-rows-9 px-4 pt-2 bg-red-50">
+    <div className="col-span-12 sm:col-span-3 row-span-6 grid grid-rows-9 px-4 pt-2 h-full bg-red-50">
       <Button
         variant="light"
         size="sm"
@@ -47,7 +47,7 @@ export default function NotificationWindow({ id, page, setNotiId }: Props) {
         className="row-span-1"
         onClick={() => setNotiId(null)}
       >
-        <ChevronLeftIcon />
+        <ChevronLeftIcon className="text-black/90 dark:text-white/90" />
       </Button>
 
       <h2 className="text-xl text-black/90 dark:text-white/90 mb-4 row-span-1">

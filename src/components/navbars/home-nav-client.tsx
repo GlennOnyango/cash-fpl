@@ -56,12 +56,13 @@ export default function HomeNav() {
     <header className="grow-0 p-0 bg-gray-800">
       <Navbar
         onMenuOpenChange={setIsMenuOpen}
+        maxWidth="full"
         classNames={{
           base: "bg-gray-800",
           wrapper: "dark",
         }}
       >
-        <NavbarContent>
+        <NavbarContent className="hidden sm:flex">
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             className="sm:hidden"
@@ -84,13 +85,43 @@ export default function HomeNav() {
             </NavbarItem>
           ))}
         </NavbarContent>
-        <NavbarContent justify="end">
-          <NavbarItem className="hidden lg:flex">
-            <Link href="/sign-in">Login</Link>
-          </NavbarItem>
+        <NavbarContent justify="end" className="hidden sm:flex">
           <NavbarItem>
-            <Button as={Link} color="primary" href="/sign-up" variant="flat">
-              Sign Up
+            <Link href="/sign-up">Sign Up</Link>
+          </NavbarItem>
+
+          <NavbarItem>
+            <Button
+              as={Link}
+              className="text-white"
+              color="primary"
+              href="/sign-in"
+              variant="flat"
+            >
+              Login
+            </Button>
+          </NavbarItem>
+        </NavbarContent>
+
+        <NavbarContent className="sm:hidden w-full">
+          <NavbarMenuToggle
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            className="sm:hidden"
+          />
+          <NavbarBrand className="justify-center ">
+            <p className="text-3xl text-inherit text-white">Bench Boasters</p>
+          </NavbarBrand>
+
+          <NavbarItem>
+            <Button
+              as={Link}
+              size="sm"
+              className="text-white"
+              color="primary"
+              href="/sign-in"
+              variant="flat"
+            >
+              Login
             </Button>
           </NavbarItem>
         </NavbarContent>
