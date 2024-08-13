@@ -140,7 +140,9 @@ export default function NotificationBody({ token }: Props) {
 
       <div className={`row-span-9 flex flex-col `}>
         {isLoading ? (
-          <Spinner label="Loading..." color="warning" size="lg" />
+          <div className="h-9/10 flex flex-col justify-center">
+            <Spinner label="Loading..." color="warning" size="lg" />
+          </div>
         ) : (
           <Tabs
             aria-label="Options"
