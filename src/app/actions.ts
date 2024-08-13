@@ -498,8 +498,6 @@ export async function getNotifications(page: number = 0, size: number = 10) {
 
     const res = await response.json();
 
-    console.log(res);
-
     return res;
   } catch (error: any) {
     let err = error.message || "Error fetching notifications.";
@@ -510,6 +508,6 @@ export async function getNotifications(page: number = 0, size: number = 10) {
 }
 
 //revalidate tag
-export async function revalidateTagExt(tag:string) {
+export async function revalidateTagExt(tag: string) {
   revalidateTag(tag);
 }
