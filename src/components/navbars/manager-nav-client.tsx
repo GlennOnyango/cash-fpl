@@ -133,9 +133,7 @@ export default function ManagerNav() {
             className="sm:hidden"
           />
           <NavbarBrand className="justify-center">
-            <p className="text-3xl text-inherit text-white">
-              Bench Boasters
-            </p>
+            <p className="text-3xl text-inherit text-white">Bench Boasters</p>
           </NavbarBrand>
 
           <Dropdown placement="bottom-end" className="bg-gray-500">
@@ -179,9 +177,9 @@ export default function ManagerNav() {
                 <Link
                   aria-current={pathname === item.url ? "page" : "false"}
                   href={item.url}
-                  className={
+                  className={`${
                     pathname === item.url ? "text-primary" : "text-white"
-                  }
+                  } text-xl`}
                 >
                   {item.name}
                 </Link>
