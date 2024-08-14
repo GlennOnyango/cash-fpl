@@ -11,6 +11,7 @@ export default async function Notifications() {
       className="
     col-span-12 
     sm:col-span-4 
+     pt-3 
     bg-white
     overflow-y-hidden
     max-h-mobileTile
