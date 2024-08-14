@@ -5,7 +5,7 @@ import { CubeTransparentIcon } from "@heroicons/react/24/outline";
 export default function Home() {
   return (
     <PageTemplate>
-      <div className="flex flex-col items-center justify-center gap-8 h-full">
+      <div className="flex flex-col items-center justify-center gap-4 h-full">
         <div
           className="bg-gray-800 animate-bounce rounded-full w-2/3 sm:w-1/4 h-32 mt-10"
           style={{
@@ -16,7 +16,7 @@ export default function Home() {
           }}
         ></div>
 
-        <div className="flex flex-col rounded-lg w-3/5 space-y-10">
+        <div className="flex flex-col rounded-lg w-5/6 sm:w-3/5 gap-4 sm:gap-10">
           <h1 className="text-white text-center text-3xl lg:text-7xl font-semibold text-wrap">
             Level Up Your FPL Game: Play Against the Best, Win Big
           </h1>
@@ -26,7 +26,7 @@ export default function Home() {
             your FPL mastery by winning big on every game week.
           </p>
 
-          <div className="flex flex-col justify-center gap-3 sm:flex-row">
+          <div className="flex flex-row justify-center gap-2 ">
             <Button size="lg" radius="full" as={Link} href="/sign-in">
               Get Started
             </Button>

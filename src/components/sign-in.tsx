@@ -2,11 +2,12 @@
 import { Input } from "@nextui-org/react";
 import { signInUser } from "../app/actions";
 import { useFormState } from "react-dom";
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 import { EyeFilledIcon } from "../components/icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../components/icons/EyeSlashFilledIcon";
 import { SubmitButton } from "./submit";
+import { useRouter } from "next/navigation";
 
 export type SignInState = {
   email: string;
@@ -14,13 +15,19 @@ export type SignInState = {
 };
 
 const initialState = {
-  errors: "",
+  message: "",
 };
 
 export default function SignInCashFPL() {
   const [state, formAction] = useFormState(signInUser, initialState);
   const [isVisible, setIsVisible] = useState(false);
-  
+  const router = useRouter();
+
+  useLayoutEffect(() => {
+    if (state?.message === "Login successful") {
+      router.replace("/dashboard");
+    }
+  }, [state]);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
   return (
@@ -29,12 +36,12 @@ export default function SignInCashFPL() {
       className="w-full max-w-sm mx-auto"
       autoComplete="off"
     >
-      {state?.errors && (
+      {state?.message !== "Login successful" && state?.message !== "" && (
         <p
           className="bg-red-100 rounded-md py-2 px-3 my-2 text-center text-gray-900"
           key={"error"}
         >
-          {`${state.errors}`}
+          {`${state.message}`}
         </p>
       )}
 

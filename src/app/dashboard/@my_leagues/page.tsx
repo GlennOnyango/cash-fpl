@@ -39,7 +39,7 @@ export default async function Leagues() {
     rounded-none
     max-h-mobileTile
     sm:max-h-upperTile
-    overflow-x-auto"
+    overflow-hidden"
     >
       <div className="w-full flex flex-row mb-2 h-1/10 justify-between">
         <Link
