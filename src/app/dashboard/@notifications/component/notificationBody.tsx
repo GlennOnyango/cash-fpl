@@ -104,7 +104,7 @@ export default function NotificationBody({ token }: Props) {
   return (
     <>
       <div className="row-span-1 flex flex-row justify-between px-4 pt-2">
-        <h4 className="text-3xl text-black/90 dark:text-white/90 mb-4">
+        <h4 className="text-xl sm:text-2xl text-black/90 dark:text-white/90 mb-4 px-2 hover:underline">
           Notifications
         </h4>
 

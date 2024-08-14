@@ -134,7 +134,8 @@ export default function HomeNav() {
                 aria-current={pathname === item.url ? "page" : "false"}
                 className={`w-full ${
                   pathname === item.url ? "text-primary" : "text-white"
-                }`}
+                } text-xl`}
+                
                 size="lg"
               >
                 {item.name}
