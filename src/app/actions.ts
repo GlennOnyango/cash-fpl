@@ -76,7 +76,7 @@ export async function signInUser(prevState: any, formData: FormData) {
 
   if (!user.success) {
     return {
-      errors: user.error.flatten().fieldErrors,
+      message: "Invalid email or password",
     };
   }
 
@@ -109,13 +109,17 @@ export async function signInUser(prevState: any, formData: FormData) {
       //expires in 50 minutes
       expires: new Date(Date.now() + 1000 * 60 * 50),
     });
+
+    return {
+      message: "Login successful",
+    };
   } catch (error: any) {
     return {
-      errors: error.message,
+      message: error.message,
     };
   }
 
-  redirect("/dashboard");
+  //redirect("/dashboard");
 }
 
 // Leagues
